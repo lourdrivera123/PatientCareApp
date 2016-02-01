@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/myToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/d10"
+        android:layout_marginLeft="@dimen/d10"
+        android:layout_marginRight="@dimen/d10"
+        android:layout_marginTop="@dimen/d10"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/partner_toolbar"
+                android:padding="3dp"
+                android:text="Customer Ordering"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/customerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/d10"
+                android:hint="Firstname Lastname"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/customerAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="top|left"
+                android:hint="Complete Mailing Address"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/customerContactNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Contact Contact Number"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/d10"
+                android:background="@color/partner_toolbar"
+                android:padding="3dp"
+                android:text="Recipient of Order"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="same recipient"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:id="@+id/hideLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/recipientName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:hint="Name of Recipient"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/recipientAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="top|left"
+                    android:hint="Complete Address of Recepient"
+                    android:inputType="textMultiLine"
+                    android:lines="2"
+                    android:maxLines="5"
+                    android:minLines="2"
+                    android:scrollbars="vertical"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/recipientContactNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:hint="Contact Number"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/d10"
+                android:background="@color/partner_toolbar"
+                android:padding="3dp"
+                android:text="Select ECE branch to serve you:"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/listOfECEBranches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/d10"
+                android:background="@color/partner_toolbar"
+                android:padding="3dp"
+                android:text="Delivery Options:"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/pickup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:checked="true"
+                    android:text="Pick-up"
+                    android:textSize="13sp" />
+
+                <RadioButton
+                    android:id="@+id/deliver"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:checked="false"
+                    android:text="Deliver"
+                    android:textSize="13sp" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/d10"
+                android:background="@color/partner_toolbar"
+                android:padding="3dp"
+                android:text="Payment Options:"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <RadioButton
+                    android:id="@+id/paypal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="PayPal"
+                    android:textSize="13sp" />
+
+                <RadioButton
+                    android:id="@+id/visa_or_mastercard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Visa/Mastercard"
+                    android:textSize="13sp" />
+
+                <RadioButton
+                    android:id="@+id/cod"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cash On Delivery"
+                    android:textSize="13sp" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/proceed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/partner_toolbar"
+                android:text="Proceed"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

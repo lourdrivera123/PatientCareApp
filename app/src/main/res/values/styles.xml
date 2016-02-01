@@ -1,0 +1,158 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light">
+        <item name="android:displayOptions">useLogo|showHome</item>
+    </style>
+
+    <!-- Cart Layout Styles -->
+    <!-- Table Layout  -->
+    <style name="tbl">
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart" tools:ignore="NewApi">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- Table Head THs -->
+    <style name="tbl_th">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
+    <!-- Table TH TR -->
+    <style name="tbl_th_tr">
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@drawable/border</item>
+    </style>
+
+    <!-- Table Body TR -->
+    <style name="tbody_tr">
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- Table Rows -->
+    <style name="cart_item_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:layout_weight">3.5</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:maxWidth">60dp</item>
+    </style>
+
+    <style name="cart_qty_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textAlignment" tools:ignore="NewApi">center</item>
+        <item name="android:ems">3</item>
+        <item name="android:inputType">number</item>
+        <item name="android:layout_gravity">bottom</item>
+    </style>
+
+    <style name="cart_total_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:layout_gravity">bottom</item>
+    </style>
+
+    <!-- Btn Controls Layout -->
+    <style name="btn_controls_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <!-- Btn Controls -->
+    <style name="btn_controls">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawableLeft">@mipmap/ic_checkout_ready</item>
+        <item name="android:layout_below">@+id/lv_items</item>
+        <item name="android:layout_alignLeft">@+id/update_cart</item>
+        <item name="android:paddingLeft">80dp</item>
+        <item name="android:paddingRight">80dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/partner_toolbar</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <!-- Checkout Button -->
+    <style name="btn_checkout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawableLeft">@mipmap/ic_checkout_white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/partner_toolbar</item>
+        <item name="android:paddingLeft">65dp</item>
+        <item name="android:paddingRight">65dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="Theme.MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Set AppCompat’s color theming attrs -->
+        <item name="colorAccent">@color/Accent</item>
+        <item name="colorPrimaryDark">@color/DarkGreen</item>
+
+        <item name="vpiCirclePageIndicatorStyle">@style/CustomCirclePageIndicator</item>
+    </style>
+
+    <style name="myDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="CustomCirclePageIndicator">
+        <item name="fillColor">@color/partner_toolbar</item>
+        <item name="strokeColor">@color/counter_text_bg</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="radius">3dp</item>
+        <item name="centered">true</item>
+    </style>
+
+    <style name="ProgressBarStyle" parent="@android:style/Widget.ProgressBar.Horizontal" />
+
+    //Toggle button
+
+    <style name="Widget.Button.Toggle" parent="android:Widget">
+        <item name="android:background">@drawable/star_bg</item>
+        <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
+    </style>
+
+    <style name="toggleButton" parent="android:Theme.Black">
+        <item name="android:buttonStyleToggle">@style/Widget.Button.Toggle</item>
+        <item name="android:textOn"></item>
+        <item name="android:textOff"></item>
+    </style>
+
+    <style name="ForDialogTheme" parent="android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+</resources>

@@ -1,0 +1,69 @@
+TASK com.example.zem.patientcareapp id=48
+  ACTIVITY com.example.zem.patientcareapp/.SidebarActivity 53710abc pid=25179
+    Local FragmentActivity 53578fbc State:
+      mCreated=truemResumed=true mStopped=false mReallyStopped=false
+      mLoadersStarted=true
+    Active Fragments in 53578120:
+      #0: ReferralsFragment{53689e18 #0 id=0x7f0d011f}
+        mFragmentId=#7f0d011f mContainerId=#7f0d011f mTag=null
+        mState=5 mIndex=0 mWho=android:fragment:0 mBackStackNesting=0
+        mAdded=true mRemoving=false mResumed=true mFromLayout=false mInLayout=false
+        mHidden=false mDetached=false mMenuVisible=true mHasMenu=false
+        mRetainInstance=false mRetaining=false mUserVisibleHint=true
+        mFragmentManager=FragmentManager{53578120 in SidebarActivity{53578fbc}}
+        mActivity=com.example.zem.patientcareapp.SidebarModule.SidebarActivity@53578fbc
+        mContainer=android.widget.FrameLayout@53666354
+        mView=android.widget.LinearLayout@5368a50c
+        mInnerView=android.widget.LinearLayout@5368a50c
+        Child FragmentManager{5368a398 in ReferralsFragment{53689e18}}:
+          FragmentManager misc state:
+            mActivity=com.example.zem.patientcareapp.SidebarModule.SidebarActivity@53578fbc
+            mContainer=android.support.v4.app.Fragment$1@5368a3d4
+            mParent=ReferralsFragment{53689e18 #0 id=0x7f0d011f}
+            mCurState=5 mStateSaved=false mDestroyed=false
+    Added Fragments:
+      #0: ReferralsFragment{53689e18 #0 id=0x7f0d011f}
+    FragmentManager misc state:
+      mActivity=com.example.zem.patientcareapp.SidebarModule.SidebarActivity@53578fbc
+      mContainer=android.support.v4.app.FragmentActivity$2@5356f3ac
+      mCurState=5 mStateSaved=false mDestroyed=false
+    View Hierarchy:
+      com.android.internal.policy.impl.PhoneWindow$DecorView{536593d4 V.E..... ... 0,0-480,800}
+        android.widget.LinearLayout{5365acdc V.E..... ... 0,0-480,800}
+          com.android.internal.widget.ActionBarContainer{5365ae08 V.ED.... ... 0,38-480,110 #1020319 android:id/action_bar_container}
+            com.android.internal.widget.ActionBarView{536501ac V.E..... ... 0,0-480,72 #102031a android:id/action_bar}
+              com.android.internal.widget.ActionBarView$HomeView{5364d0d0 VFE...C. ... 0,0-97,72}
+                android.widget.ImageView{5363fe78 V.ED.... ... 0,12-48,60 #102023b android:id/up}
+                android.widget.ImageView{5363ffe4 V.ED.... ... 43,12-91,60 #102002c android:id/home}
+              android.widget.RelativeLayout{5366f058 V.E..... ... 97,0-384,72}
+                android.widget.AutoCompleteTextView{5366f34c VFED..CL ... 0,0-287,72 #7f0d0115 app:id/search_product}
+              com.android.internal.view.menu.ActionMenuView{53663fc4 V.ED.... ... 384,0-480,72}
+                com.android.internal.view.menu.ActionMenuItemView{5365cea4 VFED..CL ... 0,0-96,72 #7f0d012a app:id/logout}
+            com.android.internal.widget.ActionBarContextView{53641b54 G.E..... ... 0,0-0,0 #102031b android:id/action_context_bar}
+          android.widget.FrameLayout{53641d7c V.ED.... ... 0,110-480,800 #1020002 android:id/content}
+            android.support.v4.widget.DrawerLayout{53642cc4 VFE..... ... 0,0-480,690 #7f0d011e app:id/drawer_layout}
+              android.widget.FrameLayout{53666354 V.E..... ... 0,0-480,690 #7f0d011f app:id/frame_container}
+                android.widget.LinearLayout{5368a50c V.E..... ... 15,15-465,675}
+                  android.widget.TextView{5368a6b0 V.ED.... ... 0,0-450,29 #7f0d00b5 app:id/referralsLvlLimit}
+                  android.widget.ListView{5368a8fc VFED.VC. F.. 0,44-450,660 #7f0d00b6 app:id/listOfReferrals}
+                    android.widget.TextView{5369fa34 V.ED.... ... 0,0-450,72 #1020014 android:id/text1}
+                  android.widget.LinearLayout{5368b384 G.E..... ... 0,0-0,0 #7f0d00b7 app:id/noReferralsLayout}
+                    android.widget.ImageView{5368b52c V.ED.... ... 0,0-0,0 #7f0d00b8 app:id/refreshList}
+                    android.widget.TextView{5368e4dc V.ED.... ... 0,0-0,0}
+              android.widget.ListView{53666cc0 IFED.VC. ... -360,0-0,690 #7f0d0120 app:id/list_slidermenu}
+                android.widget.LinearLayout{53650344 V.E..... ... 0,0-360,72}
+                  android.widget.TextView{5364d438 V.ED.... ... 15,0-87,72 #7f0d0033 app:id/title}
+                  android.widget.TextView{53653fec G.ED.... ... 0,0-0,0 #7f0d0087 app:id/counter}
+                android.widget.LinearLayout{5363f2ec V.E..... ... 0,74-360,146}
+                  android.widget.TextView{5363f6c0 V.ED.... ... 15,0-122,72 #7f0d0033 app:id/title}
+                  android.widget.TextView{536639c4 G.ED.... ... 0,0-0,0 #7f0d0087 app:id/counter}
+          com.android.internal.widget.ActionBarContainer{53641f54 G.ED.... ... 0,0-0,0 #102031c android:id/split_action_bar}
+
+  ACTIVITY com.example.zem.patientcareapp/.MainActivity 53679d64 pid=25179
+    Local Activity 5364f790 State:
+      mResumed=false mStopped=true mFinished=false
+      mLoadersStarted=false
+      mChangingConfigurations=false
+      mCurrentConfig={1.0 310mcc260mnc en_US sw320dp w320dp h508dp nrml long port finger qwerty/v/v dpad/v s.5}
+    FragmentManager misc state:
+      mCurState=3 mStateSaved=true mDestroyed=false

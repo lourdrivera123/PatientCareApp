@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/d10"
+    android:layout_marginLeft="@dimen/d10"
+    android:layout_marginRight="@dimen/d10"
+    android:layout_marginTop="@dimen/d10"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:text="Complaints:"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/complaints"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_weight="0.8"
+                android:clickable="false"
+                android:ems="20"
+                android:enabled="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:inputType="textMultiLine"
+                android:text="The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog."
+                android:textColor="#000000"
+                android:textSize="6pt" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

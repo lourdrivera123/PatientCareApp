@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
+    useLibrary  'org.apache.http.legacy'
+
+    defaultConfig {
+        applicationId "com.example.zem.patientcareapp"
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+
+        multiDexEnabled true
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile project(':PayPalAndroidSDK-2.9.7')
+    compile project(':universal-image-loader-1.9.4')
+    compile project(':datetime-ui-library')
+    compile project(':httpcore-4.3.1')
+    compile project(':httpmime-4.3.1')
+}
+apply plugin: 'com.google.gms.google-services'

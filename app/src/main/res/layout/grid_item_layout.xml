@@ -1,0 +1,13 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/grid_color_selector"
+    android:orientation="vertical"
+    android:paddingLeft="5dp">
+
+    <ImageView
+        android:id="@+id/image_row"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="5dp"/>
+</LinearLayout>

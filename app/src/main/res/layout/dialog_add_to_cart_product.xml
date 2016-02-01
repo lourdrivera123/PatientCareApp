@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/d10"
+    android:layout_marginBottom="@dimen/d10"
+    android:layout_marginLeft="@dimen/d10"
+    android:layout_marginRight="@dimen/d10">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow android:layout_marginBottom="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Biogesic "
+                        android:layout_marginBottom="10dp"
+                        android:textStyle="bold"
+                        android:id="@+id/product_name" />
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="(Php 3.00 / tablet)"
+                        android:layout_marginBottom="10dp"
+                        android:textStyle="bold"
+                        android:id="@+id/product_price" />
+                </TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="Description:" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:id="@+id/product_description"
+                    android:text="Biogesic for Kids 100 mg/mL Suspension (Oral Drops)\nBiogesic for Kids 120 mg/ 5 mL Suspension\nBiogesic for Kids 250 mg/5 mL Suspension\nBiogesic 500 mg Tablet" />
+
+                <TableRow android:layout_marginTop="20dp">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:textSize="10sp"
+                        android:layout_height="wrap_content"
+                        android:text="Add to Cart | Php 3.00"
+                        android:layout_marginRight="20dp"
+                        android:id="@+id/add_to_cart_btn" />
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_weight=".6"
+                        android:textSize="15sp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/qty"
+                        android:inputType="number"
+                        android:hint="Quantity" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

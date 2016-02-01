@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="requests">
+        <item>get_clinics</item>
+        <item>get_clinic_doctor</item>
+        <item>get_doctors</item>
+        <item>get_doctor_specialties</item>
+        <item>get_doctor_sub_specialties</item>
+        <item>get_product_categories</item>
+        <item>get_product_subcategories&amp;cat=all</item>
+        <item>get_products</item>
+        <item>get_promo</item>
+        <item>get_discounts_free_products</item>
+        <item>get_branches</item>
+        <item>get_free_products</item>
+        <item>get_settings</item>
+    </array>
+
+    <array name="table_names">
+        <item>clinics</item>
+        <item>clinic_doctor</item>
+        <item>doctors</item>
+        <item>specialties</item>
+        <item>sub_specialties</item>
+        <item>product_categories</item>
+        <item>product_subcategories</item>
+        <item>products</item>
+        <item>promo</item>
+        <item>discounts_free_products</item>
+        <item>branches</item>
+        <item>free_products</item>
+        <item>settings</item>
+    </array>
+
+    <array name="server_ids">
+        <item>clinics_id</item>
+        <item>clinic_doctor_id</item>
+        <item>doc_id</item>
+        <item>specialty_id</item>
+        <item>sub_specialty_id</item>
+        <item>product_category_id</item>
+        <item>product_subcategory_id</item>
+        <item>product_id</item>
+        <item>promo_id</item>
+        <item>dfp_id</item>
+        <item>branches_id</item>
+        <item>free_products_id</item>
+        <item>serverID</item>
+    </array>
+</resources>

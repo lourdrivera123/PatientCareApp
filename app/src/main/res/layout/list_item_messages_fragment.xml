@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/msgLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/messages_layout"
+    android:orientation="vertical"
+    android:layout_marginBottom="@dimen/d20"
+    android:padding="@dimen/d10">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/subject"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:text="Subject"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/msgDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:gravity="right"
+            android:text="02/23/1995" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/msgMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Apple Ball Cat Dog Egg Flower Goat House Ink Jar Kite..." />
+</LinearLayout>

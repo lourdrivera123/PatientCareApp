@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/toolbar"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/patient_points"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="20dp"
+                    android:text="Your Points - "
+                    android:textColor="#2b2b2b"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="20dp"
+                    android:text="Used Points Log"
+                    android:textColor="#2b2b2b"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/ColorPrimary" />
+
+                <com.example.zem.patientcareapp.Customizations.NonScrollListView
+                    android:id="@+id/used_points_log"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/partner_toolbar"
+                    android:dividerHeight="1dp"
+                    android:padding="16dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="20dp"
+                    android:text="Earned Points Log"
+                    android:textColor="#2b2b2b"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/ColorPrimary" />
+
+                <com.example.zem.patientcareapp.Customizations.NonScrollListView
+                    android:id="@+id/earned_points_log"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/partner_toolbar"
+                    android:dividerHeight="1dp"
+                    android:padding="16dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="20dp"
+                    android:text="Downlines"
+                    android:textColor="#2b2b2b"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/ColorPrimary" />
+
+                <com.example.zem.patientcareapp.Customizations.NonScrollListView
+                    android:id="@+id/downlines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/partner_toolbar"
+                    android:dividerHeight="1dp"
+                    android:padding="16dp" />
+
+            </LinearLayout>
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@android:drawable/dialog_holo_light_frame"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/referralsLvlLimit"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="@dimen/d10"-->
+                    <!--android:padding="@dimen/d10"-->
+                    <!--android:textSize="15sp" />-->
+
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="2dp"-->
+                    <!--android:layout_marginBottom="@dimen/d20"-->
+                    <!--android:background="@color/toolbar" />-->
+
+                <!--<HorizontalScrollView-->
+                    <!--android:id="@+id/horizontalView"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:fillViewport="true"-->
+                    <!--android:scrollbars="horizontal|vertical">-->
+
+                    <!--<TableLayout-->
+                        <!--android:id="@+id/table_parent"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:stretchColumns="*">-->
+
+                        <!--<TableRow>-->
+
+                            <!--<TextView-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:background="@drawable/cell_border"-->
+                                <!--android:gravity="center"-->
+                                <!--android:padding="5dp"-->
+                                <!--android:text="Lvl"-->
+                                <!--android:textSize="15sp" />-->
+
+                            <!--<TextView-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:background="@drawable/cell_border"-->
+                                <!--android:gravity="center"-->
+                                <!--android:padding="5dp"-->
+                                <!--android:text="ID"-->
+                                <!--android:textSize="15sp" />-->
+
+                            <!--<TextView-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:background="@drawable/cell_border"-->
+                                <!--android:gravity="center"-->
+                                <!--android:padding="5dp"-->
+                                <!--android:text="Name"-->
+                                <!--android:textSize="15sp" />-->
+
+                            <!--<TextView-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:background="@drawable/cell_border"-->
+                                <!--android:gravity="center"-->
+                                <!--android:padding="5dp"-->
+                                <!--android:text="Parent ID"-->
+                                <!--android:textSize="15sp" />-->
+
+                            <!--<TextView-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:background="@drawable/cell_border"-->
+                                <!--android:gravity="center"-->
+                                <!--android:padding="5dp"-->
+                                <!--android:text="Date"-->
+                                <!--android:textSize="15sp" />-->
+                        <!--</TableRow>-->
+                    <!--</TableLayout>-->
+                <!--</HorizontalScrollView>-->
+
+            <!--</LinearLayout>-->
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

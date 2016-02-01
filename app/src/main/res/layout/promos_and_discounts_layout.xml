@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/toolbar"
+    android:orientation="vertical"
+    android:id="@+id/root">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/myToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:layout_weight=".9">
+
+                <LinearLayout
+                    android:id="@+id/redeem_points_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="20dp"
+                        android:text="Redeem Points"
+                        android:textColor="#2b2b2b"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/peso_changer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:text="(1 point = 1 peso)"
+                        android:textColor="#2b2b2b"
+                        android:textSize="14sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dip"
+                        android:background="@color/ColorPrimary" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:orientation="horizontal"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true">
+
+                        <EditText
+                            android:id="@+id/points_txtfield"
+                            android:layout_width="0dp"
+                            android:layout_weight=".3"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:singleLine="true"
+                            android:lines="1"
+                            android:textSize="14sp"
+                            android:gravity="right|center"
+                            android:inputType="numberDecimal"
+                            android:digits="0123456789.,"
+                            android:imeOptions="actionDone"/>
+
+                        <TextView
+                            android:id="@+id/points_text"
+                            android:layout_width="0dp"
+                            android:layout_weight=".7"
+                            android:layout_height="match_parent"
+                            android:text=" points out of 100"
+                            android:gravity="left|center"
+                            android:textSize="14sp" />
+
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/redeem_points"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/partner_toolbar"
+                        android:clickable="true"
+                        android:text="Use Points"
+                        android:textColor="@color/white"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="20dp"
+                        android:text="Promo Code"
+                        android:textColor="#2b2b2b"
+                        android:textSize="20sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dip"
+                        android:background="@color/ColorPrimary" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:orientation="vertical"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true">
+
+                        <EditText
+                            android:id="@+id/coupon"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter coupon promo here"
+                            android:textSize="14sp"
+                            android:singleLine="true"
+                            android:lines="1" />
+
+                        <TextView
+                            android:id="@+id/message_after_promo_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sorry, cannot find the promo code"
+                            android:textSize="14sp"
+                            android:gravity="center"
+                            android:visibility="gone"/>
+
+                        <ProgressBar
+                            android:id="@+id/promo_progress"
+                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:indeterminate="true"
+                            android:visibility="gone"/>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/promo_code_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/partner_toolbar"
+                        android:clickable="true"
+                        android:text="Search Promo Code"
+                        android:textColor="@color/white"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/checkout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".1"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/next_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_button"
+                    android:clickable="true"
+                    android:drawableRight="@mipmap/ic_next"
+                    android:text="Next"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

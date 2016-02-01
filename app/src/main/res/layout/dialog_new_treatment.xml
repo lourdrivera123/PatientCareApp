@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/d10">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Medication"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginTop="@dimen/d10"
+        android:background="@color/partner_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/d10"
+            android:orientation="vertical">
+
+            <AutoCompleteTextView
+                android:id="@+id/search_medicine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_search"
+                android:hint="Medicine"
+                android:paddingBottom="0dip"
+                android:paddingLeft="0dip"
+                android:paddingTop="0dip"
+                android:textSize="13sp" />
+
+            <EditText
+                android:id="@+id/dosage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="bottom|left"
+                android:hint="Dosage"
+                android:inputType="textMultiLine"
+                android:lines="2"
+                android:maxLines="5"
+                android:minLines="2"
+                android:scrollbars="vertical"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/d20">
+
+        <Button
+            android:id="@+id/save_treatment"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_selector"
+            android:text="Save"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/cancel_treatment"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_selector"
+            android:text="Cancel"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</LinearLayout>

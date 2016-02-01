@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--Toolbar-->
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/selected_product_toolbar"
+            android:layout_weight=".9"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!--Para sa Product Image -->
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="fill_parent"
+                    android:layout_height="150dp" />
+
+                <com.example.zem.patientcareapp.ImageGallery.CirclePageIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dip" />
+                <!--End of "Para sa Product Image" -->
+
+                <!--Body Name with Shadow-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@drawable/shadow_inverted" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/prod_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Foracort Neo Haler"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/prod_generic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Generic name" />
+
+                    <TextView
+                        android:id="@+id/prod_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/d10"
+                        android:text="\u20B1 17.50"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/counter_text_bg" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/original_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\u20B1 30.00" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:text="30% OFF"
+                            android:textColor="@color/bpRed" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/prod_unit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1 strip/s (20 capsules)" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal"
+                        android:id="@+id/edit_layout"
+                        android:visibility="gone">
+
+                        <ImageButton
+                            android:id="@+id/minus_qty"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".25"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:src="@drawable/ic_minus" />
+
+                        <TextView
+                            android:id="@+id/qty_cart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".2"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                        <ImageButton
+                            android:id="@+id/add_qty"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight=".25"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:src="@drawable/ic_plus" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/d20"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="Information" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginBottom="@dimen/d20"
+                            android:background="@color/partner_toolbar" />
+
+                        <TextView
+                            android:id="@+id/prod_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:padding="5dp"
+                            android:singleLine="false" />
+                    </LinearLayout>
+                </LinearLayout>
+                <!--End of "Body"-->
+            </LinearLayout>
+        </ScrollView>
+
+        <!--Add to cart button with shadow-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/shadow_inverted" />
+
+        <LinearLayout
+            android:id="@+id/out_of_stock"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/counter_text_bg"
+            android:clickable="true"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="Out of stock"
+                android:textStyle="italic"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/add_to_cart"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/partner_toolbar"
+            android:clickable="true"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="Add to Cart"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+        <!--End of "Add to cart button with shadow"-->
+    </LinearLayout>
+</RelativeLayout>

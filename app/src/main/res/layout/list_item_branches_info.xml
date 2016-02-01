@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/d10"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".9"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/branch_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ECE -  Davao"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/branch_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="150 5th St., Ecoland Subdivision, Barangay Bucana, Davao City"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/d20">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Operating hours:  "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/operating_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="8:00 AM - 5:00 PM"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_weight=".1"
+        android:gravity="right|center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:src="@drawable/arrow" />
+    </LinearLayout>
+</LinearLayout>

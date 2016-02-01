@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?><!-- suppress ALL -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.zem.patientcareapp">
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="17" />
+    <!-- for google maps -->
+    <permission
+        android:name="android.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="android.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- for card.io card scanning -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- Permission to start Alarm on device reboot -->
+    <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> -->
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!-- [START gcm_permission] -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- [END gcm_permission] -->
+    <application
+        android:name=".Network.PatientCareApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_app"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        <!-- start of bullshit here -->
+        <activity
+            android:name=".gcm.gcmquickstart.MainActivity"
+            android:label="@string/app_name"></activity>
+
+        <!-- [START gcm_receiver] -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="gcm.play.android.samples.com.gcmquickstart" />
+            </intent-filter>
+        </receiver>
+        <!-- [END gcm_receiver] -->
+
+
+        <!-- [START gcm_listener] -->
+        <service
+            android:name=".gcm.gcmquickstart.MyGcmListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <!-- [END gcm_listener] -->
+        <!-- [START instanceId_listener] -->
+        <service
+            android:name=".gcm.gcmquickstart.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <!-- [END instanceId_listener] -->
+        <service
+            android:name=".gcm.gcmquickstart.RegistrationIntentService"
+            android:exported="false"></service>
+
+        <!-- end of bullshit here -->
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyB5vFUn56wjEfd4TdyQv0u5Kq2ZbvZmIRw" />
+
+        <!-- Activities -->
+        <activity
+            android:name=".Activities.ShoppingCartActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.MainActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.DoctorActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.ViewPatientRecordActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".SwipeTabsModule.ViewPagerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".SwipeTabsModule.MasterTabActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".SwipeTabsModule.EditTabsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Activities.SaveMedicalRecordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.SelectedProductActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.ReferralActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.CheckoutActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.PatientConsultationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.MessageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.SplashActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".ShowPrescriptionDialog"
+            android:excludeFromRecents="true"
+            android:theme="@style/myDialog" />
+        <activity
+            android:name=".Activities.GoogleMapsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.ProductsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activities.OrderDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".SidebarModule.SidebarActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".CheckoutModule.DeliverPickupOption"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".CheckoutModule.AddressForDelivery"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".CheckoutModule.RecipientForDelivery"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".CheckoutModule.PaymentMethod"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".CheckoutModule.PromosDiscounts"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".CheckoutModule.SummaryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".CheckoutModule.ContactForDelivery"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+
+        <service
+            android:name="com.paypal.android.sdk.payments.PayPalService"
+            android:exported="false" />
+
+        <activity
+            android:name="com.paypal.android.sdk.payments.PaymentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.paypal.android.sdk.payments.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.paypal.android.sdk.payments.PaymentMethodActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.paypal.android.sdk.payments.PaymentConfirmActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="io.card.payment.DataEntryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CheckoutModule.PayPalCheckout"
+            android:screenOrientation="portrait" />
+
+        <!-- Will not be called unless the application explicitly enables it -->
+        <receiver
+            android:name=".AlarmModule.DeviceBootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".AlarmModule.AlarmReceiver"
+            android:enabled="true" />
+    </application>
+</manifest>
