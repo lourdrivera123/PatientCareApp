@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -257,7 +258,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                             }
 
                             //get the price * qty of the free item/s and add it on total_savings_value variable
-                            total_savings_value = price * free_qty; // if the free item is different from the cart item -> fetch price on server.
+                            total_savings_value += price * free_qty; // if the free item is different from the cart item -> fetch price on server.
 
                             txt_obj_free_item.setText(set_free_item);
                         }
@@ -273,19 +274,18 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                             if (final_percentage1 > 0 && final_is_every1.equals("0")) {
                                 temp_prod_discount = total_per_item * decimal;
 
-                                if ((total_per_item - price) <= final_min_purchase1){
+                                if ((total_per_item - price) < final_min_purchase1) {
+                                    total_savings_value += total_per_item * percent_off;
                                     cart_total_amount += (temp_prod_discount - (total_per_item - price));
-                                    total_savings_value += (total_per_item - price);
-                                } else{
+                                } else {
                                     cart_total_amount += temp_prod_discount - ((total_per_item - price) * decimal);
-                                    total_savings_value += ((total_per_item - price) * decimal);
+                                    total_savings_value += price * percent_off;
                                 }
-
                             } else if (final_peso1 > 0) {
                                 if (final_is_every1.equals("1")) {
                                     temp_prod_discount = total_per_item - (discount_times * final_peso1);
 
-                                    if ((total_per_item - price) <= (final_min_purchase1 * discount_times)){
+                                    if ((total_per_item - price) < (final_min_purchase1 * discount_times)){
                                         cart_total_amount += (price - final_peso1);
                                         total_savings_value += final_peso1;
                                     } else
@@ -294,9 +294,9 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                     temp_prod_discount = total_per_item - final_peso1;
                                     cart_total_amount += price;
 
-                                    if ((total_per_item - price) <= final_min_purchase1){
+                                    if ((total_per_item - price) < final_min_purchase1){
                                         cart_total_amount -= final_peso1;
-                                        total_savings_value -= final_peso1;
+                                        total_savings_value += final_peso1;
                                     }
                                 }
                             }
@@ -341,7 +341,6 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                     cart_total_amount = cart_total_amount - price;
 
                     if (final_qty_required1 > 0 && final_free_gift1.equals("1")) {
-
                         if (lastQty < final_qty_required1) {
                             txt_obj_free_item.setVisibility(View.GONE);
                         } else {
@@ -351,7 +350,6 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
 
                                 String purchases = helpers.getPluralForm(final_free_packing1, discount_times);
                                 set_free_item = "*Free " + discount_times + " " + purchases + " of " + final_free_item_name1;
-
 
                                 //deduct the total_Savings by free product price here
                                 txt_obj_free_item.setText(set_free_item);
@@ -364,10 +362,14 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                             p_total.setPaintFlags(p_total.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
 
                             if ((total_per_item + price) >= final_min_purchase1) {
-                                if (final_peso1 > 0)
+                                if (final_peso1 > 0) {
                                     cart_total_amount += final_peso1;
-                                else if (final_percentage1 > 0 && final_is_every1.equals("0"))
-                                    cart_total_amount += ((price * (lastQty + 1)) * percent_off);
+                                    total_savings_value -= final_peso1;
+                                }else if (final_percentage1 > 0 && final_is_every1.equals("0")) {
+                                    double back = (total_per_item+price) * percent_off;
+                                    cart_total_amount += back;
+                                    total_savings_value -= back;
+                                }
                             }
                         } else {
                             double discounted_temp_total = price * lastQty;
@@ -377,13 +379,16 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                 if (!final_is_every1.equals("0")) {
                                     discounted_temp_total -= (final_peso1 * discount_times);
 
-                                    if ((total_per_item - price) >= (final_min_purchase1 * discount_times))
+                                    if ((total_per_item - price) > (final_min_purchase1 * discount_times)) {
                                         cart_total_amount += final_peso1;
+                                        total_savings_value -= final_peso1;
+                                    }
                                 } else
                                     discounted_temp_total -= final_peso1;
                             } else if (final_percentage1 > 0 && final_is_every1.equals("0")) {
                                 discounted_temp_total = discounted_temp_total - ((price * lastQty) * percent_off);
                                 cart_total_amount = cart_total_amount + (price * percent_off);
+                                total_savings_value -= price * percent_off;
                             }
                             txt_promo.setText("Php " + df.format(discounted_temp_total));
                         }

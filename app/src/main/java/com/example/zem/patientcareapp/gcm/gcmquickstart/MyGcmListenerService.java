@@ -26,8 +26,10 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.zem.patientcareapp.Activities.OrderDetailsActivity;
 import com.example.zem.patientcareapp.R;
 import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
+import com.example.zem.patientcareapp.SwipeTabsModule.MasterTabActivity;
 import com.google.android.gms.gcm.GcmListenerService;
 
 import org.json.JSONArray;
@@ -81,11 +83,19 @@ public class MyGcmListenerService extends GcmListenerService {
     // [END receive_message]
 
     private void sendNotification(Bundle data) {
-//        d("data_bundle", data.getBundle("message") + "");
+        d("data", data + "");
 //        d("message_fuck", message + "");
+        Intent intent;
 
-
-        Intent intent = new Intent(this, SidebarActivity.class);
+        if( data.getString("intent").equals("ReferralFragment") ) {
+            intent = new Intent(this, MasterTabActivity.class);
+            intent.putExtra("selected", 0);
+        } else if(data.getString("intent").equals("OrderDetailsActivity")){
+            intent = new Intent(this, OrderDetailsActivity.class);
+            intent.putExtra("order_id", Integer.parseInt(data.getString("order_id")));
+        } else {
+            intent = new Intent(this, SidebarActivity.class);
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -103,6 +113,7 @@ public class MyGcmListenerService extends GcmListenerService {
             JSONObject json_msg = new JSONObject(data.getString("message"));
             d("json_obj", json_msg + "");
             d("json_obj_title", data.getString("title") + "");
+            d("json_obj_intent", data.getString("intent") + "");
 
             inboxStyle.setBigContentTitle(data.getString("title"));
 

@@ -53,7 +53,7 @@
         <!-- start of bullshit here -->
         <activity
             android:name=".gcm.gcmquickstart.MainActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
 
         <!-- [START gcm_receiver] -->
         <receiver
@@ -89,7 +89,7 @@
         <!-- [END instanceId_listener] -->
         <service
             android:name=".gcm.gcmquickstart.RegistrationIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <!-- end of bullshit here -->
 
@@ -260,5 +260,8 @@
         <receiver
             android:name=".AlarmModule.AlarmReceiver"
             android:enabled="true" />
+
+        <activity android:name=".Activities.SeniorCitizenActivity"></activity>
     </application>
+
 </manifest>

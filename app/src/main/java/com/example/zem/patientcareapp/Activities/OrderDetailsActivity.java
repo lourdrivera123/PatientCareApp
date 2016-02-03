@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import static android.util.Log.d;
+
 /**
  * Created by zemskie on 12/11/2015.
  */
@@ -79,6 +81,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Order Details");
         myToolBar.setNavigationIcon(R.drawable.ic_back);
+
+        d("order_od_id", order_id + "");
 
         order_information = oc.getOrder(order_id);
         items = odc.getOrderDetailsFromOrder(order_id);
