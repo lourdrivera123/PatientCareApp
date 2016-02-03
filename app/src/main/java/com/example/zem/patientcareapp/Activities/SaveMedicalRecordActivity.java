@@ -207,6 +207,9 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
                                     int last_inserted_id = response.getInt("last_inserted_id");
                                     record.setRecordID(last_inserted_id);
                                     insertTreatments(last_inserted_id, record);
+                                    Intent intent = new Intent(SaveMedicalRecordActivity.this, SidebarActivity.class);
+                                    intent.putExtra("select", 4);
+                                    startActivity(intent);
                                     SaveMedicalRecordActivity.this.finish();
                                 }
                             } catch (JSONException e) {

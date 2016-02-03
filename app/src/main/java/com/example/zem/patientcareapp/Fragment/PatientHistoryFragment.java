@@ -147,6 +147,11 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                                     hashHistory.remove(pos);
                                     mAdapter.notifyDataSetChanged();
                                     Snackbar.make(root, "Record has been deleted", Snackbar.LENGTH_SHORT).show();
+
+                                    if (hashHistory.size() == 0) {
+                                        list_of_history.setVisibility(View.GONE);
+                                        noResults.setVisibility(View.VISIBLE);
+                                    }
                                 } else
                                     Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
                             } else

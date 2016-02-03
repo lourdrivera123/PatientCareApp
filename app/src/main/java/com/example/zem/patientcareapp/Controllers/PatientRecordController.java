@@ -130,11 +130,20 @@ public class PatientRecordController extends DbHelper {
 
     public boolean deleteAllRecords() {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
-        long id = db.delete(TBL_PATIENT_RECORDS, null, null);
+        String sql = "SELECT * FROM " + TBL_PATIENT_RECORDS;
+        Cursor cur = db.rawQuery(sql, null);
+        boolean flag = false;
 
+        if (cur.moveToNext()) {
+            db.delete(TBL_PATIENT_RECORDS, null, null);
+            flag = true;
+        } else
+            flag = true;
+
+        cur.close();
         db.close();
 
-        return id > 0;
+        return flag;
     }
 
     public boolean deleteRecord(int record_id) {

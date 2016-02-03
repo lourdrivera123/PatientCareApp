@@ -51,7 +51,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(PatientRecordController.CREATE_TABLE);
         db.execSQL(ClinicController.CREATE_TABLE);
         db.execSQL(ClinicDoctorController.CREATE_TABLE);
-        db.execSQL(SecretaryController.CREATE_TABLE);
         db.execSQL(ClinicSecretaryController.CREATE_TABLE);
         db.execSQL(DoctorSecretaryController.CREATE_TABLE);
         db.execSQL(PromoController.CREATE_TABLE);

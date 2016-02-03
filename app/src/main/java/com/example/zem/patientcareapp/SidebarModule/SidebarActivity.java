@@ -114,16 +114,16 @@ public class SidebarActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
 //                mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
-                d("mainactivity",  "oneceive");
+                d("mainactivity", "oneceive");
                 SharedPreferences sp =
                         PreferenceManager.getDefaultSharedPreferences(context);
                 boolean sentToken = sp
                         .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
-                    d("mainactivity",  "senttoken");
+                    d("mainactivity", "senttoken");
 //                    showdl("senttoken");
                 } else {
-                    d("mainactivity",  "errortoken");
+                    d("mainactivity", "errortoken");
 
 //                    showdl("error");
                 }
@@ -227,7 +227,7 @@ public class SidebarActivity extends AppCompatActivity {
         }
     }
 
-    void showdl(String msg){
+    void showdl(String msg) {
         AlertDialog.Builder order_completed_dialog = new AlertDialog.Builder(SidebarActivity.this);
         order_completed_dialog.setTitle("Connection status");
         order_completed_dialog.setMessage(msg);
@@ -367,8 +367,8 @@ public class SidebarActivity extends AppCompatActivity {
 //                fragment = new HomeTileFragment();
 //                break;
             case 8:
-                if(prc.deleteAllRecords()) {
-                    if(ptc.deleteTreatments()) {
+                if (prc.deleteAllRecords()) {
+                    if (ptc.deleteTreatments()) {
                         editor.clear();
                         editor.commit();
                         startActivity(new Intent(this, MainActivity.class));
