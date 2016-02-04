@@ -261,7 +261,9 @@
             android:name=".AlarmModule.AlarmReceiver"
             android:enabled="true" />
 
-        <activity android:name=".Activities.SeniorCitizenActivity"></activity>
+        <activity android:name=".Activities.SeniorCitizenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme"/>
     </application>
 
 </manifest>
