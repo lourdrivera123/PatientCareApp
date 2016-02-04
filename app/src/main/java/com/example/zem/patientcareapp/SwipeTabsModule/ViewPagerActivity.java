@@ -1,16 +1,18 @@
 package com.example.zem.patientcareapp.SwipeTabsModule;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,8 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.example.zem.patientcareapp.ConfigurationModule.Config;
@@ -47,6 +49,7 @@ public class ViewPagerActivity extends AppCompatActivity implements ViewPager.On
     ViewPager viewPager;
     View v;
     Toolbar myToolBar;
+    LinearLayout root;
 
     ArrayList<String> uploadsByUser;
     ArrayList<HashMap<String, String>> hashPrescriptions;
@@ -83,7 +86,9 @@ public class ViewPagerActivity extends AppCompatActivity implements ViewPager.On
             uploadsByUser.add(hashPrescriptions.get(x).get(PatientPrescriptionController.PRESCRIPTIONS_FILENAME));
         }
 
+        root = (LinearLayout) findViewById(R.id.root);
         viewPager = (ViewPager) findViewById(R.id.pager);
+
         pagerAdapter = new MyPagerAdapter(this, uploadsByUser);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(selectedPosition);
@@ -135,19 +140,18 @@ public class ViewPagerActivity extends AppCompatActivity implements ViewPager.On
                                         if (ppc.deletePrescriptionByServerID(serverID)) {
                                             pagerAdapter.removeView(viewPager, selectedPosition);
                                             pdialog.dismiss();
-                                        } else {
-                                            Toast.makeText(getBaseContext(), "Sorry, we can't delete your item right now. Please try again later.", Toast.LENGTH_SHORT).show();
-                                        }
+                                        } else
+                                            Snackbar.make(root, "Sorry, we can't delete your item right now. Please try again later", Snackbar.LENGTH_SHORT).show();
                                     }
                                 } catch (Exception e) {
-                                    System.out.print("src: <ViewPagerActivity>");
-                                    Toast.makeText(getBaseContext(), "Server error occurred", Toast.LENGTH_SHORT).show();
+                                    Log.d("viewpagerAct1", e + "");
+                                    Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                                 }
                             }
                         }, new ErrorListener<VolleyError>() {
                             public void getError(VolleyError error) {
-                                System.out.print("src <ViewPagerActivity>: " + error.toString());
-                                Toast.makeText(getBaseContext(), "Couldn't delete item. Please check your Internet connection", Toast.LENGTH_LONG).show();
+                                Log.d("viewpagerAct2", error + "");
+                                Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -227,7 +231,7 @@ public class ViewPagerActivity extends AppCompatActivity implements ViewPager.On
                             message = "Unknown error";
                             break;
                     }
-                    Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+                    Snackbar.make(root, message, Snackbar.LENGTH_SHORT).show();
 
                     spinner.setVisibility(View.GONE);
                 }

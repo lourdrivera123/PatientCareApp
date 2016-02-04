@@ -2,6 +2,7 @@ package com.example.zem.patientcareapp.Controllers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
@@ -57,11 +58,20 @@ public class PatientTreatmentsController extends DbHelper {
 
     public boolean deleteTreatments() {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
-        long id = db.delete(TBL_PATIENT_TREATMENTS, null, null);
+        String sql = "SELECT * FROM " + TBL_PATIENT_TREATMENTS;
+        Cursor cur = db.rawQuery(sql, null);
+        boolean flag = false;
 
+        if (cur.moveToNext()) {
+            db.delete(TBL_PATIENT_TREATMENTS, null, null);
+            flag = true;
+        } else
+            flag = true;
+
+        cur.close();
         db.close();
 
-        return id > 0;
+        return flag;
     }
 
     public boolean deleteTreatmentsByRecordID(int record_id) {
