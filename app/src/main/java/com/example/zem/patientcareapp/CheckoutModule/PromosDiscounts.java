@@ -72,7 +72,7 @@ public class PromosDiscounts extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.promos_and_discounts_layout);
 
-        promos_map = new HashMap();
+        promos_map = new HashMap<>();
         msg = "";
         order_model = (OrderModel) getIntent().getSerializableExtra("order_model");
 
@@ -89,13 +89,13 @@ public class PromosDiscounts extends AppCompatActivity implements View.OnClickLi
         points_txtfield = (EditText) findViewById(R.id.points_txtfield);
         promo_code_btn = (Button) findViewById(R.id.promo_code_btn);
 
-        all_promos = new ArrayList();
+        all_promos = new ArrayList<>();
 
         promo_code_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 message_after_promo_input.setVisibility(View.GONE);
-                if(!coupon.getText().toString().equals("")){
+                if (!coupon.getText().toString().equals("")) {
                     promo_progress.setVisibility(View.VISIBLE);
                     searchPromoCode(coupon.getText().toString());
                 }
@@ -108,7 +108,7 @@ public class PromosDiscounts extends AppCompatActivity implements View.OnClickLi
                     message_after_promo_input.setVisibility(View.GONE);
                     promo_progress.setVisibility(View.VISIBLE);
 
-                    if(!coupon.getText().toString().equals(""))
+                    if (!coupon.getText().toString().equals(""))
                         searchPromoCode(coupon.getText().toString());
 
                 }
@@ -128,7 +128,7 @@ public class PromosDiscounts extends AppCompatActivity implements View.OnClickLi
 
                 if (patient.getPoints() > 0) {
                     redeem_points_card.setVisibility(View.VISIBLE);
-                    points_txtfield.setText(patient.getPoints() + "");
+                    points_txtfield.setText(String.valueOf(patient.getPoints()));
                     points_text.setText(" out of " + patient.getPoints() + " points");
                     glowButton = new GlowingText(
                             PromosDiscounts.this,               // Pass activity Object
@@ -151,12 +151,14 @@ public class PromosDiscounts extends AppCompatActivity implements View.OnClickLi
         redeem_points.setOnClickListener(this);
 
         setSupportActionBar(myToolBar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Promos & Discounts");
         myToolBar.setNavigationIcon(R.drawable.ic_back);
     }
 
-    void searchPromoCode(String promo_code){
+    void searchPromoCode(String promo_code) {
         ListOfPatientsRequest.getJSONobj(PromosDiscounts.this, "check_promo_code&promo_code=" + promo_code, "promos", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
@@ -194,24 +196,24 @@ public class PromosDiscounts extends AppCompatActivity implements View.OnClickLi
                         final_qty_required = promos_map.get("quantity_required");
 
 
-                        if (final_peso_discount > 0){
+                        if (final_peso_discount > 0) {
                             msg = "You got ₱" + promos_map.get("peso_discount") + " discount on your total order.";
                             order_model.setCoupon_discount(Double.parseDouble(promos_map.get("peso_discount")));
                             order_model.setCoupon_discount_type("peso_discount");
                         }
 
-                        if (final_percentage_discount > 0){
+                        if (final_percentage_discount > 0) {
                             msg = "You got " + promos_map.get("percentage_discount") + "% discount on your total order.";
                             order_model.setCoupon_discount(Double.parseDouble(promos_map.get("percentage_discount")));
                             order_model.setCoupon_discount_type("percentage_discount");
                         }
 
-                        if (final_free_gift.equals("1")){
+                        if (final_free_gift.equals("1")) {
                             msg = "You got free gift, upon purchase.";
                             order_model.setCoupon_discount_type("free_gift");
                         }
 
-                        if (final_free_delivery.equals("1")){
+                        if (final_free_delivery.equals("1")) {
                             msg = "You got free delivery.";
                             order_model.setCoupon_discount_type("free_delivery");
                         }

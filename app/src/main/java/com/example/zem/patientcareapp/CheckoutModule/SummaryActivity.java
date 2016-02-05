@@ -47,9 +47,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by Zem on 11/20/2015.
- */
 public class SummaryActivity extends AppCompatActivity implements View.OnClickListener {
 
     Toolbar myToolBar;
@@ -118,11 +115,6 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         helper = new Helpers();
         sc = new SettingController(this);
 
-//        final ProgressDialog dialog = new ProgressDialog(this);
-//        dialog.setMessage("Please wait...");
-//        dialog.setCancelable(false);
-//        dialog.show();
-
         showBeautifulDialog();
 
         String url_raw = "check_basket?patient_id=" + SidebarActivity.getUserID() + "&branch_id=" + order_model.getBranch_id();
@@ -172,6 +164,8 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         recipient_contact_number.setText(order_model.getRecipient_contactNumber());
 
         setSupportActionBar(myToolBar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Order Summary");
         myToolBar.setNavigationIcon(R.drawable.ic_back);
@@ -191,7 +185,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                     double item_subtotal_value = Double.parseDouble(item.get("item_subtotal"));
                     double peso_discount = Double.parseDouble(item.get("peso_discount"));
                     double percentage_discount = Double.parseDouble(item.get("percentage_discount"));
-                    double computed_discount = 0;
+                    double computed_discount;
 
                     if (promo_type.equals("peso_discount"))
                         computed_discount = item_subtotal_value - peso_discount;
@@ -227,8 +221,8 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                 amount_of_coupon_discount.setText("\u20B1 " + String.format("%.2f", coupon_discount));
                 amount_of_points_discount.setText("\u20B1 " + String.format("%.2f", points_discount));
                 total_amount.setText("\u20B1 " + String.format("%.2f", discounted_total));
-                label_expected_points.setText("You will receive "+ expected_points_value + " points upon order." );
-                label_total_savings.setText("You will save \u20b1 "+ ShoppingCartAdapter.total_savings_value);
+                label_expected_points.setText("You will receive " + expected_points_value + " points upon order.");
+                label_total_savings.setText("You will save \u20b1 " + ShoppingCartAdapter.total_savings_value);
 
                 if (isDelivery) {
                     settings = sc.getAllSettings();
@@ -324,7 +318,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                         public void onClick(DialogInterface dialog, int which) {
                             Patient patient = pc.getloginPatient(SidebarActivity.getUname());
                             showBeautifulDialog();
-                            HashMap<String, String> map = new HashMap();
+                            HashMap<String, String> map = new HashMap<>();
                             map.put("user_id", String.valueOf(SidebarActivity.getUserID()));
                             map.put("recipient_name", order_model.getRecipient_name());
                             map.put("recipient_address", order_model.getRecipient_address());

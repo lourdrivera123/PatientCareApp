@@ -17,8 +17,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.example.zem.patientcareapp.Activities.GoogleMapsActivity;
-import com.example.zem.patientcareapp.CheckoutModule.DeliverPickupOption;
-import com.example.zem.patientcareapp.CheckoutModule.PromosDiscounts;
 import com.example.zem.patientcareapp.Controllers.DbHelper;
 import com.example.zem.patientcareapp.Controllers.OrderPreferenceController;
 import com.example.zem.patientcareapp.Controllers.PatientConsultationController;
@@ -36,8 +34,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-
-import static android.util.Log.d;
 
 public class HomeTileFragment extends Fragment implements View.OnClickListener {
     LinearLayout orderLayout, refillLayout, pointsLayout, prescriptionLayout, consultationLayout;
@@ -99,7 +95,7 @@ public class HomeTileFragment extends Fragment implements View.OnClickListener {
                     } else
                         notifConsultation.setVisibility(View.INVISIBLE);
                 } catch (Exception e) {
-                    Log.d("home1", e+"");
+                    Log.d("home1", e + "");
                     Toast.makeText(getActivity(), e + "", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -142,7 +138,7 @@ public class HomeTileFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.consultationLayout:
-                HashMap<String, String> hashMap = new HashMap();
+                HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("request", "crud");
                 hashMap.put("table", "consultations");
                 hashMap.put("action", "update_with_custom_where_clause");

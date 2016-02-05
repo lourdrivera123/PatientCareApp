@@ -41,6 +41,8 @@ public class MasterTabActivity extends AppCompatActivity implements TabLayout.On
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         showOverLay();
 

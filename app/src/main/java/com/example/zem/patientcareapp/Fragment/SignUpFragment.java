@@ -63,7 +63,7 @@ public class SignUpFragment extends Fragment {
         sex = (RadioGroup) rootView.findViewById(R.id.sex);
 
         civil_status_spinner = (Spinner) rootView.findViewById(R.id.civil_status);
-        civil_status_adapter = new ArrayAdapter(getActivity(), R.layout.address_spinner_list_item, civil_status_array);
+        civil_status_adapter = new ArrayAdapter<>(getActivity(), R.layout.address_spinner_list_item, civil_status_array);
         civil_status_spinner.setAdapter(civil_status_adapter);
 
         birthday.addTextChangedListener(tw);
