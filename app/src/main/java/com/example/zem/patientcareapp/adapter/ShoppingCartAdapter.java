@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
 
     public static double cart_total_amount;
     public static double total_savings_value;
-
+    DecimalFormat df;
 
     public ShoppingCartAdapter(Context context, int resource, ArrayList<HashMap<String, String>> objects) {
         super(context, resource, objects);
@@ -91,7 +92,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
         final int cart_quantity = Integer.parseInt(objects.get(position).get("quantity"));
 
         final double total_per_item = price * cart_quantity;
-        final DecimalFormat df = new DecimalFormat("#.##");
+        df = new DecimalFormat("#.##");
 
         int final_qty_required = 0, final_percentage = 0;
         double final_peso = 0, final_min_purchase = 0;
@@ -273,10 +274,10 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                             if (final_percentage1 > 0 && final_is_every1.equals("0")) {
                                 temp_prod_discount = total_per_item * decimal;
 
-                                if ((total_per_item - price) <= final_min_purchase1){
+                                if ((total_per_item - price) <= final_min_purchase1) {
                                     cart_total_amount += (temp_prod_discount - (total_per_item - price));
                                     total_savings_value += (total_per_item - price);
-                                } else{
+                                } else {
                                     cart_total_amount += temp_prod_discount - ((total_per_item - price) * decimal);
                                     total_savings_value += ((total_per_item - price) * decimal);
                                 }
@@ -285,7 +286,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                 if (final_is_every1.equals("1")) {
                                     temp_prod_discount = total_per_item - (discount_times * final_peso1);
 
-                                    if ((total_per_item - price) <= (final_min_purchase1 * discount_times)){
+                                    if ((total_per_item - price) <= (final_min_purchase1 * discount_times)) {
                                         cart_total_amount += (price - final_peso1);
                                         total_savings_value += final_peso1;
                                     } else
@@ -294,7 +295,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                     temp_prod_discount = total_per_item - final_peso1;
                                     cart_total_amount += price;
 
-                                    if ((total_per_item - price) <= final_min_purchase1){
+                                    if ((total_per_item - price) <= final_min_purchase1) {
                                         cart_total_amount -= final_peso1;
                                         total_savings_value -= final_peso1;
                                     }
@@ -351,7 +352,6 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
 
                                 String purchases = helpers.getPluralForm(final_free_packing1, discount_times);
                                 set_free_item = "*Free " + discount_times + " " + purchases + " of " + final_free_item_name1;
-
 
                                 //deduct the total_Savings by free product price here
                                 txt_obj_free_item.setText(set_free_item);
@@ -414,6 +414,8 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                 final int pos = Integer.parseInt(String.valueOf(v.getTag()));
                 final int server_id = Integer.parseInt(objects.get(pos).get("basket_id"));
 
+                Log.d("objects/srvr_ID", objects + "/" + server_id);
+
                 AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(context);
                 confirmationDialog.setTitle("Delete item?");
                 confirmationDialog.setNegativeButton("No", null);
@@ -439,6 +441,10 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                     int success = response.getInt("success");
 
                                     if (success == 1) {
+                                        double remove_value = Double.parseDouble(objects.get(pos).get("item_subtotal"));
+                                        cart_total_amount -= remove_value;
+                                        ShoppingCartActivity.total_amount.setText("Total amount is ₱" + df.format(cart_total_amount));
+
                                         objects.remove(pos);
                                         ShoppingCartAdapter.this.notifyDataSetChanged();
                                         Snackbar.make(v, "Item has been deleted", Snackbar.LENGTH_SHORT).show();

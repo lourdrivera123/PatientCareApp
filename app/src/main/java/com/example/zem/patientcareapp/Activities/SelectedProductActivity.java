@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,19 +66,20 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
 
     Handler handler;
     DbHelper dbhelper;
-    PatientController ptc;
-    OrderPreferenceController opc;
-    OrderModel order_model;
-
     Product product;
     Helpers helpers;
+    PatientController ptc;
+    OrderModel order_model;
+    OrderPreferenceController opc;
     CircleFragmentAdapter adapter;
 
     public static AppCompatDialog pDialog;
     AlertDialog.Builder builder;
-//    ProgressDialog dialog;
 
-    public HashMap<String, String> map;
+    public HashMap<String, String> map = new HashMap<>();
+    private TextView number_of_notif;
+
+    int basket_count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +91,8 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
         ptc = new PatientController(this);
         opc = new OrderPreferenceController(this);
         helpers = new Helpers();
-        map = new HashMap();
 
         order_model = opc.getOrderPreference();
-
 
         prod_name = (TextView) findViewById(R.id.prod_name);
         prod_generic = (TextView) findViewById(R.id.prod_generic);
@@ -112,20 +113,18 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
         add_qty.setOnClickListener(this);
         add_to_cart.setOnClickListener(this);
 
-
         myToolBar = (Toolbar) findViewById(R.id.myToolBar);
         setSupportActionBar(myToolBar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         get_productID = intent.getIntExtra(PRODUCT_ID, 0);
 
-//        dialog = new ProgressDialog(this);
-//        dialog.setMessage("Please wait...");
-//        dialog.show();
         showBeautifulDialog();
         product = getProductWithImage(get_productID);
-        qty_cart.setText("" + temp_qty);
+        qty_cart.setText(String.valueOf(temp_qty));
     }
 
     void showBeautifulDialog() {
@@ -141,24 +140,33 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.go_to_cart_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.go_to_cart);
+        MenuItemCompat.setActionView(item, R.layout.count_badge_layout);
+        RelativeLayout badgeLayout = (RelativeLayout) MenuItemCompat.getActionView(item);
+
+        number_of_notif = (TextView) badgeLayout.findViewById(R.id.number_of_notif);
+        ImageButton go_to_cart = (ImageButton) badgeLayout.findViewById(R.id.go_to_cart);
+        go_to_cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SelectedProductActivity.this, ShoppingCartActivity.class));
+            }
+        });
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.go_to_cart:
-                startActivity(new Intent(this, ShoppingCartActivity.class));
-                break;
-
             case android.R.id.home:
                 this.finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.go_to_cart_menu, menu);
-        return true;
     }
 
     @Override
@@ -169,10 +177,10 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                 minus_qty.setImageResource(R.drawable.ic_minus_dead);
 
                 if (temp_qty < 1) {
-                    qty_cart.setText("" + 1);
                     temp_qty = 1;
+                    qty_cart.setText(String.valueOf(temp_qty));
                 } else
-                    qty_cart.setText("" + temp_qty);
+                    qty_cart.setText(String.valueOf(temp_qty));
 
                 prod_unit.setText("1 " + product.getPacking() + " x " + temp_qty + "(" + (temp_qty * product.getQtyPerPacking()) + " " + product.getUnit() + ")");
                 prod_price.setText("Php " + (temp_qty * product.getPrice()));
@@ -186,7 +194,7 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                 break;
 
             case R.id.add_qty:
-                if(temp_qty < available_qty){
+                if (temp_qty < available_qty) {
                     temp_qty += 1;
                     add_qty.setImageResource(R.drawable.ic_plus_dead);
                     prod_price.setText("Php " + (temp_qty * product.getPrice()));
@@ -205,15 +213,11 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                 break;
 
             case R.id.add_to_cart:
-                final HashMap<String, String> hashMap = new HashMap();
+                final HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("table", "baskets");
                 hashMap.put("product_id", String.valueOf(get_productID));
                 hashMap.put("patient_id", String.valueOf(SidebarActivity.getUserID()));
                 hashMap.put("request", "crud");
-
-//                final ProgressDialog pdialog = new ProgressDialog(this);
-//                pdialog.setMessage("Please wait...");
-//                pdialog.show();
 
                 showBeautifulDialog();
 
@@ -224,13 +228,16 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                         try {
                             int success = response.getInt("success");
                             int check = 0;
-                            HashMap<String, String> old_basket = new HashMap();
+                            final HashMap<String, String> old_basket = new HashMap<>();
 
                             if (success == 1) {
                                 JSONArray json_mysql = response.getJSONArray("baskets");
 
                                 for (int x = 0; x < json_mysql.length(); x++) {
                                     JSONObject obj = json_mysql.getJSONObject(x);
+                                    basket_count += 1;
+
+                                    Log.d("object", obj + "");
 
                                     if (get_productID == obj.getInt("product_id")) {
                                         check += 1;
@@ -271,10 +278,6 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                                 hashMap.put("quantity", String.valueOf(temp_qty));
                                 hashMap.put("action", "insert");
 
-//                                final ProgressDialog dialog = new ProgressDialog(SelectedProductActivity.this);
-//                                dialog.setCancelable(false);
-//                                dialog.setMessage("Loading...");
-
                                 if (product.getPrescriptionRequired() == 1) { //IF PRODUCT REQUIRES PRESCRIPTION
                                     GridView gridView;
                                     final Dialog builder;
@@ -302,17 +305,21 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                                                             if (success == 1) {
                                                                 hashMap.put("server_id", String.valueOf(response.getInt("last_inserted_id")));
                                                                 Snackbar.make(root, "New item has been added to your cart", Snackbar.LENGTH_SHORT).show();
-                                                                ProductsActivity.transferHashMap(hashMap);
+
+                                                                number_of_notif.setVisibility(View.VISIBLE);
+                                                                number_of_notif.setText(String.valueOf(basket_count + 1));
                                                             }
                                                         } catch (JSONException e) {
-                                                            Snackbar.make(root, e + "", Snackbar.LENGTH_SHORT).show();
+                                                            Log.d("selected_prod6", e + "");
+                                                            Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                                                         }
                                                         letDialogSleep();
                                                     }
                                                 }, new ErrorListener<VolleyError>() {
                                                     public void getError(VolleyError error) {
                                                         letDialogSleep();
-                                                        Snackbar.make(root, "Please check your Internet connection", Snackbar.LENGTH_SHORT).show();
+                                                        Log.d("selected_prod5", error + "");
+                                                        Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
                                                     }
                                                 });
                                                 builder.dismiss();
@@ -348,21 +355,27 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                                         public void getResult(JSONObject response) {
                                             try {
                                                 Snackbar.make(root, "New item has been added to your cart", Snackbar.LENGTH_SHORT).show();
+
+                                                number_of_notif.setVisibility(View.VISIBLE);
+                                                number_of_notif.setText(String.valueOf(basket_count + 1));
                                             } catch (Exception e) {
-                                                Snackbar.make(root, e + "", Snackbar.LENGTH_SHORT).show();
+                                                Log.d("selected_prod4", e + "");
+                                                Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                                             }
                                             letDialogSleep();
                                         }
                                     }, new ErrorListener<VolleyError>() {
                                         public void getError(VolleyError error) {
                                             letDialogSleep();
-                                            Snackbar.make(root, "Please check your Internet connection", Snackbar.LENGTH_SHORT).show();
+                                            Log.d("selected_prod3", error + "");
+                                            Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
                                         }
                                     });
                                 }
                             }
                         } catch (Exception e) {
-                            Snackbar.make(root, e + "", Snackbar.LENGTH_SHORT).show();
+                            Log.d("selected_prod2", e + "");
+                            Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                         }
                         letDialogSleep();
                     }
@@ -370,7 +383,8 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                     @Override
                     public void getError(VolleyError e) {
                         letDialogSleep();
-                        Snackbar.make(root, "Please check your Internet connection", Snackbar.LENGTH_SHORT).show();
+                        Log.d("selected_prod1", e + "");
+                        Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
                     }
                 });
 
@@ -381,14 +395,12 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
     @Override
     protected void onResume() {
         super.onResume();
+
+        getAllBasketItems();
         CircleFragmentAdapter.CONTENT.clear();
         ProductsActivity.is_finish = 0;
 
         if (is_resumed != 0) {
-//            final ProgressDialog pdialog = new ProgressDialog(this);
-//            pdialog.setCancelable(false);
-//            pdialog.setMessage("Please wait...");
-//            pdialog.show();
             showBeautifulDialog();
 
             int prescriptionId = is_resumed;
@@ -402,8 +414,12 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                     try {
                         int success = response.getInt("success");
 
-                        if (success == 1)
+                        if (success == 1) {
                             Snackbar.make(root, "New item has been added to your cart", Snackbar.LENGTH_SHORT).show();
+
+                            number_of_notif.setVisibility(View.VISIBLE);
+                            number_of_notif.setText(String.valueOf(basket_count + 1));
+                        }
                     } catch (Exception e) {
                         Snackbar.make(root, e + "", Snackbar.LENGTH_SHORT).show();
                     }
@@ -421,10 +437,10 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
     }
 
     public Product getProductWithImage(int product_id) {
-        final ArrayList<String> filenames = new ArrayList();
+        final ArrayList<String> filenames = new ArrayList<>();
         final Product prod = new Product();
 
-        ListOfPatientsRequest.getJSONobj(this, "get_selected_product_with_image&product_id=" + product_id+"&branch_id="+order_model.getBranch_id(), "products", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj(this, "get_selected_product_with_image&product_id=" + product_id + "&branch_id=" + order_model.getBranch_id(), "products", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
@@ -459,25 +475,13 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                     Snackbar.make(root, e + "", Snackbar.LENGTH_SHORT).show();
                 }
 
-                available_qty  = prod.getAvailableQuantity();
+                available_qty = prod.getAvailableQuantity();
 
-                if(available_qty == 0){
+                if (available_qty == 0) {
                     out_of_stock.setVisibility(View.VISIBLE);
                     add_to_cart.setVisibility(View.GONE);
-                }  else {
+                } else
                     edit_layout.setVisibility(View.VISIBLE);
-                }
-
-//                Basket basket = bc.getBasket(get_productID);
-//                int basket_qty = basket.getQuantity();
-//
-//                if(basket_qty == 0)
-//                    temp_qty = 1;
-//                else
-//                    temp_qty = basket.getQuantity();
-//
-//                qty_cart.setText("" + temp_qty);
-
 
                 prod_name.setText(prod.getName());
                 prod_generic.setText(prod.getGenericName());
@@ -485,6 +489,8 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                 prod_price.setText("Php " + prod.getPrice());
                 qtyPerPacking = prod.getQtyPerPacking();
                 prod_unit.setText("1 " + prod.getPacking() + " x " + temp_qty + "(" + prod.getQtyPerPacking() + " " + prod.getUnit() + ")");
+
+                assert getSupportActionBar() != null;
                 getSupportActionBar().setTitle(prod.getName());
 
                 CircleFragmentAdapter.CONTENT.addAll(filenames);
@@ -498,10 +504,44 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
             @Override
             public void getError(VolleyError e) {
                 letDialogSleep();
-                Snackbar.make(root, "Please check your Internet connection", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
             }
         });
 
         return prod;
+    }
+
+    private void getAllBasketItems() {
+        String url_raw = "get_basket_items&patient_id=" + SidebarActivity.getUserID() + "&table=baskets";
+
+        ListOfPatientsRequest.getJSONobj(SelectedProductActivity.this, url_raw, "baskets", new RespondListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject response) {
+                try {
+                    int success = response.getInt("success");
+                    int count = 0;
+                    if (success == 1) {
+                        JSONArray json_mysql = response.getJSONArray("baskets");
+
+                        for (int x = 0; x < json_mysql.length(); x++)
+                            count++;
+
+                        if (count > 0) {
+                            number_of_notif.setVisibility(View.VISIBLE);
+                            number_of_notif.setText(count + "");
+                        }
+                    } else
+                        number_of_notif.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    Log.d("SidebarAct2", e + "");
+                    Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        }, new ErrorListener<VolleyError>() {
+            @Override
+            public void getError(VolleyError e) {
+                Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 }

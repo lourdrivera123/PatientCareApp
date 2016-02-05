@@ -1,6 +1,7 @@
 package com.example.zem.patientcareapp.SidebarModule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Dialog;
 import android.app.FragmentTransaction;
@@ -24,6 +25,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,12 +35,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.example.zem.patientcareapp.Activities.ShoppingCartActivity;
 import com.example.zem.patientcareapp.AlarmModule.AlarmService;
 import com.example.zem.patientcareapp.Controllers.DbHelper;
@@ -55,6 +60,9 @@ import com.example.zem.patientcareapp.Fragment.PatientProfileFragment;
 import com.example.zem.patientcareapp.Fragment.PromoFragment;
 import com.example.zem.patientcareapp.ImageGallery.ImageHelper;
 import com.example.zem.patientcareapp.Activities.MainActivity;
+import com.example.zem.patientcareapp.Interface.ErrorListener;
+import com.example.zem.patientcareapp.Interface.RespondListener;
+import com.example.zem.patientcareapp.Network.ListOfPatientsRequest;
 import com.example.zem.patientcareapp.R;
 import com.example.zem.patientcareapp.adapter.NavDrawerListAdapter;
 import com.example.zem.patientcareapp.gcm.gcmquickstart.QuickstartPreferences;
@@ -62,23 +70,17 @@ import com.example.zem.patientcareapp.gcm.gcmquickstart.RegistrationIntentServic
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import static android.util.Log.d;
 
-/**
- * Created by Zem on 7/16/2015.
- */
-
 public class SidebarActivity extends AppCompatActivity {
-    private String[] navMenuTitles; // slide menu items
-    private TypedArray navMenuIcons;
-    private ArrayList<NavDrawerItem> navDrawerItems;
-
     public static String uname, pass;
     public static int userID;
 
     AlarmService alarmService;
     SharedPreferences.Editor editor;
-    private NavDrawerListAdapter adapter;
     FragmentTransaction fragmentTransaction;
     private ActionBarDrawerToggle mDrawerToggle;
     public static SharedPreferences sharedpreferences;
@@ -88,6 +90,8 @@ public class SidebarActivity extends AppCompatActivity {
     LinearLayout root;
     ImageView img_first, sideBar_overlay;
     Toolbar myToolBar;
+    TextView number_of_notif;
+    ImageButton go_to_cart;
 
     static com.example.zem.patientcareapp.Model.Patient patient;
     static DbHelper dbHelper;
@@ -152,7 +156,6 @@ public class SidebarActivity extends AppCompatActivity {
 
         showOverLay();
 
-        //////////////FOR THE SIDEBAR///////////////////////////////
         //Header of the listview
         View header = getLayoutInflater().inflate(R.layout.header_sidebar, null);
         img_first = (ImageView) header.findViewById(R.id.img_first);
@@ -162,10 +165,9 @@ public class SidebarActivity extends AppCompatActivity {
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.temp_user);
         img_first.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bm, 300));
 
-        navDrawerItems = new ArrayList();
-
-        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items); // load slide menu items
-        navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons); // nav drawer icons from resources
+        ArrayList<NavDrawerItem> navDrawerItems = new ArrayList<>();
+        String[] navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        TypedArray navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -185,7 +187,7 @@ public class SidebarActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
         // setting the nav drawer list adapter
-        adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
+        NavDrawerListAdapter adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
         mDrawerList.addHeaderView(header);
         mDrawerList.setAdapter(adapter);
 
@@ -217,11 +219,11 @@ public class SidebarActivity extends AppCompatActivity {
 
         if (pc.checkUserIfRegistered(getUname()) > 0) {
             // start consultation schedules reminder
-//            alarmService = new AlarmService(this);
-//            alarmService.patientConsultationReminder();
+            alarmService = new AlarmService(this);
+            alarmService.patientConsultationReminder();
         } else {
             editor.clear();
-            editor.commit();
+            editor.apply();
             moveTaskToBack(true);
             startActivity(new Intent(this, MainActivity.class));
         }
@@ -277,6 +279,8 @@ public class SidebarActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        getAllBasketItems();
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
     }
@@ -305,30 +309,35 @@ public class SidebarActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.go_to_cart_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.go_to_cart);
+        MenuItemCompat.setActionView(item, R.layout.count_badge_layout);
+        RelativeLayout badgeLayout = (RelativeLayout) MenuItemCompat.getActionView(item);
+
+        number_of_notif = (TextView) badgeLayout.findViewById(R.id.number_of_notif);
+        go_to_cart = (ImageButton) badgeLayout.findViewById(R.id.go_to_cart);
+        go_to_cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SidebarActivity.this, ShoppingCartActivity.class));
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item))
-            return true;
-
-        if (item.getItemId() == R.id.go_to_cart)
-            startActivity(new Intent(this, ShoppingCartActivity.class));
-
-        return super.onOptionsItemSelected(item);
+        mDrawerToggle.onOptionsItemSelected(item);
+        
+        return true;
     }
 
-    /***
-     * Called when invalidateOptionsMenu() is triggered
-     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         return super.onPrepareOptionsMenu(menu);
     }
 
     private void displayView(int position) {
-        // update the main content by replacing fragments
         Fragment fragment = null;
         String title = "Home";
         switch (position) {
@@ -392,7 +401,7 @@ public class SidebarActivity extends AppCompatActivity {
             mDrawerLayout.closeDrawer(mDrawerList);
             getSupportActionBar().setTitle(title);
         } else
-            Log.e("SidebarAct", "Error in creating fragment");
+            Log.e("SidebarAct1", "Error in creating fragment");
     }
 
     @Override
@@ -427,5 +436,39 @@ public class SidebarActivity extends AppCompatActivity {
             });
             dialog.show();
         }
+    }
+
+    private void getAllBasketItems() {
+        String url_raw = "get_basket_items&patient_id=" + SidebarActivity.getUserID() + "&table=baskets";
+
+        ListOfPatientsRequest.getJSONobj(SidebarActivity.this, url_raw, "baskets", new RespondListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject response) {
+                try {
+                    int success = response.getInt("success");
+                    int count = 0;
+                    if (success == 1) {
+                        JSONArray json_mysql = response.getJSONArray("baskets");
+
+                        for (int x = 0; x < json_mysql.length(); x++)
+                            count++;
+
+                        if (count > 0) {
+                            number_of_notif.setVisibility(View.VISIBLE);
+                            number_of_notif.setText(count + "");
+                        }
+                    } else
+                        number_of_notif.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    Log.d("SidebarAct2", e + "");
+                    Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        }, new ErrorListener<VolleyError>() {
+            @Override
+            public void getError(VolleyError e) {
+                Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 }

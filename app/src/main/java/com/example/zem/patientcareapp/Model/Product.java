@@ -2,9 +2,6 @@ package com.example.zem.patientcareapp.Model;
 
 import java.io.Serializable;
 
-/**
- * Created by Dexter B. on 5/14/2015.
- */
 public class Product implements Serializable {
     String name, genericName, description, unit, packing, photo, sku, createdAt, updatedAt, deletedAt;
     int id, prescriptionRequired, productId, subCategoryId, qtyPerPacking, availableQuantity;
