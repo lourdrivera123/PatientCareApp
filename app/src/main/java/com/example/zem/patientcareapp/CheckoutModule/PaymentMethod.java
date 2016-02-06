@@ -32,9 +32,6 @@ import static android.util.Log.d;
 import static com.example.zem.patientcareapp.Network.CustomPostRequest.send;
 import static java.lang.System.out;
 
-/**
- * Created by Zem on 11/18/2015.
- */
 public class PaymentMethod extends AppCompatActivity implements View.OnClickListener {
 
     Toolbar myToolBar;
@@ -53,7 +50,6 @@ public class PaymentMethod extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.payment_method_layout);
 
         get_intent = getIntent();
-//        Bundle bundle= get_intent.getExtras();
 
         order_model = (OrderModel) get_intent.getSerializableExtra("order_model");
 
@@ -88,6 +84,8 @@ public class PaymentMethod extends AppCompatActivity implements View.OnClickList
         paypal.setOnClickListener(this);
 
         setSupportActionBar(myToolBar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Payment Method");
         myToolBar.setNavigationIcon(R.drawable.ic_back);

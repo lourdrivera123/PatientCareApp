@@ -40,10 +40,9 @@ import java.util.Map;
 public class ProductsAdapter extends ArrayAdapter implements View.OnClickListener {
     LayoutInflater inflater;
     TextView product_name, rs_price, cart_text, out_of_stock, is_promo, in_stocks;
-    ImageView product_image;
+    ImageView product_image, cart_icon;
     LinearLayout add_to_cart, root;
     ToggleButton add_to_favorite;
-    ImageView cart_icon;
 
     Context context;
 
@@ -199,13 +198,15 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                                     Snackbar.make(v, "Your cart has been updated", Snackbar.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
-                                Snackbar.make(v, e + "", Snackbar.LENGTH_SHORT).show();
+                                Log.d("prod_adapter6", e + "");
+                                Snackbar.make(v, "Networ error", Snackbar.LENGTH_SHORT).show();
                             }
                             pdialog.dismiss();
                         }
                     }, new ErrorListener<VolleyError>() {
                         public void getError(VolleyError error) {
                             pdialog.dismiss();
+                            Log.d("prod_adapter5", error + "");
                             Snackbar.make(v, "Network error", Snackbar.LENGTH_SHORT).show();
                         }
                     });
@@ -249,14 +250,16 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                                                     Snackbar.make(v, "New item has been added to your cart", Snackbar.LENGTH_SHORT).show();
                                                 }
                                             } catch (JSONException e) {
-                                                Snackbar.make(v, e + "", Snackbar.LENGTH_SHORT).show();
+                                                Log.d("prod_adapter4", e + "");
+                                                Snackbar.make(v, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                                             }
                                             pdialog.dismiss();
                                         }
                                     }, new ErrorListener<VolleyError>() {
                                         public void getError(VolleyError error) {
                                             pdialog.dismiss();
-                                            Snackbar.make(v, "Please check your Internet connection", Snackbar.LENGTH_SHORT).show();
+                                            Log.d("prod_adapter3", error + "");
+                                            Snackbar.make(v, "Network error", Snackbar.LENGTH_SHORT).show();
                                         }
                                     });
                                     builder.dismiss();
@@ -300,14 +303,16 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                                         Snackbar.make(v, "New item has been added to your cart", Snackbar.LENGTH_SHORT).show();
                                     }
                                 } catch (Exception e) {
-                                    Snackbar.make(v, e + "", Snackbar.LENGTH_SHORT).show();
+                                    Log.d("prod_adapter2", e + "");
+                                    Snackbar.make(v, "Server error occurred" + "", Snackbar.LENGTH_SHORT).show();
                                 }
                                 pdialog.dismiss();
                             }
                         }, new ErrorListener<VolleyError>() {
                             public void getError(VolleyError error) {
                                 pdialog.dismiss();
-                                Snackbar.make(v, "Please check your Internet connection", Snackbar.LENGTH_SHORT).show();
+                                Log.d("prod_adapter1", error + "");
+                                Snackbar.make(v, "Network error", Snackbar.LENGTH_SHORT).show();
                             }
                         });
                     }

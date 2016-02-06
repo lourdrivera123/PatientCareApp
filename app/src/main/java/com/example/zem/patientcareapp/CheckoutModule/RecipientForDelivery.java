@@ -22,9 +22,6 @@ import com.example.zem.patientcareapp.Model.OrderModel;
 import com.example.zem.patientcareapp.Model.Patient;
 import com.example.zem.patientcareapp.R;
 
-/**
- * Created by Zem on 11/18/2015.
- */
 public class RecipientForDelivery extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     Toolbar myToolBar;
@@ -82,6 +79,8 @@ public class RecipientForDelivery extends AppCompatActivity implements CompoundB
         to_me.setText("Me (" + patient.getFname() + " " + patient.getLname() + ")");
 
         setSupportActionBar(myToolBar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Recipient");
         myToolBar.setNavigationIcon(R.drawable.ic_back);

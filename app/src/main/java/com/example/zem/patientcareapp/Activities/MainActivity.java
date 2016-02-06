@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         login_toolbar = (Toolbar) findViewById(R.id.login_toolbar);
         setSupportActionBar(login_toolbar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setTitle("PatientCare");
 
         dbHelper = new DbHelper(this);

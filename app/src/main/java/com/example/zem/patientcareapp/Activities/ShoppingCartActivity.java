@@ -135,9 +135,9 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                                 JSONArray json_mysql = response.getJSONArray("baskets");
                                 d("baskets_json", json_mysql + "");
 
-                                if(json_mysql.length() == 0){
-                                        lisOfItems.setVisibility(View.GONE);
-                                        no_items_label.setVisibility(View.VISIBLE);
+                                if (json_mysql.length() == 0) {
+                                    lisOfItems.setVisibility(View.GONE);
+                                    no_items_label.setVisibility(View.VISIBLE);
                                 }
                                 items = bc.convertFromJson(ShoppingCartActivity.this, json_mysql);
                                 items1.addAll(items);

@@ -41,6 +41,8 @@ public class MasterTabActivity extends AppCompatActivity implements TabLayout.On
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         showOverLay();
 
@@ -88,7 +90,7 @@ public class MasterTabActivity extends AppCompatActivity implements TabLayout.On
         final Dialog dialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
         dialog.setContentView(R.layout.mastertabs_overlay);
 
-        if (oc.checkOverlay("MasterTabs", "check") == false) {
+        if (!oc.checkOverlay("MasterTabs", "check")) {
             swipeLeftRight = (ImageView) dialog.findViewById(R.id.swipeLeftRight);
             LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.masterTabsLayout);
             layout.setAlpha((float) 0.8);

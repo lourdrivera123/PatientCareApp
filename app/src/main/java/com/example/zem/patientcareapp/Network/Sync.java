@@ -23,7 +23,6 @@ import com.example.zem.patientcareapp.Controllers.PatientRecordController;
 import com.example.zem.patientcareapp.Controllers.PatientTreatmentsController;
 import com.example.zem.patientcareapp.Controllers.ProductCategoryController;
 import com.example.zem.patientcareapp.Controllers.ProductSubCategoryController;
-import com.example.zem.patientcareapp.Controllers.PromoController;
 import com.example.zem.patientcareapp.Controllers.SettingController;
 import com.example.zem.patientcareapp.Controllers.SpecialtyController;
 import com.example.zem.patientcareapp.Controllers.SubSpecialtyController;
@@ -41,7 +40,6 @@ import com.example.zem.patientcareapp.Model.ProductCategory;
 import com.example.zem.patientcareapp.Model.ProductSubCategory;
 import com.example.zem.patientcareapp.Model.Specialty;
 import com.example.zem.patientcareapp.Model.SubSpecialty;
-import com.example.zem.patientcareapp.Model.Promo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,7 +76,6 @@ public class Sync {
     PatientTreatmentsController ptc;
     DiscountsFreeProductsController dfpc;
     FreeProductsController fpc;
-    PromoController prmc;
     ClinicController clinic_controller;
     ClinicDoctorController cdc;
     PatientPrescriptionController ppc;
@@ -109,7 +106,6 @@ public class Sync {
         doctor_controller = new DoctorController(context);
         dfpc = new DiscountsFreeProductsController(context);
         fpc = new FreeProductsController(context);
-        prmc = new PromoController(context);
         clinic_controller = new ClinicController(context);
         cdc = new ClinicDoctorController(context);
         ppc = new PatientPrescriptionController(context);
@@ -171,9 +167,6 @@ public class Sync {
                             } else if (tableName.equals("free_products")) {
                                 if (!fpc.saveFreeProducts(setFreeProducts(json_object), "insert"))
                                     d("sync_11", "wala na save");
-                            } else if (tableName.equals("promo")) {
-                                if (!prmc.savePromo(setPromo(json_object), "insert"))
-                                    d("sync_10", "wala na save");
                             } else if (tableName.equals("clinics")) {
                                 if (!clinic_controller.saveClinic(setClinic(json_object), "insert"))
                                     d("sync_9", "wala na save");
@@ -593,19 +586,5 @@ public class Sync {
         freeProducts.setDeletedAt(json.getString(FreeProductsController.FP_DELETED_AT));
 
         return freeProducts;
-    }
-
-    public Promo setPromo(JSONObject json) throws JSONException {
-        Promo promo = new Promo();
-
-        promo.setServerPromoId(json.getInt("id"));
-        promo.setName(json.getString(PromoController.PROMO_NAME));
-        promo.setStartDate(json.getString(PromoController.PROMO_START_DATE));
-        promo.setEndDate(json.getString(PromoController.PROMO_END_DATE));
-        promo.setCreatedAt(json.getString(PromoController.PROMO_CREATED_AT));
-        promo.setUpdatedAt(json.getString(PromoController.PROMO_UPDATED_AT));
-        promo.setDeletedAt(json.getString(PromoController.PROMO_DELETED_AT));
-
-        return promo;
     }
 }

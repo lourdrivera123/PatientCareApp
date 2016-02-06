@@ -51,7 +51,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
 
     public static double cart_total_amount;
     public static double total_savings_value;
-
+    DecimalFormat df;
 
     public ShoppingCartAdapter(Context context, int resource, ArrayList<HashMap<String, String>> objects) {
         super(context, resource, objects);
@@ -92,7 +92,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
         final int cart_quantity = Integer.parseInt(objects.get(position).get("quantity"));
 
         final double total_per_item = price * cart_quantity;
-        final DecimalFormat df = new DecimalFormat("#.##");
+        df = new DecimalFormat("#.##");
 
         int final_qty_required = 0, final_percentage = 0;
         double final_peso = 0, final_min_purchase = 0;
@@ -285,6 +285,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                 if (final_is_every1.equals("1")) {
                                     temp_prod_discount = total_per_item - (discount_times * final_peso1);
 
+
                                     if ((total_per_item - price) < (final_min_purchase1 * discount_times)){
                                         cart_total_amount += (price - final_peso1);
                                         total_savings_value += final_peso1;
@@ -419,6 +420,8 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                 final int pos = Integer.parseInt(String.valueOf(v.getTag()));
                 final int server_id = Integer.parseInt(objects.get(pos).get("basket_id"));
 
+                Log.d("objects/srvr_ID", objects + "/" + server_id);
+
                 AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(context);
                 confirmationDialog.setTitle("Delete item?");
                 confirmationDialog.setNegativeButton("No", null);
@@ -444,6 +447,10 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                     int success = response.getInt("success");
 
                                     if (success == 1) {
+                                        double remove_value = Double.parseDouble(objects.get(pos).get("item_subtotal"));
+                                        cart_total_amount -= remove_value;
+                                        ShoppingCartActivity.total_amount.setText("Total amount is ₱" + df.format(cart_total_amount));
+
                                         objects.remove(pos);
                                         ShoppingCartAdapter.this.notifyDataSetChanged();
                                         Snackbar.make(v, "Item has been deleted", Snackbar.LENGTH_SHORT).show();

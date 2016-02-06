@@ -61,6 +61,9 @@ import com.example.zem.patientcareapp.R;
 import com.example.zem.patientcareapp.Activities.ReferralActivity;
 import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
 import com.example.zem.patientcareapp.adapter.TabsPagerAdapter;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -125,6 +128,11 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
     public static Intent intent;
     public static AppCompatDialog pDialog;
     AlertDialog.Builder builder;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -151,9 +159,10 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
 
         showBeautifulDialog();
 
-        // Initilization
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tab_layout = (TabLayout) findViewById(R.id.tab_layout);
@@ -168,6 +177,9 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
             patient.setReferred_byUser(intent.getStringExtra("referred_by_User"));
             patient.setReferred_byDoctor(intent.getStringExtra("referred_by_Doctor"));
         }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     void showBeautifulDialog() {
@@ -216,7 +228,7 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
     }
 
     public HashMap<String, String> setParams(String request) {
-        HashMap<String, String> params = new HashMap();
+        HashMap<String, String> params = new HashMap<>();
         if (request.equals("update")) {
             if (AccountFragment.checkIfChangedPass > 0) {
                 params.put("password", AccountFragment.NEW_PASS);
@@ -469,10 +481,8 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
                         + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
                         + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
 
-        CharSequence inputStr = email;
-
         Pattern pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(inputStr);
+        Matcher matcher = pattern.matcher(email);
 
         if (matcher.matches())
             return true;
@@ -506,7 +516,7 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
                 } else
                     patient.setPhoto("");
             } catch (Exception e) {
-
+                Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -572,139 +582,137 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
                     } else if (hasError2) {
                         viewPager.setCurrentItem(1);
                     } else {
-                        if (!hasError && !hasError2) {
-                            validateUserAccountInfo();
+                        validateUserAccountInfo();
 
-                            if (!hasError3) {
-                                patient.setBarangay_id(Integer.parseInt(ContactsFragment.barangay_id));
-                                patient.setBarangay(ContactsFragment.address_barangay.getSelectedItem().toString());
-                                patient.setMunicipality(ContactsFragment.address_city_municipality.getSelectedItem().toString());
-                                patient.setProvince(ContactsFragment.address_province.getSelectedItem().toString());
-                                patient.setRegion(ContactsFragment.address_region.getSelectedItem().toString());
+                        if (!hasError3) {
+                            patient.setBarangay_id(Integer.parseInt(ContactsFragment.barangay_id));
+                            patient.setBarangay(ContactsFragment.address_barangay.getSelectedItem().toString());
+                            patient.setMunicipality(ContactsFragment.address_city_municipality.getSelectedItem().toString());
+                            patient.setProvince(ContactsFragment.address_province.getSelectedItem().toString());
+                            patient.setRegion(ContactsFragment.address_region.getSelectedItem().toString());
 
-                                if (edit_int > 0) {
-                                    showBeautifulDialog();
-                                    editUser = pc.getloginPatient(SidebarActivity.getUname());
+                            if (edit_int > 0) {
+                                showBeautifulDialog();
+                                editUser = pc.getloginPatient(SidebarActivity.getUname());
 
-                                    patient.setServerID(editUser.getServerID());
-                                    HashMap<String, String> params = setParams("update");
+                                patient.setServerID(editUser.getServerID());
+                                HashMap<String, String> params = setParams("update");
 
-                                    PostRequest.send(getBaseContext(), params, new RespondListener<JSONObject>() {
-                                        @Override
-                                        public void getResult(JSONObject response) {
-                                            int success = 0;
+                                PostRequest.send(getBaseContext(), params, new RespondListener<JSONObject>() {
+                                    @Override
+                                    public void getResult(JSONObject response) {
+                                        int success = 0;
 
-                                            try {
-                                                success = response.getInt("success");
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
+                                        try {
+                                            success = response.getInt("success");
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
 
-                                            if (success == 1) {
-                                                if (pc.savePatient(patient_json_object_mysql, patient, "update")) {
-                                                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                                                    editor.putString(MainActivity.name, patient.getUsername());
-                                                    editor.putString(MainActivity.pass, patient.getPassword());
-                                                    editor.commit();
+                                        if (success == 1) {
+                                            if (pc.savePatient(patient_json_object_mysql, patient, "update")) {
+                                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                                editor.putString(MainActivity.name, patient.getUsername());
+                                                editor.putString(MainActivity.pass, patient.getPassword());
+                                                editor.apply();
 
-                                                    Snackbar.make(root, "Updated successfully", Snackbar.LENGTH_SHORT).show();
-                                                    EditTabsActivity.this.finish();
-                                                } else
-                                                    Snackbar.make(root, "Something went wrong", Snackbar.LENGTH_SHORT).show();
+                                                Snackbar.make(root, "Updated successfully", Snackbar.LENGTH_SHORT).show();
+                                                EditTabsActivity.this.finish();
                                             } else
-                                                Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
-                                            letDialogSleep();
-                                        }
-                                    }, new ErrorListener<VolleyError>() {
-                                        public void getError(VolleyError error) {
-                                            letDialogSleep();
-                                            Snackbar.make(root, "Networ error", Snackbar.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                } else {
-                                    showBeautifulDialog();
+                                                Snackbar.make(root, "Something went wrong", Snackbar.LENGTH_SHORT).show();
+                                        } else
+                                            Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
+                                        letDialogSleep();
+                                    }
+                                }, new ErrorListener<VolleyError>() {
+                                    public void getError(VolleyError error) {
+                                        letDialogSleep();
+                                        Snackbar.make(root, "Networ error", Snackbar.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                showBeautifulDialog();
 
-                                    final HashMap<String, String> params = setParams("register");
+                                final HashMap<String, String> params = setParams("register");
 
-                                    StringRequests.getString(EditTabsActivity.this, "api/generate/referral_id", new StringRespondListener<String>() {
+                                StringRequests.getString(EditTabsActivity.this, "api/generate/referral_id", new StringRespondListener<String>() {
 
-                                        @Override
-                                        public void getResult(String response) {
-                                            patient.setReferral_id(response);
-                                            params.put("referral_id", patient.getReferral_id());
+                                    @Override
+                                    public void getResult(String response) {
+                                        patient.setReferral_id(response);
+                                        params.put("referral_id", patient.getReferral_id());
 
-                                            PostRequest.send(getBaseContext(), params, new RespondListener<JSONObject>() {
-                                                @Override
-                                                public void getResult(JSONObject response) {
-                                                    try {
-                                                        int success = response.getInt("success");
+                                        PostRequest.send(getBaseContext(), params, new RespondListener<JSONObject>() {
+                                            @Override
+                                            public void getResult(JSONObject response) {
+                                                try {
+                                                    int success = response.getInt("success");
 
-                                                        if (success == 2) {
-                                                            Snackbar.make(root, "Username is already registered", Snackbar.LENGTH_SHORT).show();
-                                                        } else if (success == 1) {
-                                                            patient_json_array_mysql = response.getJSONArray("patient");
-                                                            patient_json_object_mysql = patient_json_array_mysql.getJSONObject(0);
+                                                    if (success == 2) {
+                                                        Snackbar.make(root, "Username is already registered", Snackbar.LENGTH_SHORT).show();
+                                                    } else if (success == 1) {
+                                                        patient_json_array_mysql = response.getJSONArray("patient");
+                                                        patient_json_object_mysql = patient_json_array_mysql.getJSONObject(0);
 
-                                                            if (ReferralActivity.cpd_id > 0) {
-                                                                HashMap<String, String> map = new HashMap();
-                                                                map.put("request", "crud");
-                                                                map.put("action", "update");
-                                                                map.put("table", "clinic_patient_doctor");
-                                                                map.put("id", String.valueOf(ReferralActivity.cpd_id));
-                                                                map.put("patient_id", String.valueOf(patient_json_object_mysql.getInt("id")));
+                                                        if (ReferralActivity.cpd_id > 0) {
+                                                            HashMap<String, String> map = new HashMap<>();
+                                                            map.put("request", "crud");
+                                                            map.put("action", "update");
+                                                            map.put("table", "clinic_patient_doctor");
+                                                            map.put("id", String.valueOf(ReferralActivity.cpd_id));
+                                                            map.put("patient_id", String.valueOf(patient_json_object_mysql.getInt("id")));
 
-                                                                PostRequest.send(EditTabsActivity.this, map, new RespondListener<JSONObject>() {
-                                                                    @Override
-                                                                    public void getResult(JSONObject response) {
-                                                                        try {
-                                                                            int success = response.getInt("success");
+                                                            PostRequest.send(EditTabsActivity.this, map, new RespondListener<JSONObject>() {
+                                                                @Override
+                                                                public void getResult(JSONObject response) {
+                                                                    try {
+                                                                        int success = response.getInt("success");
 
-                                                                            if (success != 1)
-                                                                                Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
+                                                                        if (success != 1)
+                                                                            Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
 
-                                                                        } catch (JSONException e) {
-                                                                            e.printStackTrace();
-                                                                        }
+                                                                    } catch (JSONException e) {
+                                                                        e.printStackTrace();
                                                                     }
-                                                                }, new ErrorListener<VolleyError>() {
-                                                                    public void getError(VolleyError error) {
-                                                                        Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
-                                                                    }
-                                                                });
-                                                            }
-
-                                                            if (pc.savePatient(patient_json_object_mysql, patient, "insert")) {
-                                                                SharedPreferences sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                                                                SharedPreferences.Editor editor = sharedpreferences.edit();
-                                                                editor.putString(MainActivity.name, patient.getUsername());
-                                                                editor.putString(MainActivity.pass, patient.getPassword());
-                                                                editor.commit();
-
-                                                                startActivity(new Intent(getBaseContext(), SidebarActivity.class));
-                                                                EditTabsActivity.this.finish();
-                                                            } else
-                                                                Snackbar.make(root, "Something went wrong", Snackbar.LENGTH_SHORT).show();
+                                                                }
+                                                            }, new ErrorListener<VolleyError>() {
+                                                                public void getError(VolleyError error) {
+                                                                    Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
+                                                                }
+                                                            });
                                                         }
-                                                    } catch (JSONException e) {
-                                                        Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
-                                                        Log.d("EditTabs2", e + "");
+
+                                                        if (pc.savePatient(patient_json_object_mysql, patient, "insert")) {
+                                                            SharedPreferences sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                                                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                                                            editor.putString(MainActivity.name, patient.getUsername());
+                                                            editor.putString(MainActivity.pass, patient.getPassword());
+                                                            editor.apply();
+
+                                                            startActivity(new Intent(getBaseContext(), SidebarActivity.class));
+                                                            EditTabsActivity.this.finish();
+                                                        } else
+                                                            Snackbar.make(root, "Something went wrong", Snackbar.LENGTH_SHORT).show();
                                                     }
-                                                    letDialogSleep();
+                                                } catch (JSONException e) {
+                                                    Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
+                                                    Log.d("EditTabs2", e + "");
                                                 }
-                                            }, new ErrorListener<VolleyError>() {
-                                                public void getError(VolleyError error) {
-                                                    letDialogSleep();
-                                                    Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                        }
-                                    }, new ErrorListener<VolleyError>() {
-                                        public void getError(VolleyError error) {
-                                            letDialogSleep();
-                                            Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
+                                                letDialogSleep();
+                                            }
+                                        }, new ErrorListener<VolleyError>() {
+                                            public void getError(VolleyError error) {
+                                                letDialogSleep();
+                                                Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }, new ErrorListener<VolleyError>() {
+                                    public void getError(VolleyError error) {
+                                        letDialogSleep();
+                                        Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
                         }
                     }
@@ -727,6 +735,46 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "EditTabs Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.zem.patientcareapp.SwipeTabsModule/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "EditTabs Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.zem.patientcareapp.SwipeTabsModule/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     /////////////////////////////////////////////////////
@@ -797,7 +845,6 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
 
         @Override
         protected void onPostExecute(String result) {
-            Log.d("edittabsresult", result + "");
             try {
                 JSONObject jObject;
                 jObject = new JSONObject(result);
@@ -819,7 +866,6 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-//                upload_dialog.dismiss();
                 uploadfaileddialog("Sorry, we cannot upload your file", "Upload Failed");
             }
             upload_dialog.dismiss();
