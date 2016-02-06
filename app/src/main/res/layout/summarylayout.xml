@@ -26,6 +26,54 @@
             android:orientation="vertical">
 
             <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/something"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gradient_button"
+                android:text="Have Promo Code? "
+                android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/use_points"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_button"
+                    android:text="Use your points ?"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/senior"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_button"
+                    android:text="Are you a Senior ?"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/dialog_holo_light_frame"
@@ -224,8 +272,8 @@
                             android:layout_weight=".5"
                             android:gravity="center"
                             android:text="You will save \u20b1 --"
-                            android:textSize="15sp"
-                            android:textColor="#2d2d2d"/>
+                            android:textColor="#2d2d2d"
+                            android:textSize="15sp"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -242,8 +290,8 @@
                             android:layout_weight=".5"
                             android:gravity="center"
                             android:text="You will receive -- points upon order."
-                            android:textSize="14sp"
-                            android:textColor="#2d2d2d"/>
+                            android:textColor="#2d2d2d"
+                            android:textSize="14sp"/>
 
                     </LinearLayout>
 
@@ -289,7 +337,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight=".3"
-                        android:background="@color/partner_toolbar"
+                        android:background="@drawable/gradient_button"
                         android:text="Edit"
                         android:textColor="@color/white" />
 

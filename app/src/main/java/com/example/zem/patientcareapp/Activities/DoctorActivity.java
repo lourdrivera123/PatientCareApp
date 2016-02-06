@@ -104,19 +104,19 @@ public class DoctorActivity extends AppCompatActivity implements View.OnClickLis
             contact_number = (TextView) v.findViewById(R.id.contact_number);
             String firstLine, secondLine, building = "", barangay = "";
 
-            if (!hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_BUILDING).equals(""))
-                building = "#" + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_BUILDING);
-            if (!hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_BARANGAY).equals(""))
-                barangay = ", " + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_BARANGAY);
-
-            firstLine = (building + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_STREET) + barangay).trim();
-            secondLine = hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_CITY) +
-                    ", " + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_REGION) +
-                    ", Philippines, " + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_ZIP);
+//            if (!hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_BUILDING).equals(""))
+//                building = "#" + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_BUILDING);
+//            if (!hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_BARANGAY).equals(""))
+//                barangay = ", " + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_BARANGAY);
+//
+//            firstLine = (building + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_STREET) + barangay).trim();
+//            secondLine = hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_CITY) +
+//                    ", " + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_REGION) +
+//                    ", Philippines, " + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_ZIP);
 
             clinic_name.setText(hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_NAME));
-            clinic_address_first_line.setText(firstLine);
-            clinic_address_second_line.setText(secondLine);
+//            clinic_address_first_line.setText(firstLine);
+//            clinic_address_second_line.setText(secondLine);
             contact_number.setText(hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_CONTACT_NO));
 
             return v;

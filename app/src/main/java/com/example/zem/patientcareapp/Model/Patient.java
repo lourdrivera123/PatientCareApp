@@ -11,9 +11,9 @@ public class Patient implements Serializable {
             occupation = "", birthdate = "", sex = "", civil_status = "", height = "",
             weight = "", cell_no = "", tel_no = "", email = "", photo = "",
             referral_id = "", referred_byUser = "", referred_byDoctor = "",
-            optional_address = "", address_street = "", barangay = "", municipality = "", province = "", region = "";
+            optional_address = "", address_street = "", barangay = "", municipality = "", province = "", region = "", senior_citizen_id_number ="", senior_id_picture = "";
 
-    int id = 0, serverID = 0, barangay_id = 0;
+    int id = 0, serverID = 0, barangay_id = 0, isSenior = 0;
 
     double points = 0;
 
@@ -27,6 +27,30 @@ public class Patient implements Serializable {
 
     public Patient() {
 
+    }
+
+    public String getSenior_citizen_id_number() {
+        return senior_citizen_id_number;
+    }
+
+    public void setSenior_citizen_id_number(String senior_citizen_id_number) {
+        this.senior_citizen_id_number = senior_citizen_id_number;
+    }
+
+    public String getSenior_id_picture() {
+        return senior_id_picture;
+    }
+
+    public void setSenior_id_picture(String senior_id_picture) {
+        this.senior_id_picture = senior_id_picture;
+    }
+
+    public int getIsSenior() {
+        return isSenior;
+    }
+
+    public void setIsSenior(int isSenior) {
+        this.isSenior = isSenior;
     }
 
     public void setServerID(int serverID) {

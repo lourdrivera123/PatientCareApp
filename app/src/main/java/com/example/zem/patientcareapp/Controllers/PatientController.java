@@ -54,11 +54,18 @@ public class PatientController extends DbHelper {
             PTNT_POINTS = "points",
             PTNT_REFERRAL_ID = "referral_id",
             PTNT_REFERRED_BY_USER = "referred_byUser",
-            PTNT_REFERRED_BY_DOCTOR = "referred_byDoctor";
+            PTNT_REFERRED_BY_DOCTOR = "referred_byDoctor",
+            PTNT_ISSENIOR = "isSenior",
+            PTNT_SENIOR_CIN = "senior_citizen_id_number",
+            PTNT_SIP = "senior_id_picture";
 
     // SQL to create table "patients"
-    public static final String CREATE_TABLE = String.format("CREATE TABLE %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT)",
-            TBL_PATIENTS, AI_ID, PATIENT_ID, PTNT_FNAME, PTNT_MNAME, PTNT_LNAME, PTNT_USERNAME, PTNT_PASSWORD, PTNT_OCCUPATION, PTNT_BIRTHDATE, PTNT_SEX, PTNT_CIVIL_STATUS, PTNT_HEIGHT, PTNT_WEIGHT, PTNT_OPTIONAL_ADDRESS, PTNT_STREET, PTNT_BRGY_ID, PTNT_BARANGAY, PTNT_CITY, PTNT_PROVINCE, PTNT_REGION, PTNT_TEL_NO, PTNT_MOBILE_NO, PTNT_EMAIL, PTNT_PHOTO, PTNT_POINTS, PTNT_REFERRAL_ID, PTNT_REFERRED_BY_USER, PTNT_REFERRED_BY_DOCTOR, CREATED_AT, UPDATED_AT, DELETED_AT);
+    public static final String CREATE_TABLE = String.format("CREATE TABLE %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT" +
+                    ", %s INTEGER, %s TEXT, %s TEXT" +
+                    ", %s TEXT, %s TEXT, %s TEXT)",
+            TBL_PATIENTS, AI_ID, PATIENT_ID, PTNT_FNAME, PTNT_MNAME, PTNT_LNAME, PTNT_USERNAME, PTNT_PASSWORD, PTNT_OCCUPATION, PTNT_BIRTHDATE, PTNT_SEX, PTNT_CIVIL_STATUS, PTNT_HEIGHT, PTNT_WEIGHT, PTNT_OPTIONAL_ADDRESS, PTNT_STREET, PTNT_BRGY_ID, PTNT_BARANGAY, PTNT_CITY, PTNT_PROVINCE, PTNT_REGION, PTNT_TEL_NO, PTNT_MOBILE_NO, PTNT_EMAIL, PTNT_PHOTO, PTNT_POINTS, PTNT_REFERRAL_ID, PTNT_REFERRED_BY_USER, PTNT_REFERRED_BY_DOCTOR
+            ,PTNT_ISSENIOR, PTNT_SENIOR_CIN, PTNT_SIP
+            , CREATED_AT, UPDATED_AT, DELETED_AT);
 
     public PatientController(Context context) {
         super(context);
@@ -110,6 +117,9 @@ public class PatientController extends DbHelper {
         values.put(PTNT_REFERRAL_ID, patient.getReferral_id());
         values.put(PTNT_REFERRED_BY_USER, patient.getReferred_byUser());
         values.put(PTNT_REFERRED_BY_DOCTOR, patient.getReferred_byDoctor());
+        values.put(PTNT_ISSENIOR, patient.getIsSenior());
+        values.put(PTNT_SENIOR_CIN, patient.getSenior_citizen_id_number());
+        values.put(PTNT_SIP, patient.getSenior_id_picture());
         values.put(CREATED_AT, created_at);
 
         long rowID = 0;
@@ -202,6 +212,9 @@ public class PatientController extends DbHelper {
             patient.setReferral_id(cur.getString(cur.getColumnIndex(PTNT_REFERRAL_ID)));
             patient.setReferred_byUser(cur.getString(cur.getColumnIndex(PTNT_REFERRED_BY_USER)));
             patient.setReferred_byDoctor(cur.getString(cur.getColumnIndex(PTNT_REFERRED_BY_DOCTOR)));
+            patient.setIsSenior(cur.getInt(cur.getColumnIndex(PTNT_ISSENIOR)));
+            patient.setSenior_citizen_id_number(cur.getString(cur.getColumnIndex(PTNT_SENIOR_CIN)));
+            patient.setSenior_id_picture(cur.getString(cur.getColumnIndex(PTNT_SIP)));
         }
         cur.close();
         sql_db.close();

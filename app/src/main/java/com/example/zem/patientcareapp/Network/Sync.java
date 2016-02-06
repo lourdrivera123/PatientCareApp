@@ -437,12 +437,8 @@ public class Sync {
             clinic.setName(json.getString("name"));
             clinic.setClinicsId(json.getInt("id"));
             clinic.setContactNumber(json.getString("contact_no"));
-            clinic.setFullAddress(json.getString(ClinicController.CLINIC_UNIT_NO), json.getString(ClinicController.CLINIC_BUILDING),
-                    json.getString(ClinicController.CLINIC_LOT_NO), json.getString(ClinicController.CLINIC_BLOCK_NO), json.getString(ClinicController.CLINIC_PHASE_NO),
-                    json.getString(ClinicController.CLINIC_HOUSE_NO), json.getString(ClinicController.CLINIC_STREET),
-                    json.getString(ClinicController.CLINIC_BARANGAY), json.getString(ClinicController.CLINIC_CITY),
-                    json.getString(ClinicController.CLINIC_PROVINCE), json.getString(ClinicController.CLINIC_REGION),
-                    json.getString(ClinicController.CLINIC_ZIP));
+            clinic.setFullAddress(json.getString(ClinicController.CLINIC_BARANGAY), json.getString(ClinicController.CLINIC_CITY),
+                    json.getString(ClinicController.CLINIC_PROVINCE), json.getString(ClinicController.CLINIC_REGION));
             clinic.setCreatedAt(json.getString("created_at"));
             clinic.setUpdatedAt(json.getString("updated_at"));
             clinic.setDeletedAt(json.getString("deleted_at"));
@@ -560,6 +556,10 @@ public class Sync {
             patient.setReferral_id(json.getString(PatientController.PTNT_REFERRAL_ID));
             patient.setReferred_byUser(json.getString(PatientController.PTNT_REFERRED_BY_USER));
             patient.setReferred_byDoctor(json.getString(PatientController.PTNT_REFERRED_BY_DOCTOR));
+            patient.setIsSenior(json.getInt(PatientController.PTNT_ISSENIOR));
+            patient.setSenior_citizen_id_number(json.getString(PatientController.PTNT_SENIOR_CIN));
+            patient.setSenior_id_picture(json.getString(PatientController.PTNT_SIP));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
