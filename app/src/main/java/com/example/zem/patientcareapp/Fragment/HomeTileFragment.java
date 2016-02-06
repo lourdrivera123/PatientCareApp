@@ -114,8 +114,12 @@ public class HomeTileFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
 
             case R.id.orderLayout:
-                OrderModel order_model = opc.getOrderPreference();
+                 //this condition is to determine if the user's age is >= 60 senior and they have uploaded a valid senior id.
+//                if(true){
+//                    startActivity(new Intent(getActivity(), SeniorCitizenActivity.class));
+//                }
 
+                OrderModel order_model = opc.getOrderPreference();
                 if (order_model.hasSelectedBranch())
                     startActivity(new Intent(getActivity(), ProductsActivity.class));
                 else

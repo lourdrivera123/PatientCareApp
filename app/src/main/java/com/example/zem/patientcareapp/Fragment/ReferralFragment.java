@@ -76,7 +76,9 @@ public class ReferralFragment extends Fragment {
             @Override
             public void getResult(JSONObject response) {
                 try {
-                    JSONArray json_mysql = response.getJSONArray("settings");
+                    if(response.getInt("success") > 0){
+                        JSONArray json_mysql = response.getJSONArray("settings");
+                    }
                 } catch (JSONException e) {
                     Log.d("referrals_exception", e + "");
                 }
@@ -104,12 +106,13 @@ public class ReferralFragment extends Fragment {
             @Override
             public void getResult(JSONObject response) {
                 try {
-                    JSONArray json_mysql = response.getJSONArray("referral_commission");
+                    if(response.getInt("success") > 0){
+                        JSONArray json_mysql = response.getJSONArray("referral_commission");
 
-                    items = ptc.convertFromJson(json_mysql);
-                    points_log_adapter = new PointsLogAdapter(getActivity(), items);
-                    earned_points_log.setAdapter(points_log_adapter);
-
+                        items = ptc.convertFromJson(json_mysql);
+                        points_log_adapter = new PointsLogAdapter(getActivity(), items);
+                        earned_points_log.setAdapter(points_log_adapter);
+                    }
                 } catch (JSONException e) {
                     Log.d("referrals_exception", e + "");
                 }
@@ -124,11 +127,14 @@ public class ReferralFragment extends Fragment {
             @Override
             public void getResult(JSONObject response) {
                 try {
-                    JSONArray json_mysql = response.getJSONArray("used_points");
+                    if (response.getInt("success") > 0) {
+                        JSONArray json_mysql = response.getJSONArray("used_points");
 
-                    items = ptc.convertFromJson(json_mysql);
-                    points_log_adapter = new PointsLogAdapter(getActivity(), items);
-                    used_points_log.setAdapter(points_log_adapter);
+                        items = ptc.convertFromJson(json_mysql);
+                        points_log_adapter = new PointsLogAdapter(getActivity(), items);
+                        used_points_log.setAdapter(points_log_adapter);
+                    }
+
 
                 } catch (JSONException e) {
                     Log.d("used_points_exception", e + "");
@@ -145,13 +151,15 @@ public class ReferralFragment extends Fragment {
             @Override
             public void getResult(JSONObject response) {
                 try {
-                    JSONArray json_mysql = response.getJSONArray("downlines");
+                    if (response.getInt("success") > 0) {
+                        JSONArray json_mysql = response.getJSONArray("downlines");
 
-                    Log.d("downlines", json_mysql + "");
+                        Log.d("downlines", json_mysql + "");
 
-                    items = pc.convertFromJson(json_mysql);
-                    downlinesAdapter = new DownlinesAdapter(getActivity(), items);
-                    downlines.setAdapter(downlinesAdapter);
+                        items = pc.convertFromJson(json_mysql);
+                        downlinesAdapter = new DownlinesAdapter(getActivity(), items);
+                        downlines.setAdapter(downlinesAdapter);
+                    }
                 } catch (Exception e) {
                     Log.d("exception2", e + "");
                     Snackbar.make(container, "Error occurred", Snackbar.LENGTH_SHORT).show();

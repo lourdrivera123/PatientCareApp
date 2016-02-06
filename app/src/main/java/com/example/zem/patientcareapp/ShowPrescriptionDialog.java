@@ -50,21 +50,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ShowPrescriptionDialog extends AppCompatActivity implements View.OnClickListener {
+    public static ArrayList<HashMap<String, String>> uploadsByUser;
     LinearLayout pick_camera_layout, pick_gallery_layout;
     ProgressBar progressBar;
-    private TextView txtPercentage;
     Dialog upload_dialog;
-
-    public static ArrayList<HashMap<String, String>> uploadsByUser;
     ArrayList<String> arrayOfPrescriptions;
-
     Helpers helper;
     PatientPrescriptionController ppc;
-
     String imageFileUri;
     String filePath = null;
     long totalSize = 0;
     int patientID;
+    private TextView txtPercentage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,7 +205,10 @@ public class ShowPrescriptionDialog extends AppCompatActivity implements View.On
             int patientID = SidebarActivity.getUserID();
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(Constants.FILE_UPLOAD_URL);
+            HttpPost httppost;
+
+            boolean isForSeniorUpload = getIntent().getBooleanExtra("isForSeniorUpload", false);
+                httppost = new HttpPost(Constants.FILE_UPLOAD_URL);
             try {
                 AndroidMultipartEntity entity = new AndroidMultipartEntity(
                         new AndroidMultipartEntity.ProgressListener() {
@@ -223,7 +223,13 @@ public class ShowPrescriptionDialog extends AppCompatActivity implements View.On
                 // Adding file data to http body
                 entity.addPart("patient_id", new StringBody("" + patientID));
                 entity.addPart("image", new FileBody(sourceFile));
-                entity.addPart("purpose", new StringBody("prescription_upload"));
+
+                if(isForSeniorUpload){
+                    entity.addPart("purpose", new StringBody("senior_citizen_upload"));
+                    entity.addPart("senior_citizen_id_number", new StringBody(getIntent().getStringExtra("senior_citizen_id_number")));
+                } else {
+                    entity.addPart("purpose", new StringBody("prescription_upload"));
+                }
 
                 totalSize = entity.getContentLength();
                 httppost.setEntity(entity);
