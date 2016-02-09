@@ -30,7 +30,6 @@ public class DoctorActivity extends AppCompatActivity implements View.OnClickLis
 
     ArrayList<HashMap<String, String>> hashClinicsByDoctorID;
 
-    private CustomAdapterForDoctor customAdapter;
     DbHelper dbHelper;
     Doctor doctor;
 
@@ -52,11 +51,11 @@ public class DoctorActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = getIntent();
         DoctorController doctor_controller = new DoctorController(this);
 
-        doctorID = intent.getIntExtra(doctor_controller.DOC_DOC_ID, 0);
+        doctorID = intent.getIntExtra(DoctorController.DOC_DOC_ID, 0);
         ClinicController cc = new ClinicController(this);
         hashClinicsByDoctorID = cc.getClinicByDoctorID(doctorID);
 
-        customAdapter = new CustomAdapterForDoctor(this, R.layout.list_item_of_doctors_layout, R.id.clinic_name, hashClinicsByDoctorID);
+        CustomAdapterForDoctor customAdapter = new CustomAdapterForDoctor(this, R.layout.list_item_of_doctors_layout, R.id.clinic_name, hashClinicsByDoctorID);
         listOfDoctors.setAdapter(customAdapter);
 
         if (doctorID > 0) {

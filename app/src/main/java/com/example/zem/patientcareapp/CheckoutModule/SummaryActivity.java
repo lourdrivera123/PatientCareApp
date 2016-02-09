@@ -1,6 +1,5 @@
 package com.example.zem.patientcareapp.CheckoutModule;
 
-
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,10 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,7 @@ import com.example.zem.patientcareapp.Controllers.BasketController;
 import com.example.zem.patientcareapp.Controllers.DbHelper;
 import com.example.zem.patientcareapp.Controllers.PatientController;
 import com.example.zem.patientcareapp.Controllers.SettingController;
+import com.example.zem.patientcareapp.Customizations.GlowingText;
 import com.example.zem.patientcareapp.Interface.ErrorListener;
 import com.example.zem.patientcareapp.Interface.RespondListener;
 import com.example.zem.patientcareapp.Interface.StringRespondListener;
@@ -33,9 +37,11 @@ import com.example.zem.patientcareapp.Model.Settings;
 import com.example.zem.patientcareapp.Network.CustomPostRequest;
 import com.example.zem.patientcareapp.Network.GetRequest;
 import com.example.zem.patientcareapp.Customizations.NonScrollListView;
+import com.example.zem.patientcareapp.Network.ListOfPatientsRequest;
 import com.example.zem.patientcareapp.Network.ListRequestFromCustomURI;
 import com.example.zem.patientcareapp.Network.StringRequests;
 import com.example.zem.patientcareapp.R;
+import com.example.zem.patientcareapp.ShowPrescriptionDialog;
 import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
 import com.example.zem.patientcareapp.adapter.ShoppingCartAdapter;
 
@@ -43,14 +49,19 @@ import org.json.JSONException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.util.Log.d;
+
 public class SummaryActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static AppCompatDialog pDialog;
+    public static HashMap<String, String> promos_map;
     Toolbar myToolBar;
-    Button change_id, order_now_btn;
+    Button change_id, order_now_btn, promo_code_btn, use_points_btn;
     OrderModel order_model;
     Intent get_intent;
     DbHelper dbHelper;
@@ -58,20 +69,36 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
     PatientController pc;
     BasketController bc;
     SettingController sc;
-
     ArrayList<HashMap<String, String>> items;
-    Double totalAmount = 0.0;
+    double totalAmount = 0.0;
+    double undiscounted_total = 0;
     NonScrollListView order_summary;
     TextView amount_subtotal, amount_of_coupon_discount, amount_of_points_discount, total_amount, delivery_charge;
     LinearLayout points_layout, coupon_layout, subtotal_layout, total_layout, delivery_charge_layout;
     TextView order_receiving_option, address_option, recipient_option, payment_option, recipient_contact_number, address_or_branch;
     LinearLayout root;
+    LinearLayout promo_code_btn_layout, use_points_btn_layout;
     Settings settings;
     double delivery_charge_val = 0;
     double discounted_total = 0;
-    public static AppCompatDialog pDialog;
     AlertDialog.Builder builder;
-    TextView label_expected_points, label_total_savings;
+    TextView label_expected_points, label_total_savings, label_senior_discount;
+    String msg;
+    double final_peso_discount, final_percentage_discount, final_min_purchase = 0;
+    String final_free_gift, final_free_delivery, final_qty_required = "";
+    EditText coupon;
+    ProgressBar promo_progress;
+    TextView message_after_promo_input;
+    String modeOfDelivery = "";
+    boolean final_isDelivery;
+    double final_expected_points_value;
+    EditText points_txtfield;
+    TextView points_text;
+    Patient patient;
+    TextView how_to_senior_discount;
+    EditText senior_id_number;
+    Button upload_senior_id;
+    ImageView senior_picture_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +108,6 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         get_intent = getIntent();
 
         order_model = (OrderModel) get_intent.getSerializableExtra("order_model");
-        Log.d("summary_activity_om", order_model.getMode_of_delivery());
         myToolBar = (Toolbar) findViewById(R.id.myToolBar);
         change_id = (Button) findViewById(R.id.change_id);
         order_summary = (NonScrollListView) findViewById(R.id.order_summary);
@@ -108,12 +134,41 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         root = (LinearLayout) findViewById(R.id.root);
         label_expected_points = (TextView) findViewById(R.id.label_expected_points);
         label_total_savings = (TextView) findViewById(R.id.label_total_savings);
+        label_senior_discount = (TextView) findViewById(R.id.label_senior_discount);
+
+        promo_code_btn = (Button) findViewById(R.id.promo_code_btn);
+        use_points_btn = (Button) findViewById(R.id.use_points_btn);
+        promo_code_btn_layout = (LinearLayout) findViewById(R.id.promo_code_btn_layout);
+        use_points_btn_layout = (LinearLayout) findViewById(R.id.use_points_btn_layout);
+        how_to_senior_discount = (TextView) findViewById(R.id.how_to_senior_discount);
+        senior_picture_id = (ImageView) findViewById(R.id.senior_picture_id);
+
+        how_to_senior_discount.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                showSeniorValidationDialog();
+            }
+        });
+
+        promo_code_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPromoDialog();
+            }
+        });
+        use_points_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPointsDialog();
+            }
+        });
 
         dbHelper = new DbHelper(this);
         pc = new PatientController(this);
         bc = new BasketController();
         helper = new Helpers();
         sc = new SettingController(this);
+        patient = pc.getloginPatient(SidebarActivity.getUname());
 
         showBeautifulDialog();
 
@@ -122,9 +177,9 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void getResult(JSONObject response) {
                 try {
-                    Log.d("response_fs", response + "");
+                    d("response_fs", response + "");
 
-                    double expected_points_value = response.getDouble("expected_points");
+                    final double expected_points_value = response.getDouble("expected_points");
 
                     int success = response.getInt("success");
                     final JSONArray json_mysql = response.getJSONArray("baskets");
@@ -135,16 +190,39 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                             orderCancelled();
                         }
 
-                        if (order_model.getMode_of_delivery().equals("pickup")) {
-                            address_or_branch.setText("Branch to pickup order");
-                            setBranchNameFromServer();
-                            populateView(json_mysql, false, expected_points_value);
-                        } else {
-                            address_or_branch.setText("Address for delivery");
-                            address_option.setText(order_model.getRecipient_address());
-                            populateView(json_mysql, true, expected_points_value);
-                        }
+                        StringRequests.getString(SummaryActivity.this, "db/get.php?q=get_patient_points&patient_id=" + SidebarActivity.getUserID(), new StringRespondListener<String>() {
+                            @Override
+                            public void getResult(String response) {
+                                patient.setPoints(Double.parseDouble(response));
+                                pc.updatePoints(Double.parseDouble(response));
 
+                                if (patient.getPoints() > 0)
+                                    use_points_btn_layout.setVisibility(View.VISIBLE);
+                                else
+                                    use_points_btn_layout.setVisibility(View.GONE);
+
+                                modeOfDelivery = order_model.getMode_of_delivery();
+
+                                if (modeOfDelivery.equals("pickup")) {
+                                    address_or_branch.setText("Branch to pickup order");
+                                    setBranchNameFromServer();
+                                    final_isDelivery = false;
+                                    final_expected_points_value = expected_points_value;
+                                    populateView(json_mysql);
+                                } else {
+                                    address_or_branch.setText("Address for delivery");
+                                    address_option.setText(order_model.getRecipient_address());
+                                    final_isDelivery = true;
+                                    final_expected_points_value = expected_points_value;
+                                    populateView(json_mysql);
+                                }
+
+                            }
+                        }, new ErrorListener<VolleyError>() {
+                            public void getError(VolleyError error) {
+                                Log.d("error for sumthing", error + "");
+                            }
+                        });
                     }
                 } catch (Exception e) {
                     Toast.makeText(SummaryActivity.this, e + "", Toast.LENGTH_SHORT).show();
@@ -174,7 +252,9 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         order_now_btn.setOnClickListener(this);
     }
 
-    void populateView(final JSONArray json_mysql, final boolean isDelivery, final double expected_points_value) {
+
+
+    void populateView(final JSONArray json_mysql) {
         GetRequest.getJSONobj(getBaseContext(), "get_settings", "settings", "serverID", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
@@ -187,56 +267,26 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                     double percentage_discount = Double.parseDouble(item.get("percentage_discount"));
                     double computed_discount;
 
-                    if (promo_type.equals("peso_discount"))
-                        computed_discount = item_subtotal_value - peso_discount;
-                    else if (promo_type.equals("percentage_discount"))
-                        computed_discount = item_subtotal_value - percentage_discount;
-                    else
-                        computed_discount = item_subtotal_value;
+                    switch (promo_type) {
+                        case "peso_discount":
+                            computed_discount = item_subtotal_value - peso_discount;
+                            break;
+                        case "percentage_discount":
+                            computed_discount = item_subtotal_value - percentage_discount;
+                            break;
+                        default:
+                            computed_discount = item_subtotal_value;
+                            break;
+                    }
 
+                    undiscounted_total += item_subtotal_value;
                     totalAmount = totalAmount + computed_discount;
                 }
 
-                double coupon_discount = order_model.getCoupon_discount();
+                //separate method.
+                showTotalDetails();
 
-                if (order_model.getCoupon_discount_type().equals("percentage_discount")) {
-                    Log.d("converted_percentage", totalAmount * (coupon_discount / 100) + "");
-                    coupon_discount = totalAmount * (coupon_discount / 100);
-                }
 
-                double points_discount = order_model.getPoints_discount();
-                discounted_total = totalAmount - points_discount - coupon_discount;
-
-                        /* discounts and total block*/
-                if (coupon_discount == 0.0)
-                    coupon_layout.setVisibility(View.GONE);
-
-                if (points_discount == 0.0)
-                    points_layout.setVisibility(View.GONE);
-
-                if (coupon_discount == 0.0 && points_discount == 0.0)
-                    subtotal_layout.setVisibility(View.GONE);
-
-                amount_subtotal.setText("\u20B1 " + String.valueOf(totalAmount));
-                amount_of_coupon_discount.setText("\u20B1 " + String.format("%.2f", coupon_discount));
-                amount_of_points_discount.setText("\u20B1 " + String.format("%.2f", points_discount));
-                total_amount.setText("\u20B1 " + String.format("%.2f", discounted_total));
-                label_expected_points.setText("You will receive " + expected_points_value + " points upon order.");
-                label_total_savings.setText("You will save \u20b1 " + ShoppingCartAdapter.total_savings_value);
-
-                if (isDelivery) {
-                    settings = sc.getAllSettings();
-                    delivery_charge_layout.setVisibility(View.VISIBLE);
-                    if (order_model.getCoupon_discount_type().equals("free_delivery")) {
-                        delivery_charge.setTextColor(getResources().getColor(R.color.ColorPrimary));
-                        delivery_charge.setText("Free");
-                    } else {
-                        delivery_charge.setText("₱ " + settings.getDelivery_charge());
-                        delivery_charge_val = settings.getDelivery_charge();
-                        discounted_total += delivery_charge_val;
-                        total_amount.setText("\u20B1 " + String.format("%.2f", discounted_total));
-                    }
-                }
                 /* discounts and total block*/
                 SummaryAdapter adapter = new SummaryAdapter(SummaryActivity.this, items);
                 order_summary.setAdapter(adapter);
@@ -244,6 +294,289 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         }, new ErrorListener<VolleyError>() {
             public void getError(VolleyError error) {
                 Snackbar.make(root, "Please check network connection.", Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    void showSeniorValidationDialog(){
+        View view = LayoutInflater.from(getBaseContext()).inflate(R.layout.senior_dialog_layout, null);
+        senior_id_number = (EditText) view.findViewById(R.id.senior_id_number);
+        upload_senior_id = (Button) view.findViewById(R.id.upload_senior_id);
+
+        upload_senior_id.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String senior_id_number_s  = senior_id_number.getText().toString();
+                if(!senior_id_number_s.equals("")) {
+                    Intent intent = new Intent(getBaseContext(), ShowPrescriptionDialog.class);
+                    intent.putExtra("isForSeniorUpload", true);
+                    intent.putExtra("senior_citizen_id_number", senior_id_number.getText().toString());
+                    startActivity(intent);
+                } else
+                    senior_id_number.setError("Enter ID number first");
+            }
+        });
+
+        builder = new AlertDialog.Builder(SummaryActivity.this);
+        builder.setView(view);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        Button theButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        theButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                double points_input = Double.parseDouble(points_txtfield.getText().toString());
+
+                if (points_input > patient.getPoints() || points_input == 0) {
+                    Snackbar.make(root, "Please input between 1 and " + patient.getPoints(), Snackbar.LENGTH_LONG).show();
+                } else {
+                    order_model.setPoints_discount(points_input);
+                    dialog.dismiss();
+                    showTotalDetails();           }
+            }
+        });
+    }
+
+    void showTotalDetails(){
+        double coupon_discount = order_model.getCoupon_discount();
+        d("coupon_discount_", coupon_discount + "");
+
+        if (order_model.getCoupon_discount_type().equals("percentage_discount")) {
+            d("converted_percentage", totalAmount * (coupon_discount / 100) + "");
+            coupon_discount = totalAmount * (coupon_discount / 100);
+        }
+
+        double points_discount = order_model.getPoints_discount();
+        discounted_total = totalAmount - points_discount - coupon_discount;
+
+                        /* discounts and total block*/
+        if (coupon_discount == 0.0)
+            coupon_layout.setVisibility(View.GONE);
+        else
+            coupon_layout.setVisibility(View.VISIBLE);
+
+        if (points_discount == 0.0)
+            points_layout.setVisibility(View.GONE);
+        else
+            points_layout.setVisibility(View.VISIBLE);
+
+        amount_subtotal.setText(helper.money_format(totalAmount));
+        amount_of_coupon_discount.setText(helper.money_format(coupon_discount));
+        amount_of_points_discount.setText(helper.money_format(points_discount));
+        total_amount.setText(helper.money_format(discounted_total));
+
+        double senior_discount  = undiscounted_total * .20;
+
+        label_expected_points.setText("You will receive " + final_expected_points_value + " points upon order.");
+        label_total_savings.setText("You will save "+ helper.money_format(ShoppingCartAdapter.total_savings_value));
+        label_senior_discount.setText("You will save more ( "+ helper.money_format(senior_discount)+" ) if you validate your Senior Citizen ID");
+
+        if (final_isDelivery) {
+            settings = sc.getAllSettings();
+            delivery_charge_layout.setVisibility(View.VISIBLE);
+            if (order_model.getCoupon_discount_type().equals("free_delivery")) {
+                delivery_charge.setTextColor(getResources().getColor(R.color.ColorPrimary));
+                delivery_charge.setText("Free");
+            } else {
+                delivery_charge.setText(helper.money_format(settings.getDelivery_charge()));
+                delivery_charge_val = settings.getDelivery_charge();
+                discounted_total += delivery_charge_val;
+                total_amount.setText(helper.money_format(discounted_total));
+            }
+        }
+    }
+
+    void showPointsDialog() {
+        View view = LayoutInflater.from(getBaseContext()).inflate(R.layout.points_dialog_layout, null);
+        points_txtfield = (EditText) view.findViewById(R.id.points_txtfield);
+        points_text = (TextView) view.findViewById(R.id.points_text);
+
+        points_txtfield.setText(String.valueOf(patient.getPoints()));
+        points_text.setText(" out of "+ patient.getPoints() + " points");
+
+        builder = new AlertDialog.Builder(SummaryActivity.this);
+        builder.setView(view);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Use", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        Button theButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        theButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                double points_input = Double.parseDouble(points_txtfield.getText().toString());
+
+                if (points_input > patient.getPoints() || points_input == 0) {
+                    Snackbar.make(root, "Please input between 1 and " + patient.getPoints(), Snackbar.LENGTH_LONG).show();
+                } else {
+                    order_model.setPoints_discount(points_input);
+                    dialog.dismiss();
+                    showTotalDetails();
+//                    redeem_points.setVisibility(View.GONE);
+//                    points_txtfield.setVisibility(View.GONE);
+//                    points_text.setTextColor(getResources().getColor(R.color.ColorPrimary));
+//                    points_text.setText("Your order total will be discounted ₱ " + order_model.getPoints_discount() + " upon checkout");
+                }
+            }
+        });
+
+    }
+
+    void showPromoDialog() {
+        View view1 = LayoutInflater.from(getBaseContext()).inflate(R.layout.coupon_dialog_layout, null);
+        coupon = (EditText) view1.findViewById(R.id.coupon);
+        promo_progress = (ProgressBar) view1.findViewById(R.id.promo_progress);
+        message_after_promo_input = (TextView) view1.findViewById(R.id.message_after_promo_input);
+
+        builder = new AlertDialog.Builder(SummaryActivity.this);
+        builder.setView(view1);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        Button theButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        theButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                message_after_promo_input.setVisibility(View.GONE);
+                final String promo_code = coupon.getText().toString();
+                if (!promo_code.equals("")) {
+                    promo_progress.setVisibility(View.VISIBLE);
+                   searchPromoCode(promo_code, dialog);
+                }
+            }
+        });
+    }
+
+    void searchPromoCode(String promo_code, final AlertDialog dialog) {
+        promos_map = new HashMap<>();
+        ListOfPatientsRequest.getJSONobj(SummaryActivity.this, "check_promo_code&promo_code=" + promo_code, "promos", new RespondListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject response) {
+                d("response_promo", response + "");
+                try {
+                    int success = response.getInt("success");
+
+                    if (success == 1) {
+                        JSONArray json_mysql = response.getJSONArray("promos");
+                        JSONObject obj = json_mysql.getJSONObject(0);
+
+                        d("obj_asd", obj+"");
+
+                        //free gifts still needed to be discussed
+                        promos_map.put("is_free_delivery", obj.getString("is_free_delivery"));
+                        promos_map.put("percentage_discount", obj.getString("percentage_discount"));
+                        promos_map.put("peso_discount", obj.getString("peso_discount"));
+
+                        promos_map.put("product_applicability", obj.getString("product_applicability"));
+                        promos_map.put("minimum_purchase_amount", obj.getString("minimum_purchase_amount"));
+
+                        //additional common data
+                        promos_map.put("promo_id", obj.getString("id"));
+                        promos_map.put("offer_type", obj.getString("offer_type"));
+                        promos_map.put("generic_redemption_code", obj.getString("generic_redemption_code"));
+                        promos_map.put("start_date", obj.getString("start_date"));
+                        promos_map.put("end_date", obj.getString("end_date"));
+
+                        //setting msg for what the user have received
+                        final_min_purchase = Double.parseDouble(promos_map.get("minimum_purchase_amount"));
+                        final_peso_discount = Double.parseDouble(promos_map.get("peso_discount"));
+                        final_percentage_discount = Double.parseDouble(promos_map.get("percentage_discount"));
+                        final_free_gift = "";
+                        final_free_delivery = promos_map.get("is_free_delivery");
+                        final_qty_required = promos_map.get("quantity_required");
+
+
+                        if (final_peso_discount > 0) {
+                            msg = "You got ₱" + promos_map.get("peso_discount") + " discount on your total order.";
+                            order_model.setCoupon_discount(Double.parseDouble(promos_map.get("peso_discount")));
+                            order_model.setCoupon_discount_type("peso_discount");
+                        }
+
+                        if (final_percentage_discount > 0) {
+                            msg = "You got " + promos_map.get("percentage_discount") + "% discount on your total order.";
+                            order_model.setCoupon_discount(Double.parseDouble(promos_map.get("percentage_discount")));
+                            order_model.setCoupon_discount_type("percentage_discount");
+                        }
+
+//                        if (final_free_gift.equals("1")) {
+//                            msg = "You got free gift, upon purchase.";
+//                            order_model.setCoupon_discount_type("free_gift");
+//                        }
+
+                        if (final_free_delivery.equals("1")) {
+                            msg = "You got free delivery.";
+                            order_model.setCoupon_discount_type("free_delivery");
+                        }
+
+                        dialog.dismiss();
+                        showTotalDetails();
+
+                        AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(SummaryActivity.this);
+                        confirmationDialog.setTitle("Congratulations!");
+                        confirmationDialog.setMessage(msg);
+                        confirmationDialog.setCancelable(false);
+                        confirmationDialog.setPositiveButton("Ok, Thanks", null);
+                        confirmationDialog.show();
+
+
+                        message_after_promo_input.setTextColor(getResources().getColor(R.color.ColorPrimary));
+                        message_after_promo_input.setText(msg);
+                        message_after_promo_input.setVisibility(View.VISIBLE);
+                        order_model.setPromo_id(Integer.parseInt(promos_map.get("promo_id")));
+
+                        promo_progress.setVisibility(View.GONE);
+                        coupon.setVisibility(View.GONE);
+                        promo_code_btn_layout.setVisibility(View.GONE);
+                    } else {
+                        promo_progress.setVisibility(View.GONE);
+                        message_after_promo_input.setTextColor(getResources().getColor(R.color.list_background_pressed));
+                        message_after_promo_input.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e) {
+//                                Snackbar.make(root, e + "", Snackbar.LENGTH_INDEFINITE).show();
+                    d("err", e + "");
+                }
+            }
+        }, new ErrorListener<VolleyError>() {
+            @Override
+            public void getError(VolleyError e) {
+                Snackbar.make(root, "Network error", Snackbar.LENGTH_INDEFINITE).show();
             }
         });
     }
@@ -256,7 +589,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
             }
         }, new ErrorListener<VolleyError>() {
             public void getError(VolleyError error) {
-                Log.d("error for sumthing", error + "");
+                d("error for sumthing", error + "");
             }
         });
     }
@@ -270,29 +603,6 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    public void checkForSettingsUpdate() {
-//        GetRequest.getJSONobj(getBaseContext(), "get_settings", "settings", "serverID", new RespondListener<JSONObject>() {
-//            @Override
-//            public void getResult(JSONObject response) {
-//                settings = sc.getAllSettings();
-//                delivery_charge_layout.setVisibility(View.VISIBLE);
-//                if (order_model.getCoupon_discount_type().equals("free_delivery")) {
-//                    delivery_charge.setTextColor(getResources().getColor(R.color.ColorPrimary));
-//                    delivery_charge.setText("Free");
-//                } else {
-//                    delivery_charge.setText("₱ " + settings.getDelivery_charge());
-//                    delivery_charge_val = settings.getDelivery_charge();
-//                    discounted_total += delivery_charge_val;
-//                    total_amount.setText("\u20B1 " + String.format("%.2f", discounted_total));
-//                }
-//            }
-//        }, new ErrorListener<VolleyError>() {
-//            public void getError(VolleyError error) {
-//                Snackbar.make(root, "Please check network connection.", Snackbar.LENGTH_LONG).show();
-//            }
-//        });
-//    }
 
     @Override
     public void onClick(View v) {
@@ -334,36 +644,36 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                             map.put("promo_type", String.valueOf(order_model.getCoupon_discount_type()));
                             map.put("email", patient.getEmail());
 
-                            Log.d("mappings", map.toString());
+                            d("mappings", map.toString());
 
                             String url = "verify_cash_payment";
                             CustomPostRequest.send(url, map, new RespondListener<JSONObject>() {
                                         @Override
                                         public void getResult(JSONObject response) {
-                                            Log.d("b_payresponse", response + "");
+                                            d("b_payresponse", response + "");
                                             try {
                                                 if (response.getBoolean("basket_quantity_changed")) {
                                                     letDialogSleep();
                                                     orderCancelled();
                                                 } else {
-                                                    Log.d("b_check", "true im here");
+                                                    d("b_check", "true im here");
                                                     //request for orders request
                                                     GetRequest.getJSONobj(getBaseContext(), "get_orders&patient_id=" + SidebarActivity.getUserID(), "orders", "orders_id", new RespondListener<JSONObject>() {
                                                         @Override
                                                         public void getResult(JSONObject response) {
 
-                                                            Log.d("b_get_orders", response + "");
+                                                            d("b_get_orders", response + "");
 
                                                             GetRequest.getJSONobj(getBaseContext(), "get_order_details&patient_id=" + SidebarActivity.getUserID(), "order_details", "order_details_id", new RespondListener<JSONObject>() {
                                                                 @Override
                                                                 public void getResult(JSONObject response) {
 
-                                                                    Log.d("b_get_od", response + "");
+                                                                    d("b_get_od", response + "");
 
                                                                     GetRequest.getJSONobj(getBaseContext(), "get_order_billings&patient_id=" + SidebarActivity.getUserID(), "billings", "billings_id", new RespondListener<JSONObject>() {
                                                                         @Override
                                                                         public void getResult(JSONObject response) {
-                                                                            Log.d("get_ob", response + "");
+                                                                            d("get_ob", response + "");
                                                                             try {
                                                                                 String timestamp_ordered = response.getString("server_timestamp");
 
@@ -377,21 +687,21 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                                                                     }, new ErrorListener<VolleyError>() {
                                                                         public void getError(VolleyError error) {
                                                                             letDialogSleep();
-                                                                            Log.d("get_ob_error", error + "");
+                                                                            d("get_ob_error", error + "");
                                                                         }
                                                                     });
                                                                 }
                                                             }, new ErrorListener<VolleyError>() {
                                                                 public void getError(VolleyError error) {
                                                                     letDialogSleep();
-                                                                    Log.d("b_get_od_error", error + "");
+                                                                    d("b_get_od_error", error + "");
                                                                 }
                                                             });
 
                                                         }
                                                     }, new ErrorListener<VolleyError>() {
                                                         public void getError(VolleyError error) {
-                                                            Log.d("b_get_orders_error", error + "");
+                                                            d("b_get_orders_error", error + "");
                                                             letDialogSleep();
                                                         }
                                                     });

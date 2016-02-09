@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.example.zem.patientcareapp.CheckoutModule.DeliverPickupOption;
 import com.example.zem.patientcareapp.CheckoutModule.PromosDiscounts;
+import com.example.zem.patientcareapp.CheckoutModule.SummaryActivity;
 import com.example.zem.patientcareapp.Controllers.BasketController;
 import com.example.zem.patientcareapp.Controllers.OrderPreferenceController;
 import com.example.zem.patientcareapp.Interface.ErrorListener;
@@ -331,7 +332,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                         if (success == 1) {
                             if (check == 1) {
                                 if (order_model.isValid()) {
-                                    Intent intent = new Intent(ShoppingCartActivity.this, PromosDiscounts.class);
+                                    Intent intent = new Intent(ShoppingCartActivity.this, SummaryActivity.class);
                                     intent.putExtra("order_model", order_model);
                                     startActivity(intent);
                                     ShoppingCartActivity.this.finish();

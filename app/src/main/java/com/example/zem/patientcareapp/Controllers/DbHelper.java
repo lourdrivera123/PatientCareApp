@@ -5,8 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.zem.patientcareapp.ConfigurationModule.Helpers;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,8 +13,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-
 
 public class DbHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "PatientCare";
@@ -141,7 +138,7 @@ public class DbHelper extends SQLiteOpenHelper {
                             rowObject.put(cursor.getColumnName(i), "");
                         }
                     } catch (Exception e) {
-
+                        Log.d("dbhelper1", e+"");
                     }
                 }
             }
@@ -172,7 +169,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     /////////////////////////GET METHODS/////////////////////////////
     public ArrayList<Integer> getFavoritesByUserID(int user_id) {
-        ArrayList<Integer> list = new ArrayList();
+        ArrayList<Integer> list = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();
         String sql = "SELECT * FROM " + TBL_FAVORITES + " WHERE " + FAVE_USER_ID + " = " + user_id;
         Cursor cur = db.rawQuery(sql, null);

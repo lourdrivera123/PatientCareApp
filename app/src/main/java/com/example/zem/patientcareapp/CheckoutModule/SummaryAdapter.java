@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.zem.patientcareapp.ConfigurationModule.Helpers;
 import com.example.zem.patientcareapp.R;
 
 import org.w3c.dom.Text;
@@ -16,16 +17,15 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by Zem on 11/19/2015.
- */
 public class SummaryAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<HashMap<String, String>> hashOfOrders;
+    Helpers helper;
 
     public SummaryAdapter(Context context, ArrayList<HashMap<String, String>> hashOfOrders){
         this.context = context;
         this.hashOfOrders = hashOfOrders;
+        helper = new Helpers();
     }
 
     @Override
@@ -57,9 +57,10 @@ public class SummaryAdapter extends BaseAdapter {
         TextView item_subtotal_discounted = (TextView) convertView.findViewById(R.id.item_subtotal_discounted);
 
         medicine_name.setText(hashOfOrders.get(position).get("name"));
-        qty_price.setText("\u20B1 "+hashOfOrders.get(position).get("price") + "x" +  hashOfOrders.get(position).get("quantity"));
-        item_subtotal.setText("\u20B1 "+hashOfOrders.get(position).get("item_subtotal"));
+        qty_price.setText(helper.money_format(Double.parseDouble(hashOfOrders.get(position).get("price"))) + " x " +  hashOfOrders.get(position).get("quantity"));
+        item_subtotal.setText(helper.money_format(Double.parseDouble(hashOfOrders.get(position).get("item_subtotal"))));
         String promo_type= hashOfOrders.get(position).get("promo_type");
+
         double item_subtotal_value = Double.parseDouble(hashOfOrders.get(position).get("item_subtotal"));
         double peso_discount = Double.parseDouble(hashOfOrders.get(position).get("peso_discount"));
         double percentage_discount = Double.parseDouble(hashOfOrders.get(position).get("percentage_discount"));
@@ -67,11 +68,11 @@ public class SummaryAdapter extends BaseAdapter {
 
         if(promo_type.equals("peso_discount") ){
             item_subtotal_discounted.setVisibility(View.VISIBLE);
-            item_subtotal_discounted.setText(new StringBuilder().append("\u20B1 ").append(item_subtotal_value - peso_discount).toString());
+            item_subtotal_discounted.setText(new StringBuilder().append(helper.money_format(item_subtotal_value - peso_discount)).toString());
             item_subtotal.setPaintFlags(item_subtotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else if(promo_type.equals("percentage_discount")) {
             item_subtotal_discounted.setVisibility(View.VISIBLE);
-            item_subtotal_discounted.setText(new StringBuilder().append("\u20B1 ").append(item_subtotal_value - percentage_discount+""));
+            item_subtotal_discounted.setText(new StringBuilder().append(helper.money_format(item_subtotal_value - percentage_discount)+""));
             item_subtotal.setPaintFlags(item_subtotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else if(promo_type.equals("free_gift")) {
             item_subtotal_discounted.setVisibility(View.VISIBLE);

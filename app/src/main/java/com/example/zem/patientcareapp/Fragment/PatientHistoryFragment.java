@@ -75,8 +75,8 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         dbHelper = new DbHelper(getActivity());
         ptc = new PatientTreatmentsController(getActivity());
         helpers = new Helpers();
-        arrayOfRecords = new ArrayList();
-        selectedList = new ArrayList();
+        arrayOfRecords = new ArrayList<>();
+        selectedList = new ArrayList<>();
 
         add_record = (ImageButton) rootView.findViewById(R.id.add_record);
         noResults = (TextView) rootView.findViewById(R.id.noResults);
@@ -125,7 +125,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
 
                 Log.d("record_id", record_id + "");
 
-                HashMap<String, String> hashMap = new HashMap();
+                HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("table", "patient_records");
                 hashMap.put("request", "crud");
                 hashMap.put("action", "delete");
@@ -278,7 +278,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         try {
             JSONObject object = array.getJSONObject(0);
 
-            final HashMap<String, String> map = new HashMap();
+            final HashMap<String, String> map = new HashMap<>();
             map.put("table", "patient_records");
             map.put("request", "crud");
             map.put("action", "insert");
@@ -308,11 +308,11 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                             pr.setDate(map.get("record_date"));
 
                             final JSONArray master_arr = new JSONArray();
-                            final ArrayList<HashMap<String, String>> array_treatments = new ArrayList();
+                            final ArrayList<HashMap<String, String>> array_treatments = new ArrayList<>();
 
                             for (int x = 0; x < array.length(); x++) {
                                 JSONObject obj = array.getJSONObject(x);
-                                HashMap<String, String> hash = new HashMap();
+                                HashMap<String, String> hash = new HashMap<>();
 
                                 hash.put("patient_records_id", String.valueOf(last_inserted_id));
                                 hash.put("medicine_id", obj.getString("medicine_id"));
@@ -329,7 +329,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                             JSONObject json_to_be_passed = new JSONObject();
                             json_to_be_passed.put("json_treatments", master_arr);
 
-                            HashMap<String, String> hash = new HashMap();
+                            HashMap<String, String> hash = new HashMap<>();
                             hash.put("table", "patient_treatments");
                             hash.put("request", "crud");
                             hash.put("action", "multiple_insert");

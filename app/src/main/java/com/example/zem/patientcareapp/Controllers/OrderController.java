@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.zem.patientcareapp.Model.OrderModel;
 import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
 
 import org.json.JSONException;
@@ -15,9 +14,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by Zem on 11/23/2015.
- */
 public class OrderController extends DbHelper {
 
     DbHelper dbhelper;

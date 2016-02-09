@@ -101,6 +101,14 @@ public class Helpers implements View.OnCreateContextMenuListener {
         return Constants.GET_REQUEST_URL + request + "&tbl_name=" + tbl_name;
     }
 
+    public String money_format(double value){
+        return "₱"+String.format("%.2f", value);
+    }
+
+//    public String money_format_s(String price) {
+//        return "₱"+String.format("%.2f", price);
+//    }
+
     public String get_api_url(String request) {
         return Constants.API_REQUEST_URL + request;
     }
@@ -264,4 +272,6 @@ public class Helpers implements View.OnCreateContextMenuListener {
     void compute_promo(){
 
     }
+
+
 }

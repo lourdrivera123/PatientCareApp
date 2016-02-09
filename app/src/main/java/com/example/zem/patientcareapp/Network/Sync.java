@@ -1,6 +1,7 @@
 package com.example.zem.patientcareapp.Network;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.zem.patientcareapp.Controllers.BillingController;
@@ -53,10 +54,6 @@ import java.util.HashMap;
 
 import static android.util.Log.d;
 
-/**
- * Created by Dexter B. on 5/11/2015.
- */
-
 public class Sync {
 
     JSONArray json_array_mysql = null;
@@ -90,7 +87,7 @@ public class Sync {
     OrderPreferenceController opc;
     Context context;
 
-    public void init(Context c, String request, String table_name, String table_id, JSONObject response) {
+    public void init(Context c, String table_name, String table_id, JSONObject response) {
         tableName = table_name;
         tableId = table_id;
         context = c;
@@ -288,16 +285,16 @@ public class Sync {
             patient_record.setUpdated_at(json_object.getString("updated_at"));
             patient_record.setDeleted_at(json_object.getString("deleted_at"));
         } catch (Exception e) {
-
+            Log.d("sync1", e+"");
         }
         return patient_record;
     }
 
     public ArrayList<HashMap<String, String>> setTreatments(JSONObject json) {
-        ArrayList<HashMap<String, String>> listOfTreatments = new ArrayList();
+        ArrayList<HashMap<String, String>> listOfTreatments = new ArrayList<>();
 
         try {
-            HashMap<String, String> map = new HashMap();
+            HashMap<String, String> map = new HashMap<>();
             map.put("treatments_id", String.valueOf(json.getInt("id")));
             map.put("patient_records_id", String.valueOf(json.getInt("patient_records_id")));
             map.put("medicine_id", json.getString("medicine_id"));
@@ -307,7 +304,7 @@ public class Sync {
             map.put("duration_type", json.getString("duration_type"));
             listOfTreatments.add(map);
         } catch (Exception e) {
-
+            Log.d("sync2", e+"");
         }
         return listOfTreatments;
     }
@@ -326,15 +323,12 @@ public class Sync {
                     for (int x = 0; x < json_array_sqlite.length(); x++) {
                         JSONObject json_object_sqlite = json_array_sqlite.getJSONObject(x);
 
-                        if (product_json_object_mysql.getInt("id") == json_object_sqlite.getInt(server_id)) {
+                        if (product_json_object_mysql.getString("id").equals(json_object_sqlite.getString(server_id)))
                             flag = true;
-                        }
                     }
 
-                    if (!flag) {
+                    if (!flag)
                         json_array_final_storage.put(product_json_object_mysql);
-                    }
-
                 }
             }
 
@@ -362,10 +356,6 @@ public class Sync {
                             //put your json object into final array here.
 
                             doctors_json_array_final_storage.put(json_object_mysql);
-//                        Log.d("Updated at Compare", "the updated_at column in mysql is greater than in sqlite");
-
-                        } else {
-//                        Log.d("Updated at Compare", "the updated_at column in sqlite is greater than in mysql");
 
                         }
                     }

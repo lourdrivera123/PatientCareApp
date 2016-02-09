@@ -144,10 +144,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.CheckoutActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
             android:name=".Activities.PatientConsultationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />

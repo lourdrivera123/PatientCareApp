@@ -4,31 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.example.zem.patientcareapp.Interface.ErrorListener;
-import com.example.zem.patientcareapp.Interface.RespondListener;
 import com.example.zem.patientcareapp.Model.OrderModel;
-import com.example.zem.patientcareapp.Network.CustomPostRequest;
-import com.example.zem.patientcareapp.Network.GetRequest;
-import com.example.zem.patientcareapp.R;
 import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
-import static android.util.Log.d;
-import static com.example.zem.patientcareapp.Network.CustomPostRequest.send;
-import static java.lang.System.out;
-
-/**
- * Created by Zem on 11/23/2015.
- */
 public class OrderPreferenceController extends DbHelper {
 
     DbHelper dbhelper;
@@ -92,9 +74,7 @@ public class OrderPreferenceController extends DbHelper {
         values.put(ORDER_PREFERENCES_PAYMENT_METHOD, order_model.getPayment_method());
         values.put(ORDER_PREFERENCES_BRANCH_ID, order_model.getBranch_id());
 
-        long row = 0;
-
-        row = sql_db.update(TBL_ORDER_PREFERENCES, values, ORDER_PREFERENCES_PATIENT_ID + " = " + SidebarActivity.getUserID(), null);
+        long row = sql_db.update(TBL_ORDER_PREFERENCES, values, ORDER_PREFERENCES_PATIENT_ID + " = " + SidebarActivity.getUserID(), null);
 
         sql_db.close();
         return row > 0;
@@ -112,18 +92,15 @@ public class OrderPreferenceController extends DbHelper {
         values.put(ORDER_PREFERENCES_MODE_OF_DELIVERY, jobject.getString(ORDER_PREFERENCES_MODE_OF_DELIVERY));
         values.put(ORDER_PREFERENCES_PAYMENT_METHOD, jobject.getString(ORDER_PREFERENCES_PAYMENT_METHOD));
         values.put(ORDER_PREFERENCES_BRANCH_ID, jobject.getInt(ORDER_PREFERENCES_BRANCH_ID));
-        values.put(ORDER_PREFERENCES_SERVER_ID, jobject.getInt(ORDER_PREFERENCES_SERVER_ID));
-        values.put(ORDER_PREFERENCES_SERVER_ID, jobject.getString(CREATED_AT));
-        values.put(ORDER_PREFERENCES_SERVER_ID, jobject.getString(UPDATED_AT));
-        values.put(ORDER_PREFERENCES_SERVER_ID, jobject.getString(DELETED_AT));
+        values.put(ORDER_PREFERENCES_SERVER_ID, jobject.getInt("id"));
+        values.put(CREATED_AT, jobject.getString(CREATED_AT));
+        values.put(UPDATED_AT, jobject.getString(UPDATED_AT));
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        long row = 0;
-
-        row = sql_db.insert(TBL_ORDER_PREFERENCES, null, values);
+        long row = sql_db.insert(TBL_ORDER_PREFERENCES, null, values);
 
         sql_db.close();
         return row > 0;

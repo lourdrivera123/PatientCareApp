@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.example.zem.patientcareapp.Model.PatientRecord;
 
@@ -55,6 +54,8 @@ public class PatientRecordController extends DbHelper {
                 values.put(RECORDS_DOCTOR_NAME, fullname);
                 values.put(RECORDS_CLINIC_NAME, clinic);
             }
+
+            cur.close();
         } else {
             values.put(RECORDS_DOCTOR_NAME, record.getDoctorName());
             values.put(RECORDS_CLINIC_NAME, record.getClinicName());
@@ -76,6 +77,7 @@ public class PatientRecordController extends DbHelper {
             rowID = sql_db.insert(TBL_PATIENT_RECORDS, null, values);
 
         sql_db.close();
+
         return rowID > 0;
     }
 
@@ -83,11 +85,11 @@ public class PatientRecordController extends DbHelper {
         SQLiteDatabase sql_db = dbhelper.getWritableDatabase();
         String sql = "SELECT * FROM " + TBL_PATIENT_RECORDS + " ORDER BY " + RECORDS_DATE + " DESC";
         Cursor cur = sql_db.rawQuery(sql, null);
-        ArrayList<HashMap<String, String>> arrayOfRecords = new ArrayList();
+        ArrayList<HashMap<String, String>> arrayOfRecords = new ArrayList<>();
         HashMap<String, String> map;
 
         while (cur.moveToNext()) {
-            map = new HashMap();
+            map = new HashMap<>();
             map.put("record_id", String.valueOf(cur.getInt(cur.getColumnIndex(SERVER_RECORDS_ID))));
             map.put("record_date", cur.getString(cur.getColumnIndex(RECORDS_DATE)));
             map.put("doctor_name", cur.getString(cur.getColumnIndex(RECORDS_DOCTOR_NAME)));
@@ -106,10 +108,10 @@ public class PatientRecordController extends DbHelper {
         String sql = "SELECT pr.*, pt.* FROM " + TBL_PATIENT_RECORDS + " AS pr INNER JOIN " + PatientTreatmentsController.TBL_PATIENT_TREATMENTS + " as pt on pr." + SERVER_RECORDS_ID + " = pt." + PatientTreatmentsController.TREATMENTS_PATIENT_RECORDS_ID
                 + " WHERE pr." + SERVER_RECORDS_ID + " = " + record_id;
         Cursor cur = db.rawQuery(sql, null);
-        ArrayList<HashMap<String, String>> array = new ArrayList();
+        ArrayList<HashMap<String, String>> array = new ArrayList<>();
 
         while (cur.moveToNext()) {
-            HashMap<String, String> map = new HashMap();
+            HashMap<String, String> map = new HashMap<>();
             map.put("record_id", String.valueOf(record_id));
             map.put("doctor_name", cur.getString(cur.getColumnIndex(RECORDS_DOCTOR_NAME)));
             map.put("clinic_name", cur.getString(cur.getColumnIndex(RECORDS_CLINIC_NAME)));
@@ -133,10 +135,13 @@ public class PatientRecordController extends DbHelper {
         String sql = "SELECT * FROM " + TBL_PATIENT_RECORDS;
         Cursor cur = db.rawQuery(sql, null);
         boolean flag = false;
+        long id;
 
         if (cur.moveToNext()) {
-            db.delete(TBL_PATIENT_RECORDS, null, null);
-            flag = true;
+            id = db.delete(TBL_PATIENT_RECORDS, null, null);
+
+            if(id > 0)
+                flag = true;
         } else
             flag = true;
 

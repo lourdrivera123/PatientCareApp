@@ -1,11 +1,9 @@
 package com.example.zem.patientcareapp.SidebarModule;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.app.Dialog;
 import android.app.FragmentTransaction;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,8 +20,6 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -42,6 +38,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.example.zem.patientcareapp.Activities.ShoppingCartActivity;
@@ -117,20 +114,13 @@ public class SidebarActivity extends AppCompatActivity {
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-//                mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
-                d("mainactivity", "oneceive");
-                SharedPreferences sp =
-                        PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sp
-                        .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
-                if (sentToken) {
-                    d("mainactivity", "senttoken");
-//                    showdl("senttoken");
-                } else {
-                    d("mainactivity", "errortoken");
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sp.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
 
-//                    showdl("error");
-                }
+                if (sentToken)
+                    d("mainactivity", "senttoken");
+                else
+                    d("mainactivity", "errortoken");
             }
         };
 
@@ -150,6 +140,8 @@ public class SidebarActivity extends AppCompatActivity {
 
         myToolBar = (Toolbar) findViewById(R.id.myToolBar);
         setSupportActionBar(myToolBar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         myToolBar.setNavigationIcon(R.drawable.ic_navigator);
@@ -227,20 +219,6 @@ public class SidebarActivity extends AppCompatActivity {
             moveTaskToBack(true);
             startActivity(new Intent(this, MainActivity.class));
         }
-    }
-
-    void showdl(String msg) {
-        AlertDialog.Builder order_completed_dialog = new AlertDialog.Builder(SidebarActivity.this);
-        order_completed_dialog.setTitle("Connection status");
-        order_completed_dialog.setMessage(msg);
-        order_completed_dialog.setCancelable(false);
-        order_completed_dialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        order_completed_dialog.show();
     }
 
     private boolean checkPlayServices() {
@@ -399,6 +377,8 @@ public class SidebarActivity extends AppCompatActivity {
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
             mDrawerLayout.closeDrawer(mDrawerList);
+
+            assert getSupportActionBar() != null;
             getSupportActionBar().setTitle(title);
         } else
             Log.e("SidebarAct1", "Error in creating fragment");
@@ -455,7 +435,7 @@ public class SidebarActivity extends AppCompatActivity {
 
                         if (count > 0) {
                             number_of_notif.setVisibility(View.VISIBLE);
-                            number_of_notif.setText(count + "");
+                            number_of_notif.setText(String.valueOf(count));
                         }
                     } else
                         number_of_notif.setVisibility(View.GONE);

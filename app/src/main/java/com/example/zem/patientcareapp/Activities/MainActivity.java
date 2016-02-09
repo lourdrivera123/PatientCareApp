@@ -2,21 +2,13 @@ package com.example.zem.patientcareapp.Activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -35,15 +27,10 @@ import com.example.zem.patientcareapp.Model.Patient;
 import com.example.zem.patientcareapp.Interface.ErrorListener;
 import com.example.zem.patientcareapp.Interface.RespondListener;
 import com.example.zem.patientcareapp.Network.CustomRequest;
-import com.example.zem.patientcareapp.Network.GetRequest;
 import com.example.zem.patientcareapp.Network.Sync;
 import com.example.zem.patientcareapp.Network.VolleySingleton;
 import com.example.zem.patientcareapp.R;
 import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
-import com.example.zem.patientcareapp.gcm.gcmquickstart.QuickstartPreferences;
-import com.example.zem.patientcareapp.gcm.gcmquickstart.RegistrationIntentService;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,10 +45,6 @@ import static android.util.Log.d;
 import static com.example.zem.patientcareapp.Network.GetRequest.getJSONobj;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String TAG = "SidebarActivity";
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-
     EditText username_txtfield, password_txtfield;
     TextView signup, forgotpw;
     LinearLayout login, root;
@@ -119,36 +102,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         login.setOnClickListener(this);
     }
 
-    void showdl(String msg){
-        AlertDialog.Builder order_completed_dialog = new AlertDialog.Builder(MainActivity.this);
-        order_completed_dialog.setTitle("Connection status");
-        order_completed_dialog.setMessage(msg);
-        order_completed_dialog.setCancelable(false);
-        order_completed_dialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        order_completed_dialog.show();
-    }
-
-//    private boolean checkPlayServices() {
-//        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-//        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-//        if (resultCode != ConnectionResult.SUCCESS) {
-//            if (apiAvailability.isUserResolvableError(resultCode)) {
-//                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-//                        .show();
-//            } else {
-//                Log.i(TAG, "This device is not supported.");
-//                finish();
-//            }
-//            return false;
-//        }
-//        return true;
-//    }
-
     @Override
     protected void onResume() {
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -162,9 +115,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             username_txtfield.setText("");
             password_txtfield.setText("");
         }
-
-//        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-//                new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
         super.onResume();
     }
 
@@ -316,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         SharedPreferences.Editor editor = sharedpreferences.edit();
                                         editor.putString(name, uname);
                                         editor.putString(pass, helpers.md5(password));
-                                        editor.commit();
+                                        editor.apply();
 
                                         String patient_image_name = patient_json_array_mysql.getJSONObject(0).getString("photo");
                                         if (!patient_image_name.equals(""))
@@ -352,14 +302,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    protected void onPause() {
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
-        super.onPause();
-    }
-
     public static Map<String, String> setParams() {
-        Map<String, String> params = new HashMap();
+        Map<String, String> params = new HashMap<>();
 
         params.put("request", "login");
         params.put("username", patient.getUsername());

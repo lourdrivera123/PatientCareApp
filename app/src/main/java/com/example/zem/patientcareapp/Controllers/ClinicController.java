@@ -10,10 +10,6 @@ import com.example.zem.patientcareapp.Model.Clinic;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by Zem on 11/23/2015.
- */
-
 public class ClinicController extends DbHelper {
 
     DbHelper dbhelper;
@@ -71,14 +67,14 @@ public class ClinicController extends DbHelper {
     }
 
     public ArrayList<HashMap<String, String>> getAllClinics() {
-        ArrayList<HashMap<String, String>> listOfClinics = new ArrayList();
+        ArrayList<HashMap<String, String>> listOfClinics = new ArrayList<>();
         SQLiteDatabase sql_db = dbhelper.getWritableDatabase();
 
         String sql = "SELECT * FROM " + TBL_CLINICS;
         Cursor cur = sql_db.rawQuery(sql, null);
 
         while (cur.moveToNext()) {
-            HashMap<String, String> map = new HashMap();
+            HashMap<String, String> map = new HashMap<>();
             map.put("clinic_id", String.valueOf(cur.getInt(cur.getColumnIndex(SERVER_CLINICS_ID))));
             map.put("clinic_name", cur.getString(cur.getColumnIndex(CLINIC_NAME)));
             listOfClinics.add(map);
@@ -86,11 +82,12 @@ public class ClinicController extends DbHelper {
 
         cur.close();
         sql_db.close();
+
         return listOfClinics;
     }
 
     public ArrayList<HashMap<String, String>> getClinicByDoctorID(int doctorID) {
-        ArrayList<HashMap<String, String>> listOfClinics = new ArrayList();
+        ArrayList<HashMap<String, String>> listOfClinics = new ArrayList<>();
 
         String sql = "SELECT c.*, cd.clinic_sched  FROM " + TBL_CLINICS + " as c INNER JOIN " + ClinicDoctorController.TBL_CLINIC_DOCTOR + " as cd ON c." + SERVER_CLINICS_ID +
                 " = cd." + ClinicDoctorController.CD_CLINIC_ID + " WHERE cd." + ClinicDoctorController.CD_DOCTOR_ID + " = " + doctorID;
@@ -98,7 +95,7 @@ public class ClinicController extends DbHelper {
         Cursor cur = sql_db.rawQuery(sql, null);
 
         while (cur.moveToNext()) {
-            HashMap<String, String> map = new HashMap();
+            HashMap<String, String> map = new HashMap<>();
 
             map.put(SERVER_CLINICS_ID, cur.getString(cur.getColumnIndex(SERVER_CLINICS_ID)));
             map.put(CLINIC_NAME, cur.getString(cur.getColumnIndex(CLINIC_NAME)));

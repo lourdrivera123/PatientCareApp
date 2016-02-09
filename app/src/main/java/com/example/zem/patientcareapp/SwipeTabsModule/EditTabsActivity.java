@@ -61,8 +61,6 @@ import com.example.zem.patientcareapp.R;
 import com.example.zem.patientcareapp.Activities.ReferralActivity;
 import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
 import com.example.zem.patientcareapp.adapter.TabsPagerAdapter;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.apache.http.HttpEntity;
@@ -128,11 +126,6 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
     public static Intent intent;
     public static AppCompatDialog pDialog;
     AlertDialog.Builder builder;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
 
     @Override
@@ -177,9 +170,6 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
             patient.setReferred_byUser(intent.getStringExtra("referred_by_User"));
             patient.setReferred_byDoctor(intent.getStringExtra("referred_by_Doctor"));
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     void showBeautifulDialog() {
@@ -335,8 +325,6 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
 
         if (count == limit)
             this.hasError = false;
-        else
-            this.hasError = true;
 
         patient.setSex(s_sex);
 
@@ -407,8 +395,6 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
 
         if (count == limit)
             this.hasError2 = false;
-        else
-            this.hasError2 = true;
 
         patient.setTel_no(s_tel_no);
         patient.setOptional_address(s_optional_address);
@@ -465,14 +451,17 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
     }
 
     public boolean validatechars(String str) {
-        Log.d("str_nums", String.valueOf(str.length()));
-        if (str.length() >= 6)
-            return true;
+        boolean flag = false;
 
-        return false;
+        if (str.length() >= 6)
+            flag = true;
+
+        return flag;
     }
 
     public boolean isEmailValid(String email) {
+        boolean flag = false;
+
         String regExpn =
                 "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
                         + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
@@ -485,9 +474,9 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
         Matcher matcher = pattern.matcher(email);
 
         if (matcher.matches())
-            return true;
-        else
-            return false;
+            flag = true;
+
+        return flag;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -735,46 +724,6 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "EditTabs Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.zem.patientcareapp.SwipeTabsModule/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "EditTabs Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.zem.patientcareapp.SwipeTabsModule/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 
     /////////////////////////////////////////////////////

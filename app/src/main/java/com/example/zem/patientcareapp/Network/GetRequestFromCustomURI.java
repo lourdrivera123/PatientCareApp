@@ -15,9 +15,6 @@ import com.example.zem.patientcareapp.Interface.RespondListener;
 
 import org.json.JSONObject;
 
-/**
- * Created by lourdrivera on 1/20/2016.
- */
 public class GetRequestFromCustomURI {
 
     public static void getJSONobj(final Context c, final String q, final String table_name, final String table_id, final RespondListener<JSONObject> listener, final ErrorListener<VolleyError> errorlistener) {
@@ -34,7 +31,7 @@ public class GetRequestFromCustomURI {
             @Override
             public void onResponse(JSONObject response) {
                 Sync sync = new Sync();
-                sync.init(c, q, table_name, table_id, response);
+                sync.init(c, table_name, table_id, response);
                 try {
                     upc.updateLastUpdatedTable(table_name, response.getString("latest_updated_at"));
                 } catch (Exception e) {

@@ -30,7 +30,7 @@ public class GetRequest {
             @Override
             public void onResponse(JSONObject response) {
                 Sync sync = new Sync();
-                sync.init(c, q, table_name, table_id, response);
+                sync.init(c, table_name, table_id, response);
                 try {
                     upc.updateLastUpdatedTable(table_name, response.getString("latest_updated_at"));
                 } catch (Exception e) {
