@@ -173,7 +173,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         showBeautifulDialog();
 
         String url_raw = "check_basket?patient_id=" + SidebarActivity.getUserID() + "&branch_id=" + order_model.getBranch_id();
-        ListRequestFromCustomURI.getJSONobj(this, url_raw, "baskets", new RespondListener<JSONObject>() {
+        ListRequestFromCustomURI.getJSONobj(url_raw, new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {

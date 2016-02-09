@@ -122,7 +122,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                 }
 
                 String url_raw = "check_basket?patient_id=" + SidebarActivity.getUserID() + "&branch_id=" + order_model.getBranch_id();
-                ListRequestFromCustomURI.getJSONobj(ShoppingCartActivity.this, url_raw, "baskets", new RespondListener<JSONObject>() {
+                ListRequestFromCustomURI.getJSONobj(url_raw, new RespondListener<JSONObject>() {
                     @Override
                     public void getResult(JSONObject response) {
                         try {

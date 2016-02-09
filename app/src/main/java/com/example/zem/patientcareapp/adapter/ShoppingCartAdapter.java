@@ -42,11 +42,6 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
     Helpers helpers;
     DbHelper dbHelper;
 
-    ImageView prod_image;
-    ImageButton delete, up_btn, down_btn;
-    LinearLayout root;
-    TextView productName, product_quantity, product_price, total, is_promo, promo_total, free_item;
-
     ArrayList<HashMap<String, String>> objects;
 
     public static double cart_total_amount;
@@ -65,26 +60,41 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
         total_savings_value = 0.0;
     }
 
+    class ViewHolder {
+        ImageView prod_image;
+        ImageButton delete, up_btn, down_btn;
+        LinearLayout root;
+        TextView productName, product_quantity, product_price, total, is_promo, promo_total, free_item;
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        convertView = inflater.inflate(R.layout.item_shopping_cart, parent, false);
+        ViewHolder holder;
 
-        prod_image = (ImageView) convertView.findViewById(R.id.prod_image);
-        productName = (TextView) convertView.findViewById(R.id.productName);
-        product_price = (TextView) convertView.findViewById(R.id.product_price);
-        product_quantity = (TextView) convertView.findViewById(R.id.product_quantity);
-        is_promo = (TextView) convertView.findViewById(R.id.is_promo);
-        total = (TextView) convertView.findViewById(R.id.total);
-        delete = (ImageButton) convertView.findViewById(R.id.delete);
-        up_btn = (ImageButton) convertView.findViewById(R.id.up_btn);
-        down_btn = (ImageButton) convertView.findViewById(R.id.down_btn);
-        root = (LinearLayout) convertView.findViewById(R.id.root);
-        promo_total = (TextView) convertView.findViewById(R.id.promo_total);
-        free_item = (TextView) convertView.findViewById(R.id.free_item);
+        if (convertView == null) {
+            holder = new ViewHolder();
+            convertView = inflater.inflate(R.layout.item_shopping_cart, parent, false);
 
-        delete.setTag(position);
-        up_btn.setTag(product_quantity);
-        down_btn.setTag(product_quantity);
+            holder.prod_image = (ImageView) convertView.findViewById(R.id.prod_image);
+            holder.productName = (TextView) convertView.findViewById(R.id.productName);
+            holder.product_price = (TextView) convertView.findViewById(R.id.product_price);
+            holder.product_quantity = (TextView) convertView.findViewById(R.id.product_quantity);
+            holder.is_promo = (TextView) convertView.findViewById(R.id.is_promo);
+            holder.total = (TextView) convertView.findViewById(R.id.total);
+            holder.delete = (ImageButton) convertView.findViewById(R.id.delete);
+            holder.up_btn = (ImageButton) convertView.findViewById(R.id.up_btn);
+            holder.down_btn = (ImageButton) convertView.findViewById(R.id.down_btn);
+            holder.root = (LinearLayout) convertView.findViewById(R.id.root);
+            holder.promo_total = (TextView) convertView.findViewById(R.id.promo_total);
+            holder.free_item = (TextView) convertView.findViewById(R.id.free_item);
+
+            holder.delete.setTag(position);
+            holder.up_btn.setTag(holder.product_quantity);
+            holder.down_btn.setTag(holder.product_quantity);
+
+            convertView.setTag(holder);
+        } else
+            holder = (ViewHolder) convertView.getTag();
 
         final double price = Double.parseDouble(objects.get(position).get("price"));
         int qty_per_packing = Integer.parseInt(objects.get(position).get("qty_per_packing"));
@@ -126,7 +136,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                             type_of_promo = "*A free item";
 
                             if (cart_quantity >= final_qty_required) {
-                                free_item.setVisibility(View.VISIBLE);
+                                holder.free_item.setVisibility(View.VISIBLE);
                                 String free_item_purchase;
                                 int qty;
 
@@ -141,7 +151,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                 }
 
                                 String set_free_item = "*Free " + qty + " " + free_item_purchase + " of " + final_free_item_name;
-                                free_item.setText(set_free_item);
+                                holder.free_item.setText(set_free_item);
                             }
                         }
                     } else if (final_min_purchase > 0) {
@@ -157,8 +167,8 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                             type_of_promo = "*Php " + final_peso + " off";
 
                             if (total_per_item >= final_min_purchase) {
-                                promo_total.setVisibility(View.VISIBLE);
-                                total.setPaintFlags(total.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                                holder.promo_total.setVisibility(View.VISIBLE);
+                                holder.total.setPaintFlags(holder.total.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
                                 if (final_is_every.equals("1")) {
                                     discounted_total = total_per_item - (discount_times * final_peso);
@@ -172,8 +182,8 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                             type_of_promo = "*" + final_percentage + "% off";
 
                             if (total_per_item >= final_min_purchase) {
-                                promo_total.setVisibility(View.VISIBLE);
-                                total.setPaintFlags(total.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                                holder.promo_total.setVisibility(View.VISIBLE);
+                                holder.total.setPaintFlags(holder.total.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                                 double percent_off = Double.parseDouble(String.valueOf(final_percentage / 100.0f));
 
                                 discounted_amount = total_per_item * percent_off;
@@ -181,14 +191,14 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                             }
                         }
 
-                        promo_total.setText("Php " + df.format(discounted_total));
+                        holder.promo_total.setText("Php " + df.format(discounted_total));
                         cart_total_amount = cart_total_amount - discounted_amount;
                         total_savings_value += discounted_amount;
                     }
 
                     if (!type_of_promo.equals("")) {
-                        is_promo.setVisibility(View.VISIBLE);
-                        is_promo.setText(type_of_promo + type_of_minimum);
+                        holder.is_promo.setVisibility(View.VISIBLE);
+                        holder.is_promo.setText(type_of_promo + type_of_minimum);
                     }
                 }
             }
@@ -197,16 +207,16 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ambrolex_family);
         final int shadowSize = context.getResources().getDimensionPixelSize(R.dimen.shadow_size);
         final int shadowColor = context.getResources().getColor(R.color.shadow_color);
-        prod_image.setImageDrawable(new RoundedAvatarDrawable(icon, shadowSize, shadowColor));
-        prod_image.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        holder.prod_image.setImageDrawable(new RoundedAvatarDrawable(icon, shadowSize, shadowColor));
+        holder.prod_image.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         String plural = helpers.getPluralForm(objects.get(position).get("unit"), qty_per_packing);
-        product_price.setText("Php " + price + "/" + objects.get(position).get("packing") + " (" + qty_per_packing + " " + plural + ")");
-        productName.setText(objects.get(position).get("name"));
-        total.setText("Php " + total_per_item);
-        product_quantity.setText(String.valueOf(cart_quantity));
+        holder.product_price.setText("Php " + price + "/" + objects.get(position).get("packing") + " (" + qty_per_packing + " " + plural + ")");
+        holder.productName.setText(objects.get(position).get("name"));
+        holder.total.setText("Php " + total_per_item);
+        holder.product_quantity.setText(String.valueOf(cart_quantity));
 
-        delete.setOnClickListener(this);
+        holder.delete.setOnClickListener(this);
 
         final View finalConvertView = convertView;
         final int final_qty_required1 = final_qty_required;
@@ -221,10 +231,10 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
 
         final double decimal = (100 - final_percentage1) / 100.0f;
         final double percent_off = Double.parseDouble(String.valueOf(final_percentage1 / 100.0f));
-        final Object txt_promo_total = promo_total;
-        final Object txt_free_item = free_item;
+        final Object txt_promo_total = holder.promo_total;
+        final Object txt_free_item = holder.free_item;
 
-        up_btn.setOnClickListener(new View.OnClickListener() {
+        holder.up_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TextView txt = (TextView) v.getTag();
@@ -286,7 +296,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                     temp_prod_discount = total_per_item - (discount_times * final_peso1);
 
 
-                                    if ((total_per_item - price) < (final_min_purchase1 * discount_times)){
+                                    if ((total_per_item - price) < (final_min_purchase1 * discount_times)) {
                                         cart_total_amount += (price - final_peso1);
                                         total_savings_value += final_peso1;
                                     } else
@@ -295,7 +305,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                     temp_prod_discount = total_per_item - final_peso1;
                                     cart_total_amount += price;
 
-                                    if ((total_per_item - price) < final_min_purchase1){
+                                    if ((total_per_item - price) < final_min_purchase1) {
                                         cart_total_amount -= final_peso1;
                                         total_savings_value += final_peso1;
                                     }
@@ -320,7 +330,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
             }
         });
 
-        down_btn.setOnClickListener(new View.OnClickListener() {
+        holder.down_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TextView txt = (TextView) v.getTag();
@@ -366,8 +376,8 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                 if (final_peso1 > 0) {
                                     cart_total_amount += final_peso1;
                                     total_savings_value -= final_peso1;
-                                }else if (final_percentage1 > 0 && final_is_every1.equals("0")) {
-                                    double back = (total_per_item+price) * percent_off;
+                                } else if (final_percentage1 > 0 && final_is_every1.equals("0")) {
+                                    double back = (total_per_item + price) * percent_off;
                                     cart_total_amount += back;
                                     total_savings_value -= back;
                                 }
@@ -419,8 +429,10 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
             case R.id.delete:
                 final int pos = Integer.parseInt(String.valueOf(v.getTag()));
                 final int server_id = Integer.parseInt(objects.get(pos).get("basket_id"));
+                final double remove_value = Double.parseDouble(objects.get(pos).get("price")) * Integer.parseInt(objects.get(pos).get("quantity"));
 
                 Log.d("objects/srvr_ID", objects + "/" + server_id);
+                Log.d("objects/value", remove_value + "");
 
                 AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(context);
                 confirmationDialog.setTitle("Delete item?");
@@ -429,7 +441,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        HashMap<String, String> hashMap = new HashMap();
+                        HashMap<String, String> hashMap = new HashMap<>();
                         hashMap.put("table", "baskets");
                         hashMap.put("request", "crud");
                         hashMap.put("action", "delete");
@@ -447,7 +459,6 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                     int success = response.getInt("success");
 
                                     if (success == 1) {
-                                        double remove_value = Double.parseDouble(objects.get(pos).get("item_subtotal"));
                                         cart_total_amount -= remove_value;
                                         ShoppingCartActivity.total_amount.setText("Total amount is ₱" + df.format(cart_total_amount));
 
@@ -455,16 +466,16 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                         ShoppingCartAdapter.this.notifyDataSetChanged();
                                         Snackbar.make(v, "Item has been deleted", Snackbar.LENGTH_SHORT).show();
                                     } else
-                                        Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(v, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                                 } catch (JSONException e) {
-                                    Snackbar.make(root, e + "", Snackbar.LENGTH_SHORT).show();
+                                    Snackbar.make(v, e + "", Snackbar.LENGTH_SHORT).show();
                                 }
                                 pdialog.dismiss();
                             }
                         }, new ErrorListener<VolleyError>() {
                             public void getError(VolleyError error) {
                                 pdialog.dismiss();
-                                Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(v, "Network error", Snackbar.LENGTH_SHORT).show();
                             }
                         });
                     }

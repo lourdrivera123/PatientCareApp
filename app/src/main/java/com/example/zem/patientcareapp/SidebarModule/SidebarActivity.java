@@ -306,7 +306,7 @@ public class SidebarActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         mDrawerToggle.onOptionsItemSelected(item);
-        
+
         return true;
     }
 

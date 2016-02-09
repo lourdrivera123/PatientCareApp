@@ -27,6 +27,8 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import org.json.JSONArray;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -39,6 +41,10 @@ public class Helpers implements View.OnCreateContextMenuListener {
 
     public Helpers() {
 
+    }
+
+    public boolean value_exist(JSONArray jsonArray, String value_to_find){
+        return jsonArray.toString().contains("\"cpr_id\":\""+value_to_find+"\"");
     }
 
     public String decodePaymentCode(String code, String or_opt) {

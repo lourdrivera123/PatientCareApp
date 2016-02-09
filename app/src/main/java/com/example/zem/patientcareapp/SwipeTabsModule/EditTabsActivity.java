@@ -61,7 +61,6 @@ import com.example.zem.patientcareapp.R;
 import com.example.zem.patientcareapp.Activities.ReferralActivity;
 import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
 import com.example.zem.patientcareapp.adapter.TabsPagerAdapter;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -126,7 +125,6 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
     public static Intent intent;
     public static AppCompatDialog pDialog;
     AlertDialog.Builder builder;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -488,6 +486,7 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
                     String[] projection = {MediaStore.Images.Media.DATA};
 
                     Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+                    assert cursor != null;
                     cursor.moveToFirst();
 
                     int columnIndex = cursor.getColumnIndex(projection[0]);
