@@ -1,6 +1,5 @@
 package com.example.zem.patientcareapp.Network;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -14,11 +13,8 @@ import com.example.zem.patientcareapp.Interface.RespondListener;
 
 import org.json.JSONObject;
 
-/**
- * Created by lourdrivera on 1/20/2016.
- */
 public class ListRequestFromCustomURI {
-    public static void getJSONobj(final Context c, final String q, String table_name, final RespondListener<JSONObject> listener, final ErrorListener<VolleyError> errorlistener) {
+    public static void getJSONobj(final String q, final RespondListener<JSONObject> listener, final ErrorListener<VolleyError> errorlistener) {
         RequestQueue queue;
         Helpers helpers;
 

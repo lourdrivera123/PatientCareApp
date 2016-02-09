@@ -39,10 +39,6 @@ import java.util.Map;
 
 public class ProductsAdapter extends ArrayAdapter implements View.OnClickListener {
     LayoutInflater inflater;
-    TextView product_name, rs_price, cart_text, out_of_stock, is_promo, in_stocks;
-    ImageView product_image, cart_icon;
-    LinearLayout add_to_cart, root;
-    ToggleButton add_to_favorite;
 
     Context context;
 
@@ -59,36 +55,46 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
         products_items = objects;
     }
 
+    class ViewHolder {
+        TextView product_name, rs_price, cart_text, out_of_stock, is_promo, in_stocks;
+        ImageView product_image, cart_icon;
+        LinearLayout add_to_cart, root;
+        ToggleButton add_to_favorite;
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        convertView = inflater.inflate(R.layout.product_item, parent, false);
+        ViewHolder mViewHolder;
 
-        product_image = (ImageView) convertView.findViewById(R.id.product_image);
-        product_name = (TextView) convertView.findViewById(R.id.product_name);
-        rs_price = (TextView) convertView.findViewById(R.id.rs_price);
-        add_to_cart = (LinearLayout) convertView.findViewById(R.id.add_to_cart);
-        add_to_favorite = (ToggleButton) convertView.findViewById(R.id.add_to_favorite);
-        cart_icon = (ImageView) convertView.findViewById(R.id.cart_icon);
-        cart_text = (TextView) convertView.findViewById(R.id.cart_text);
-        out_of_stock = (TextView) convertView.findViewById(R.id.out_of_stock);
-        root = (LinearLayout) convertView.findViewById(R.id.root);
-        is_promo = (TextView) convertView.findViewById(R.id.is_promo);
-        in_stocks = (TextView) convertView.findViewById(R.id.in_stocks);
+        if (convertView == null) {
+            mViewHolder = new ViewHolder();
+            convertView = inflater.inflate(R.layout.product_item, parent, false);
 
-        add_to_cart.setTag(position);
-        add_to_favorite.setTag(position);
+            mViewHolder.product_image = (ImageView) convertView.findViewById(R.id.product_image);
+            mViewHolder.product_name = (TextView) convertView.findViewById(R.id.product_name);
+            mViewHolder.rs_price = (TextView) convertView.findViewById(R.id.rs_price);
+            mViewHolder.add_to_cart = (LinearLayout) convertView.findViewById(R.id.add_to_cart);
+            mViewHolder.add_to_favorite = (ToggleButton) convertView.findViewById(R.id.add_to_favorite);
+            mViewHolder.cart_icon = (ImageView) convertView.findViewById(R.id.cart_icon);
+            mViewHolder.cart_text = (TextView) convertView.findViewById(R.id.cart_text);
+            mViewHolder.out_of_stock = (TextView) convertView.findViewById(R.id.out_of_stock);
+            mViewHolder.root = (LinearLayout) convertView.findViewById(R.id.root);
+            mViewHolder.is_promo = (TextView) convertView.findViewById(R.id.is_promo);
+            mViewHolder.in_stocks = (TextView) convertView.findViewById(R.id.in_stocks);
+
+            mViewHolder.add_to_cart.setTag(position);
+            mViewHolder.add_to_favorite.setTag(position);
+
+            convertView.setTag(mViewHolder);
+        } else
+            mViewHolder = (ViewHolder) convertView.getTag();
 
         if (Integer.parseInt(products_items.get(position).get("available_quantity")) == 0) {
-            out_of_stock.setVisibility(View.VISIBLE);
-            add_to_cart.setVisibility(View.GONE);
+            mViewHolder.out_of_stock.setVisibility(View.VISIBLE);
+            mViewHolder.add_to_cart.setVisibility(View.GONE);
         }
 
-//        if (Integer.parseInt(products_items.get(position).get("in_cart")) > -1) {
-//            in_stocks.setVisibility(View.VISIBLE);
-//            add_to_cart.setVisibility(View.GONE);
-//        }
-
-        add_to_cart.setOnClickListener(this);
+        mViewHolder.add_to_cart.setOnClickListener(this);
 
         basket_items = ProductsActivity.basket_items;
         db = new DbHelper(context);
@@ -99,7 +105,7 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
 
         for (int x = 0; x < list_favorites.size(); x++) {
             if (list_favorites.get(x) == product_id)
-                add_to_favorite.setChecked(true);
+                mViewHolder.add_to_favorite.setChecked(true);
         }
 
         if (ProductsActivity.specific_no_code.size() > 0) {
@@ -135,15 +141,15 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                     }
 
                     if (!type_of_promo.equals("")) {
-                        is_promo.setVisibility(View.VISIBLE);
-                        is_promo.setText(type_of_promo + type_of_minimum);
+                        mViewHolder.is_promo.setVisibility(View.VISIBLE);
+                        mViewHolder.is_promo.setText(type_of_promo + type_of_minimum);
                     }
                 }
             }
         }
 
-        product_name.setText(products_items.get(position).get("name"));
-        rs_price.setText("Php " + products_items.get(position).get("price") + "/" + products_items.get(position).get("packing"));
+        mViewHolder.product_name.setText(products_items.get(position).get("name"));
+        mViewHolder.rs_price.setText("Php " + products_items.get(position).get("price") + "/" + products_items.get(position).get("packing"));
 
         return convertView;
     }
@@ -177,7 +183,7 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                 }
 
                 if (check > 0) { //EXISTING ITEM IN YOUR BASKET (UPDATE ONLY)
-                    final HashMap<String, String> hashMap = new HashMap();
+                    final HashMap<String, String> hashMap = new HashMap<>();
                     hashMap.put("patient_id", String.valueOf(SidebarActivity.getUserID()));
                     hashMap.put("table", "baskets");
                     hashMap.put("request", "crud");
@@ -211,7 +217,7 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                         }
                     });
                 } else { //ADD NEW SA BASKET
-                    final HashMap<String, String> hashMap = new HashMap();
+                    final HashMap<String, String> hashMap = new HashMap<>();
                     hashMap.put("product_id", String.valueOf(product_id));
                     hashMap.put("quantity", String.valueOf(productQty));
                     hashMap.put("patient_id", String.valueOf(SidebarActivity.getUserID()));

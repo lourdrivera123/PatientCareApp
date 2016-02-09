@@ -65,7 +65,6 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
     PatientTreatmentsController ptc;
     Helpers helpers;
     Dialog dialog;
-    Dialog dialog2;
     ProgressDialog progress;
 
     @Override
@@ -75,8 +74,8 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         dbHelper = new DbHelper(getActivity());
         ptc = new PatientTreatmentsController(getActivity());
         helpers = new Helpers();
-        arrayOfRecords = new ArrayList();
-        selectedList = new ArrayList();
+        arrayOfRecords = new ArrayList<>();
+        selectedList = new ArrayList<>();
 
         add_record = (ImageButton) rootView.findViewById(R.id.add_record);
         noResults = (TextView) rootView.findViewById(R.id.noResults);
@@ -86,6 +85,12 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         list_of_history.setOnItemClickListener(this);
         list_of_history.setOnCreateContextMenuListener(this);
         add_record.setOnClickListener(this);
+
+        progress = new ProgressDialog(getActivity());
+        progress.setMessage("Please wait...");
+
+        SyncClinicsRecord();
+
         return rootView;
     }
 
@@ -125,7 +130,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
 
                 Log.d("record_id", record_id + "");
 
-                HashMap<String, String> hashMap = new HashMap();
+                HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("table", "patient_records");
                 hashMap.put("request", "crud");
                 hashMap.put("action", "delete");
@@ -195,7 +200,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        dialog2 = new Dialog(getActivity());
+                        final Dialog dialog2 = new Dialog(getActivity());
                         dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         dialog2.setContentView(R.layout.get_clinic_record);
                         dialog2.show();
@@ -214,45 +219,11 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                                 else if (password.getText().toString().equals(""))
                                     password.setError("Field required");
                                 else {
-                                    progress = new ProgressDialog(getActivity());
-                                    progress.setMessage("Please wait...");
-                                    progress.show();
-
                                     String uname = username.getText().toString();
                                     String pword = password.getText().toString();
-                                    String url = "db/get.php?q=get_clinic_records&username=" + uname + "&password=" + pword + "&patient_id=" + SidebarActivity.getUserID();
+                                    dialog2.dismiss();
 
-                                    ListRequestFromCustomURI.getJSONobj(getActivity(), url, "records", new RespondListener<JSONObject>() {
-                                        @Override
-                                        public void getResult(JSONObject response) {
-                                            try {
-                                                int success = response.getInt("success");
-
-                                                if (success == 1) {
-                                                    int hasRecord = response.getInt("has_record");
-                                                    JSONArray json_mysql = response.getJSONArray("records");
-
-                                                    if (hasRecord == 1) {
-                                                        dialog2.dismiss();
-                                                        Snackbar.make(root, "Record already exists", Snackbar.LENGTH_SHORT).show();
-                                                    } else
-                                                        insertHistory(json_mysql);
-                                                } else
-                                                    Snackbar.make(root, "Invalid credentials", Snackbar.LENGTH_SHORT).show();
-                                            } catch (Exception e) {
-                                                Log.e("patientHistoryFrag0", e + "");
-                                                Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
-                                            }
-                                            progress.dismiss();
-                                        }
-                                    }, new ErrorListener<VolleyError>() {
-                                        @Override
-                                        public void getError(VolleyError e) {
-                                            progress.dismiss();
-                                            Log.d("patientHistoryFrag1", e + "");
-                                            Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                    getClinicRecords(uname, pword);
                                 }
                             }
                         });
@@ -274,11 +245,114 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         }
     }
 
+    void updateList() {
+        noResults.setVisibility(View.GONE);
+        list_of_history.setVisibility(View.VISIBLE);
+
+        hashHistory.clear();
+        hashHistory = prc.getAllPatientRecords();
+        mAdapter = new SelectionAdapter(getActivity(), R.layout.listview_history_views, hashHistory);
+        list_of_history.setAdapter(mAdapter);
+    }
+
+    void SyncClinicsRecord() {
+        final ProgressDialog progress1 = new ProgressDialog(getActivity());
+        progress1.setMessage("Please wait...");
+        progress1.show();
+
+        String url = "db/get.php?q=get_uname_pword_from_clinic&patient_id=" + SidebarActivity.getUserID();
+
+        ListRequestFromCustomURI.getJSONobj(url, new RespondListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject response) {
+                try {
+                    int success = response.getInt("success");
+
+                    if (success == 1) {
+                        JSONArray json_mysql = response.getJSONArray("clinic_patient_doctor");
+                        JSONArray array = new JSONArray();
+                        int cpr_id;
+
+                        for (int x = 0; x < json_mysql.length() - 1; x++) {
+                            JSONObject obj = json_mysql.getJSONObject(x);
+
+                            cpr_id = obj.getInt("cpr_id");
+
+                            for (int y = (x + 1); y < json_mysql.length(); y++) {
+                                JSONObject obj_future = json_mysql.getJSONObject(y);
+
+                                if (obj.getString("pr_record_id").equals("")) {
+                                    if (cpr_id != obj_future.getInt("cpr_id")) {
+                                        insertHistory(array);
+                                        array = new JSONArray();
+                                        array.put(obj_future);
+                                    } else {
+                                        array.put(obj);
+                                        array.put(obj_future);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e("patientHistoryFrag5", e + "");
+                    Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
+                }
+                progress1.dismiss();
+            }
+        }, new ErrorListener<VolleyError>() {
+            @Override
+            public void getError(VolleyError e) {
+                progress1.dismiss();
+                Log.d("patientHistoryFrag6", e + "");
+                Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    void getClinicRecords(String uname, String pword) {
+        progress.show();
+        String url = "db/get.php?q=get_clinic_records&username=" + uname + "&password=" + pword + "&patient_id=" + SidebarActivity.getUserID();
+
+        ListRequestFromCustomURI.getJSONobj(url, new RespondListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject response) {
+                try {
+                    int success = response.getInt("success");
+
+                    if (success == 1) {
+                        int hasRecord = response.getInt("has_record");
+                        JSONArray json_mysql = response.getJSONArray("records");
+
+                        if (hasRecord == 1) {
+                            Snackbar.make(root, "Record already exists", Snackbar.LENGTH_SHORT).show();
+                        } else
+                            insertHistory(json_mysql);
+                    } else
+                        Snackbar.make(root, "Your Medical record has not been uploaded. Please try again later", Snackbar.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.e("patientHistoryFrag0", e + "");
+                    Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
+                }
+                progress.dismiss();
+            }
+        }, new ErrorListener<VolleyError>() {
+            @Override
+            public void getError(VolleyError e) {
+                progress.dismiss();
+                Log.d("patientHistoryFrag1", e + "");
+                Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void insertHistory(final JSONArray array) {
+        progress.show();
+
         try {
             JSONObject object = array.getJSONObject(0);
 
-            final HashMap<String, String> map = new HashMap();
+            final HashMap<String, String> map = new HashMap<>();
             map.put("table", "patient_records");
             map.put("request", "crud");
             map.put("action", "insert");
@@ -308,11 +382,11 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                             pr.setDate(map.get("record_date"));
 
                             final JSONArray master_arr = new JSONArray();
-                            final ArrayList<HashMap<String, String>> array_treatments = new ArrayList();
+                            final ArrayList<HashMap<String, String>> array_treatments = new ArrayList<>();
 
                             for (int x = 0; x < array.length(); x++) {
                                 JSONObject obj = array.getJSONObject(x);
-                                HashMap<String, String> hash = new HashMap();
+                                HashMap<String, String> hash = new HashMap<>();
 
                                 hash.put("patient_records_id", String.valueOf(last_inserted_id));
                                 hash.put("medicine_id", obj.getString("medicine_id"));
@@ -329,7 +403,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                             JSONObject json_to_be_passed = new JSONObject();
                             json_to_be_passed.put("json_treatments", master_arr);
 
-                            HashMap<String, String> hash = new HashMap();
+                            HashMap<String, String> hash = new HashMap<>();
                             hash.put("table", "patient_treatments");
                             hash.put("request", "crud");
                             hash.put("action", "multiple_insert");
@@ -383,22 +457,9 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        dialog2.dismiss();
-    }
-
-    void updateList() {
-        noResults.setVisibility(View.GONE);
-        list_of_history.setVisibility(View.VISIBLE);
-
-        hashHistory.clear();
-        hashHistory = prc.getAllPatientRecords();
-        mAdapter = new SelectionAdapter(getActivity(), R.layout.listview_history_views, hashHistory);
-        list_of_history.setAdapter(mAdapter);
     }
 
     private class SelectionAdapter extends ArrayAdapter {
-        TextView record_date, doctor, clinic;
         LayoutInflater inflater;
         ArrayList<HashMap<String, String>> objects;
 
@@ -408,17 +469,29 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
             this.objects = objects;
         }
 
+        class ViewHolder {
+            TextView record_date, doctor, clinic;
+        }
+
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = inflater.inflate(R.layout.listview_history_views, parent, false);
+        public View getView(int position, View v, ViewGroup parent) {
+            ViewHolder mViewHolder;
 
-            record_date = (TextView) v.findViewById(R.id.record_date);
-            doctor = (TextView) v.findViewById(R.id.doctor_name);
-            clinic = (TextView) v.findViewById(R.id.clinic);
+            if (v == null) {
+                mViewHolder = new ViewHolder();
+                v = inflater.inflate(R.layout.listview_history_views, parent, false);
 
-            doctor.setText(objects.get(position).get("doctor_name"));
-            record_date.setText(objects.get(position).get("record_date"));
-            clinic.setText(objects.get(position).get("clinic_name"));
+                mViewHolder.record_date = (TextView) v.findViewById(R.id.record_date);
+                mViewHolder.doctor = (TextView) v.findViewById(R.id.doctor_name);
+                mViewHolder.clinic = (TextView) v.findViewById(R.id.clinic);
+
+                v.setTag(mViewHolder);
+            } else
+                mViewHolder = (ViewHolder) v.getTag();
+
+            mViewHolder.doctor.setText(objects.get(position).get("doctor_name"));
+            mViewHolder.record_date.setText(objects.get(position).get("record_date"));
+            mViewHolder.clinic.setText(objects.get(position).get("clinic_name"));
 
             return v;
         }

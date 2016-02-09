@@ -286,7 +286,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                     temp_prod_discount = total_per_item - (discount_times * final_peso1);
 
 
-                                    if ((total_per_item - price) < (final_min_purchase1 * discount_times)){
+                                    if ((total_per_item - price) < (final_min_purchase1 * discount_times)) {
                                         cart_total_amount += (price - final_peso1);
                                         total_savings_value += final_peso1;
                                     } else
@@ -295,7 +295,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                     temp_prod_discount = total_per_item - final_peso1;
                                     cart_total_amount += price;
 
-                                    if ((total_per_item - price) < final_min_purchase1){
+                                    if ((total_per_item - price) < final_min_purchase1) {
                                         cart_total_amount -= final_peso1;
                                         total_savings_value += final_peso1;
                                     }
@@ -366,8 +366,8 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                 if (final_peso1 > 0) {
                                     cart_total_amount += final_peso1;
                                     total_savings_value -= final_peso1;
-                                }else if (final_percentage1 > 0 && final_is_every1.equals("0")) {
-                                    double back = (total_per_item+price) * percent_off;
+                                } else if (final_percentage1 > 0 && final_is_every1.equals("0")) {
+                                    double back = (total_per_item + price) * percent_off;
                                     cart_total_amount += back;
                                     total_savings_value -= back;
                                 }

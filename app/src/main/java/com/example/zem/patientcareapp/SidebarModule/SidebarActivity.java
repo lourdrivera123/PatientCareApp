@@ -229,20 +229,6 @@ public class SidebarActivity extends AppCompatActivity {
         }
     }
 
-    void showdl(String msg) {
-        AlertDialog.Builder order_completed_dialog = new AlertDialog.Builder(SidebarActivity.this);
-        order_completed_dialog.setTitle("Connection status");
-        order_completed_dialog.setMessage(msg);
-        order_completed_dialog.setCancelable(false);
-        order_completed_dialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        order_completed_dialog.show();
-    }
-
     private boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
@@ -328,7 +314,7 @@ public class SidebarActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         mDrawerToggle.onOptionsItemSelected(item);
-        
+
         return true;
     }
 
