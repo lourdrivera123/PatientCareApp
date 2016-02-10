@@ -96,7 +96,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
 
         int final_qty_required = 0, final_percentage = 0;
         double final_peso = 0, final_min_purchase = 0;
-        String final_is_every = "0", final_free_gift = "0", final_free_packing = "", final_free_item_name = "", final_free_qty = "";
+        String final_is_every = "0", final_free_gift = "0", final_free_packing = "", final_free_item_name = "", final_free_qty = "", final_free_prod_price = "";
 
         cart_total_amount = cart_total_amount + total_per_item;
 
@@ -112,11 +112,14 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                     final_free_qty = ShoppingCartActivity.no_code_promos.get(x).get("quantity_free");
                     final_free_packing = ShoppingCartActivity.no_code_promos.get(x).get("free_product_packing");
                     final_free_item_name = ShoppingCartActivity.no_code_promos.get(x).get("name");
+                    final_free_prod_price = ShoppingCartActivity.no_code_promos.get(x).get("free_prod_price");
 
                     String type_of_promo = "", type_of_minimum = "";
                     String purchases = helpers.getPluralForm(objects.get(position).get("packing"), final_qty_required);
 
                     if (final_qty_required > 0) {
+                        double saved_amount = 0;
+
                         if (final_is_every.equals("1"))
                             type_of_minimum = " for every " + final_qty_required + " " + purchases;
                         else
@@ -135,18 +138,21 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
 
                                     qty = discount_times;
                                     free_item_purchase = helpers.getPluralForm(final_free_packing, discount_times);
+                                    saved_amount = (discount_times * Double.parseDouble(final_free_prod_price));
                                 } else {
                                     qty = Integer.parseInt(final_free_qty);
                                     free_item_purchase = helpers.getPluralForm(final_free_packing, Integer.parseInt(final_free_qty));
+                                    saved_amount = Double.parseDouble(final_free_prod_price);
                                 }
 
                                 String set_free_item = "*Free " + qty + " " + free_item_purchase + " of " + final_free_item_name;
                                 free_item.setText(set_free_item);
+                                total_savings_value += saved_amount;
                             }
                         }
                     } else if (final_min_purchase > 0) {
-                        double discounted_amount = 0, discounted_total = 0;
                         int discount_times = (int) (total_per_item / final_min_purchase);
+                        double discounted_amount = 0, discounted_total = 0;
 
                         if (final_is_every.equals("1"))
                             type_of_minimum = " for every Php " + final_min_purchase + " worth of purchase";
@@ -224,6 +230,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
         final Object txt_promo_total = promo_total;
         final Object txt_free_item = free_item;
 
+        final String final_free_prod_price1 = final_free_prod_price;
         up_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,20 +253,22 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                             txt_obj_free_item.setVisibility(View.VISIBLE);
                             int discount_times = lastQty / final_qty_required1;
                             String set_free_item;
-                            int free_qty;
+                            double saved = 0;
 
                             if (final_is_every1.equals("1")) {
                                 String purchases = helpers.getPluralForm(final_free_packing1, discount_times);
                                 set_free_item = "*Free " + discount_times + " " + purchases + " of " + final_free_item_name1;
-                                free_qty = discount_times;
+
+                                if (lastQty % final_qty_required1 == 0)
+                                    saved = Double.parseDouble(final_free_prod_price1);
                             } else {
                                 set_free_item = "*Free " + final_free_qty1 + " " + final_free_packing1 + " of " + final_free_item_name1;
-                                free_qty = Integer.parseInt(final_free_qty1);
+
+                                if (lastQty == final_qty_required1)
+                                    saved = Integer.parseInt(final_free_qty1) * Double.parseDouble(final_free_prod_price1);
                             }
 
-                            //get the price * qty of the free item/s and add it on total_savings_value variable
-                            total_savings_value += price * free_qty; // if the free item is different from the cart item -> fetch price on server.
-
+                            total_savings_value += saved;
                             txt_obj_free_item.setText(set_free_item);
                         }
 
@@ -284,7 +293,6 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                             } else if (final_peso1 > 0) {
                                 if (final_is_every1.equals("1")) {
                                     temp_prod_discount = total_per_item - (discount_times * final_peso1);
-
 
                                     if ((total_per_item - price) < (final_min_purchase1 * discount_times)) {
                                         cart_total_amount += (price - final_peso1);
@@ -344,6 +352,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                     if (final_qty_required1 > 0 && final_free_gift1.equals("1")) {
                         if (lastQty < final_qty_required1) {
                             txt_obj_free_item.setVisibility(View.GONE);
+                            total_savings_value -= (Integer.parseInt(final_free_qty1) * Double.parseDouble(final_free_prod_price1));
                         } else {
                             if (final_is_every1.equals("1")) {
                                 int discount_times = lastQty / final_qty_required1;
@@ -352,8 +361,10 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                 String purchases = helpers.getPluralForm(final_free_packing1, discount_times);
                                 set_free_item = "*Free " + discount_times + " " + purchases + " of " + final_free_item_name1;
 
-                                //deduct the total_Savings by free product price here
                                 txt_obj_free_item.setText(set_free_item);
+
+                                if (lastQty % final_qty_required1 == 0)
+                                    total_savings_value -= Double.parseDouble(final_free_prod_price1);
                             }
                         }
 

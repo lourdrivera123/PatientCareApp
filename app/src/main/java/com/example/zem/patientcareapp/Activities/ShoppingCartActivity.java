@@ -115,6 +115,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                                 map.put("name", obj.getString("name"));
                                 map.put("quantity_free", obj.getString("quantity_free"));
                                 map.put("free_product_packing", obj.getString("free_product_packing"));
+                                map.put("free_prod_price", obj.getString("free_prod_price"));
                                 no_code_promos.add(map);
                             }
                         }
