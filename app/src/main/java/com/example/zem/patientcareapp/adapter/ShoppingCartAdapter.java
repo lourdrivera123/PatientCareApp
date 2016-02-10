@@ -247,7 +247,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
 
                 if (lastQty <= available_qty) {
                     double total_per_item = price * lastQty;
-                    txt.setText(lastQty + "");
+                    txt.setText(String.valueOf(lastQty));
 
                     if (final_qty_required1 > 0 && final_free_gift1.equals("1")) {
                         cart_total_amount = cart_total_amount + price;
@@ -408,7 +408,7 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                     ShoppingCartActivity.total_savings.setText("You saved ₱" + df.format(total_savings_value));
                 }
 
-                txt.setText(lastQty + "");
+                txt.setText(String.valueOf(lastQty));
                 p_total.setText("Php " + df.format(total_per_item));
 
                 HashMap<String, String> temp = objects.get(position);
