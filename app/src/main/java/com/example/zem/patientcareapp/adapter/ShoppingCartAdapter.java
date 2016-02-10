@@ -100,6 +100,9 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
 
         cart_total_amount = cart_total_amount + total_per_item;
 
+        Log.d("per_item_total", total_per_item+"");
+        Log.d("balik diri_total", "true");
+
         if (ShoppingCartActivity.no_code_promos.size() > 0) {
             for (int x = 0; x < ShoppingCartActivity.no_code_promos.size(); x++) {
                 if (ShoppingCartActivity.no_code_promos.get(x).get("product_id").equals(objects.get(position).get("product_id"))) {
@@ -431,6 +434,10 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                 final int pos = Integer.parseInt(String.valueOf(v.getTag()));
                 final int server_id = Integer.parseInt(objects.get(pos).get("basket_id"));
                 final double remove_value = Double.parseDouble(objects.get(pos).get("price")) * Integer.parseInt(objects.get(pos).get("quantity"));
+
+                Log.d("objects_total", objects.get(pos)+"");
+                Log.d("cart_total", cart_total_amount+"");
+                Log.d("remove_total", remove_value+"");
 
                 AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(context);
                 confirmationDialog.setTitle("Delete item?");

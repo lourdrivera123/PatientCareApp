@@ -886,7 +886,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                 Intent order_intent = new Intent(SummaryActivity.this, SidebarActivity.class);
                 order_intent.putExtra("payment_from", "cod");
                 order_intent.putExtra("timestamp_ordered", timestamp_ordered);
-                order_intent.putExtra("select", 5);
+                order_intent.putExtra("select", 4);
                 startActivity(order_intent);
                 SummaryActivity.this.finish();
             }
