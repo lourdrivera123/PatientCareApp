@@ -412,13 +412,13 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         send("flush_user_basket_promos", hashMap, new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
-                d("flush", response+"");
+                d("flush", response + "");
                 try {
-                    if(response.getBoolean("success")){
+                    if (response.getBoolean("success")) {
                         showBeautifulDialog();
                         getBasketDetails();
                     }
-                } catch(Exception e)  {
+                } catch (Exception e) {
                     System.out.println("<flush_user_basket_promos> request error" + e);
                 }
             }
@@ -461,7 +461,8 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         label_expected_points.setText("You will receive " + final_expected_points_value + " points upon order.");
         label_total_savings.setText("You will save " + helper.money_format(ShoppingCartAdapter.total_savings_value));
         discounted_total = totalAmount - points_discount - coupon_discount;
-
+        subtotal_layout.setVisibility(View.VISIBLE);
+        
         if(senior_discount > ShoppingCartAdapter.total_savings_value){
             if(senior_validity.equals("senior_valid")){
                 if(ShoppingCartAdapter.total_savings_value == 0) {
@@ -478,16 +479,22 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                 how_to_senior_discount.setVisibility(View.VISIBLE);
                 label_senior_discount.setText("You will save more ( " + helper.money_format(senior_discount) + " ) if you validate your Senior Citizen ID");
             } else {
+                senior_discount = 0;
                 label_senior_discount.setVisibility(View.GONE);
                 how_to_senior_discount.setVisibility(View.GONE);
                 label_total_savings.setVisibility(View.VISIBLE);
                 label_total_savings.setText("You will save " + helper.money_format(ShoppingCartAdapter.total_savings_value + coupon_discount + points_discount));
             }
         } else {
+            senior_discount = 0;
             label_total_savings.setVisibility(View.VISIBLE);
             label_total_savings.setText("You will save " + helper.money_format(ShoppingCartAdapter.total_savings_value + coupon_discount + points_discount));
         }
-        if(ShoppingCartAdapter.total_savings_value == 0 && senior_discount == 0){
+
+        d("gd", ShoppingCartAdapter.total_savings_value + "");
+        d("gd", senior_discount + "");
+
+        if(ShoppingCartAdapter.total_savings_value == 0 && totalAmount == discounted_total){
             total_savings_layout.setVisibility(View.GONE);
             subtotal_layout.setVisibility(View.GONE);
         }

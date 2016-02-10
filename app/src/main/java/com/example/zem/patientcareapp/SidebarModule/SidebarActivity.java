@@ -329,23 +329,23 @@ public class SidebarActivity extends AppCompatActivity {
                 title = "Profile";
                 fragment = new PatientProfileFragment();
                 break;
+//            case 3:
+//                title = "Messages";
+//                fragment = new MessagesFragment();
+//                break;
             case 3:
-                title = "Messages";
-                fragment = new MessagesFragment();
-                break;
-            case 4:
                 title = "Medical Records";
                 fragment = new PatientHistoryFragment();
                 break;
-            case 5:
+            case 4:
                 title = "Recent Orders";
                 fragment = new OrdersFragment();
                 break;
-            case 6:
+            case 5:
                 title = "Doctors";
                 fragment = new ListOfDoctorsFragment();
                 break;
-            case 7:
+            case 6:
                 title = "Promos";
                 fragment = new PromoFragment();
                 break;
@@ -353,7 +353,7 @@ public class SidebarActivity extends AppCompatActivity {
 //                title = "News";
 //                fragment = new HomeTileFragment();
 //                break;
-            case 8:
+            case 7:
                 if (prc.deleteAllRecords()) {
                     if (ptc.deleteTreatments()) {
                         editor.clear();

@@ -352,7 +352,8 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                 String purchases = helpers.getPluralForm(final_free_packing1, discount_times);
                                 set_free_item = "*Free " + discount_times + " " + purchases + " of " + final_free_item_name1;
 
-                                //deduct the total_Savings by free product price here
+                                //add the total_Savings by free product price here
+
                                 txt_obj_free_item.setText(set_free_item);
                             }
                         }
