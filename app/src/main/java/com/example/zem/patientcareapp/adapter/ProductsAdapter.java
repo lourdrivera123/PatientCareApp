@@ -50,7 +50,7 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
     DbHelper db;
     Helpers helpers;
 
-    ArrayList<Map<String, String>> products_items, basket_items;
+    ArrayList<Map<String, String>> products_items;
     ArrayList<Integer> list_favorites;
 
     int initial_count = 20;
@@ -64,6 +64,7 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
         convertView = inflater.inflate(R.layout.product_item, parent, false);
 
         product_image = (ImageView) convertView.findViewById(R.id.product_image);
@@ -88,7 +89,6 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
 
         add_to_cart.setOnClickListener(this);
 
-        basket_items = ProductsActivity.basket_items;
         db = new DbHelper(context);
         helpers = new Helpers();
         list_favorites = db.getFavoritesByUserID(SidebarActivity.getUserID());
@@ -155,7 +155,7 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
 
     private void loadMoreData() {
         this.initial_count += 20;
-        
+
         if (ProductsActivity.load_items.size() >= initial_count) {
             for (int x = (initial_count - 20); x <= initial_count; x++)
                 products_items.add(ProductsActivity.load_items.get(x));
@@ -187,11 +187,11 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                 pdialog.setCancelable(false);
                 pdialog.setMessage("Please wait...");
 
-                for (int x = 0; x < basket_items.size(); x++) {
-                    if (basket_items.get(x).get("product_id").equals(String.valueOf(product_id))) {
+                for (int x = 0; x < ProductsActivity.basket_items.size(); x++) {
+                    if (ProductsActivity.basket_items.get(x).get("product_id").equals(String.valueOf(product_id))) {
                         check += 1;
-                        old_qty = Integer.parseInt(basket_items.get(x).get("quantity"));
-                        server_id = basket_items.get(x).get("server_id");
+                        old_qty = Integer.parseInt(ProductsActivity.basket_items.get(x).get("quantity"));
+                        server_id = ProductsActivity.basket_items.get(x).get("server_id");
                     }
                 }
 

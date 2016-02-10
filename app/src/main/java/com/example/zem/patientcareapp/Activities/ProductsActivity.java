@@ -75,7 +75,7 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
 
     Intent get_intent;
 
-    public static ArrayList<Map<String, String>> temp_products_items = new ArrayList<>(), products_items = new ArrayList<>(), basket_items = new ArrayList<>(), load_items;
+    public static ArrayList<Map<String, String>> temp_products_items = new ArrayList<>(), products_items = new ArrayList<>(), basket_items, load_items;
     public static ArrayList<HashMap<String, String>> specific_no_code;
     public static HashMap<String, String> map = new HashMap<>();
     ArrayList<HashMap<Integer, HashMap<String, String>>> searchProducts = new ArrayList<>();
@@ -193,6 +193,8 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onResume() {
         super.onResume();
+
+        basket_items = new ArrayList<>();
         getAllBasketItems();
 
         SelectedProductActivity.is_resumed = 0;
@@ -538,8 +540,14 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
                                     } else {
                                         for (Map<String, String> map : products_items) {
                                             if (map.containsValue(category))
-                                                newMap.add(map);
+                                                load_items.add(map);
                                         }
+
+                                        if (load_items.size() >= 20) {
+                                            for (int x = 0; x < 20; x++)
+                                                newMap.add(load_items.get(x));
+                                        } else
+                                            newMap.addAll(load_items);
 
                                         if (newMap.size() == 0) {
                                             no_products.setVisibility(View.VISIBLE);

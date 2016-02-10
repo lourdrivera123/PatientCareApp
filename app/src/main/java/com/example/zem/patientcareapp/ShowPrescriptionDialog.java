@@ -267,15 +267,20 @@ public class ShowPrescriptionDialog extends AppCompatActivity implements View.On
                 } else {
                     image_url = jObject.getString("file_name");
                     serverID = jObject.getInt("server_id");
+                    boolean isForSeniorUpload = getIntent().getBooleanExtra("isForSeniorUpload", false);
 
-                    //put the refresh grid here or the display newly added image here
-                    if (ppc.insertUploadOnPrescription(patientID, image_url, serverID)) {
-                        arrayOfPrescriptions = refreshPrescriptionList();
-                        ShowPrescriptionDialog.this.finish();
-                        ProductsActivity.is_finish = serverID;
-                        SelectedProductActivity.is_resumed = serverID;
-                    } else
-                        Toast.makeText(ShowPrescriptionDialog.this, "Error occurred", Toast.LENGTH_SHORT).show();
+                    if(isForSeniorUpload){
+                        returnSeniorImage(image_url);
+                    } else {
+                        //put the refresh grid here or the display newly added image here
+                        if (ppc.insertUploadOnPrescription(patientID, image_url, serverID)) {
+                            arrayOfPrescriptions = refreshPrescriptionList();
+                            ShowPrescriptionDialog.this.finish();
+                            ProductsActivity.is_finish = serverID;
+                            SelectedProductActivity.is_resumed = serverID;
+                        } else
+                            Toast.makeText(ShowPrescriptionDialog.this, "Error occurred", Toast.LENGTH_SHORT).show();
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -285,6 +290,13 @@ public class ShowPrescriptionDialog extends AppCompatActivity implements View.On
             upload_dialog.dismiss();
 
             super.onPostExecute(result);
+        }
+
+        public void returnSeniorImage(String imgFile) {
+            Intent intentMessage = new Intent();
+            intentMessage.putExtra("imgFile", imgFile);
+            setResult(2, intentMessage);
+            finish();
         }
 
         void uploadfaileddialog(String msg, String title) {

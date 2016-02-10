@@ -145,7 +145,7 @@
                             android:layout_weight=".5"
                             android:gravity="center"
                             android:text="Delivery Charge"
-                            android:textColor="@color/partner_toolbar"
+                            android:textColor="@color/list_background_pressed"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 

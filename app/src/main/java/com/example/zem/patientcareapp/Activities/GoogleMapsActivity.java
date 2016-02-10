@@ -348,7 +348,7 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
         confirmationDialog1.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
+                dialogInterface.dismiss();
 //                GoogleMapsActivity.this.finish();
             }
         });
@@ -363,8 +363,8 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     void redirect(){
-            startActivity(new Intent(this, ProductsActivity.class));
-            this.finish();
+        startActivity(new Intent(this, ProductsActivity.class));
+        this.finish();
     }
 
     void saveSelectedBranchOnline(final OrderModel order_model){

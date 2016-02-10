@@ -2,8 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical">
-    
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,6 +33,7 @@
             android:layout_height="wrap_content"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:indeterminate="false"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -62,12 +61,20 @@
                 android:src="@drawable/logopharmacy"
                 android:visibility="gone"/>
 
+            <ProgressBar
+                android:id="@+id/progress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:max="100" />
+
             <Button
                 android:id="@+id/upload_senior_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/partner_toolbar"
-                android:text="Upload A Photo"
+                android:text="Upload ID picture and submit"
                 android:textColor="@color/white"/>
 
             <TextView
@@ -89,6 +96,5 @@
 
         </LinearLayout>
         </ScrollView>
-
 </LinearLayout>
 </LinearLayout>
