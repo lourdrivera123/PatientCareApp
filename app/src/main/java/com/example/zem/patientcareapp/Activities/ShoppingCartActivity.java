@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,7 +18,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.example.zem.patientcareapp.CheckoutModule.DeliverPickupOption;
-import com.example.zem.patientcareapp.CheckoutModule.PromosDiscounts;
 import com.example.zem.patientcareapp.CheckoutModule.SummaryActivity;
 import com.example.zem.patientcareapp.Controllers.BasketController;
 import com.example.zem.patientcareapp.Controllers.OrderPreferenceController;
@@ -56,8 +56,8 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     AlertDialog.Builder builder;
     TextView no_items_label;
 
-    public ArrayList<HashMap<String, String>> items = new ArrayList();
-    public ArrayList<HashMap<String, String>> items1 = new ArrayList();
+    public ArrayList<HashMap<String, String>> items = new ArrayList<>();
+    public ArrayList<HashMap<String, String>> items1 = new ArrayList<>();
     public static ArrayList<HashMap<String, String>> no_code_promos;
 
     @Override
@@ -75,10 +75,12 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 
         bc = new BasketController();
         opc = new OrderPreferenceController(getBaseContext());
-        no_code_promos = new ArrayList();
+        no_code_promos = new ArrayList<>();
         order_model = opc.getOrderPreference();
 
         setSupportActionBar(myToolBar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Shopping Cart");
         myToolBar.setNavigationIcon(R.drawable.ic_back);
@@ -98,7 +100,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 
                         for (int x = 0; x < json_mysql.length(); x++) {
                             JSONObject obj = json_mysql.getJSONObject(x);
-                            HashMap<String, String> map = new HashMap();
+                            HashMap<String, String> map = new HashMap<>();
 
                             if (obj.getString("product_applicability").equals("SPECIFIC_PRODUCTS")) {
                                 map.put("promo_id", obj.getString("pr_promo_id"));
@@ -113,6 +115,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                                 map.put("name", obj.getString("name"));
                                 map.put("quantity_free", obj.getString("quantity_free"));
                                 map.put("free_product_packing", obj.getString("free_product_packing"));
+                                map.put("free_prod_price", obj.getString("free_prod_price"));
                                 no_code_promos.add(map);
                             }
                         }
@@ -170,7 +173,6 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 
     void cartQuantityUpdated() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(ShoppingCartActivity.this);
-//        dialog.setTitle("Order Cancelled!");
         dialog.setMessage("Our records show that one or more products in your cart exceeds the number of our stocks. \n" +
                 "We updated your basket items.");
         dialog.setCancelable(false);
@@ -217,12 +219,12 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     }
 
     ArrayList<HashMap<String, String>> CartWithPromos(ArrayList<HashMap<String, String>> items, ArrayList<HashMap<String, String>> promos) {
-        ArrayList<HashMap<String, String>> new_items = new ArrayList();
+        ArrayList<HashMap<String, String>> new_items = new ArrayList<>();
 
         for (int x = 0; x < items.size(); x++) {
             for (int y = 0; y < promos.size(); y++) {
                 if (items.get(x).get("product_id").equals(promos.get(y).get("product_id"))) {
-                    HashMap<String, String> map = new HashMap();
+                    HashMap<String, String> map = new HashMap<>();
                     map.putAll(items.get(x));
                     map.put("promo_id", "0");
                     map.put("promo_type", "");
@@ -238,7 +240,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                             map.put("promo_value", promos.get(y).get("free_product_id"));
 
                             if (promos.get(y).get("is_every").equals("1")) {
-                                int discount_times = (int) (Integer.parseInt(items.get(x).get("quantity")) / Integer.parseInt(promos.get(y).get("quantity_required")));
+                                int discount_times = (Integer.parseInt(items.get(x).get("quantity")) / Integer.parseInt(promos.get(y).get("quantity_required")));
                                 int qty_free = discount_times * Integer.parseInt(promos.get(y).get("quantity_free"));
                                 map.put("promo_free_product_qty", String.valueOf(qty_free));
                             }
@@ -298,7 +300,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
     void updateBasket(ArrayList<HashMap<String, String>> objects, final int check) {
         try {
             JSONArray master_arr = new JSONArray();
-            HashMap<String, String> hash = new HashMap();
+            HashMap<String, String> hash = new HashMap<>();
             JSONObject obj_for_server;
 
             for (int x = 0; x < objects.size(); x++) {
@@ -315,13 +317,11 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
             final JSONObject json_to_be_passed = new JSONObject();
             json_to_be_passed.put("jsobj", master_arr);
 
-            HashMap<String, String> params = new HashMap();
+            HashMap<String, String> params = new HashMap<>();
             params.put("table", "baskets");
             params.put("request", "crud");
             params.put("action", "multiple_update_for_basket");
             params.put("jsobj", json_to_be_passed.toString());
-
-            d("a_jsobj", json_to_be_passed.toString());
 
             PostRequest.send(ShoppingCartActivity.this, params, new RespondListener<JSONObject>() {
                 @Override
@@ -345,16 +345,19 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                             }
                         }
                     } catch (Exception e) {
-                        Snackbar.make(root, "cart_error: " + e, Snackbar.LENGTH_SHORT).show();
+                        Log.d("shoppingCartAct", e + "");
+                        Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }, new ErrorListener<VolleyError>() {
                 public void getError(VolleyError error) {
+                    Log.d("shoppingCartAct1", error + "");
                     Snackbar.make(root, "Network Error", Snackbar.LENGTH_SHORT).show();
                 }
             });
         } catch (JSONException e) {
-            Snackbar.make(root, "cart_json_error: " + e, Snackbar.LENGTH_SHORT).show();
+            Log.d("shoppingCartAct2", e + "");
+            Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
         }
     }
 }

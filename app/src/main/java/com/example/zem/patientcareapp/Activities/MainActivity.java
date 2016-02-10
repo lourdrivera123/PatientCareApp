@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (sharedpreferences.contains(pass)) {
                 Intent i = new Intent(this, SidebarActivity.class);
                 startActivity(i);
+                this.finish();
             }
         } else {
             username_txtfield.setText("");
@@ -175,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             }
                                         }, new ErrorListener<VolleyError>() {
                                             public void getError(VolleyError error) {
+                                                Log.d("MainException1", error + "");
                                                 make(root, "Network error", LENGTH_SHORT).show();
                                             }
                                         });
@@ -186,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             }
                                         }, new ErrorListener<VolleyError>() {
                                             public void getError(VolleyError error) {
-                                                d("orders error", error + "");
+                                                Log.d("MainException2", error + "");
                                                 make(root, "Network error", LENGTH_SHORT).show();
                                             }
                                         });
@@ -198,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             }
                                         }, new ErrorListener<VolleyError>() {
                                             public void getError(VolleyError error) {
+                                                Log.d("MainException3", error + "");
                                                 make(root, "Network error", LENGTH_SHORT).show();
                                             }
                                         });
@@ -206,10 +210,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         getJSONobj(getBaseContext(), "get_order_details&patient_id=" + syncedPatient.getServerID(), "order_details", "order_details_id", new RespondListener<JSONObject>() {
                                             @Override
                                             public void getResult(JSONObject response) {
-                                                d("fuck response", response + "");
                                             }
                                         }, new ErrorListener<VolleyError>() {
                                             public void getError(VolleyError error) {
+                                                Log.d("MainException4", error + "");
                                                 make(root, "Network error", LENGTH_SHORT).show();
                                             }
                                         });
@@ -218,10 +222,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         getJSONobj(getBaseContext(), "get_consultations&patient_id=" + syncedPatient.getServerID(), "consultations", "consultation_id", new RespondListener<JSONObject>() {
                                             @Override
                                             public void getResult(JSONObject response) {
-                                                d("mainactivity response", response + "");
                                             }
                                         }, new ErrorListener<VolleyError>() {
                                             public void getError(VolleyError error) {
+                                                Log.d("MainException5", error + "");
                                                 make(root, "Network error", LENGTH_SHORT).show();
                                             }
                                         });
@@ -234,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             }
                                         }, new ErrorListener<VolleyError>() {
                                             public void getError(VolleyError error) {
+                                                Log.d("MainException6", error + "");
                                                 make(root, "Network error", LENGTH_SHORT).show();
                                             }
                                         });
@@ -246,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             }
                                         }, new ErrorListener<VolleyError>() {
                                             public void getError(VolleyError error) {
+                                                Log.d("MainException7", error + "");
                                                 make(root, "Network error", LENGTH_SHORT).show();
                                             }
                                         });
@@ -258,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             }
                                         }, new ErrorListener<VolleyError>() {
                                             public void getError(VolleyError error) {
+                                                Log.d("MainException8", error + "");
                                                 make(root, "Network error", LENGTH_SHORT).show();
                                             }
                                         });
@@ -273,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             helpers.cacheImageOnly(patient_image_name, patient_json_array_mysql.getJSONObject(0).getInt("id"));
                                         pDialog.dismiss();
                                         startActivity(new Intent(getBaseContext(), SidebarActivity.class));
+                                        MainActivity.this.finish();
                                     } else {
                                         pDialog.dismiss();
                                         make(root, "Error occurred", LENGTH_SHORT).show();

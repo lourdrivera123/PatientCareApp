@@ -462,7 +462,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         label_total_savings.setText("You will save " + helper.money_format(ShoppingCartAdapter.total_savings_value));
         discounted_total = totalAmount - points_discount - coupon_discount;
         subtotal_layout.setVisibility(View.VISIBLE);
-        
+
         if(senior_discount > ShoppingCartAdapter.total_savings_value){
             if(senior_validity.equals("senior_valid")){
                 if(ShoppingCartAdapter.total_savings_value == 0) {

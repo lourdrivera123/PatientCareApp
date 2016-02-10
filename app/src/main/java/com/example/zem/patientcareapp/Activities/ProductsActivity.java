@@ -75,8 +75,7 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
 
     Intent get_intent;
 
-    public static ArrayList<Map<String, String>> temp_products_items = new ArrayList<>(), products_items = new ArrayList<>();
-    public static ArrayList<Map<String, String>> basket_items = new ArrayList<>();
+    public static ArrayList<Map<String, String>> temp_products_items = new ArrayList<>(), products_items = new ArrayList<>(), basket_items, load_items;
     public static ArrayList<HashMap<String, String>> specific_no_code;
     public static HashMap<String, String> map = new HashMap<>();
     ArrayList<HashMap<Integer, HashMap<String, String>>> searchProducts = new ArrayList<>();
@@ -194,6 +193,8 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onResume() {
         super.onResume();
+
+        basket_items = new ArrayList<>();
         getAllBasketItems();
 
         SelectedProductActivity.is_resumed = 0;
@@ -492,6 +493,7 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
                                 }
                                 temp_products_items.addAll(products_items);
                                 ArrayList<Map<String, String>> newMap = new ArrayList<>();
+                                load_items = new ArrayList<>();
 
                                 if (promo_id > 0) { //IF GIKAN SA PROMOFRAGMENT
                                     ArrayList<HashMap<String, String>> spec_promo = new ArrayList<>();
@@ -529,12 +531,23 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
                                             listOfProducts.setVisibility(View.GONE);
                                         }
                                     } else if (category.equals("All")) {
-                                        newMap.addAll(products_items);
+                                        if (products_items.size() > 20) {
+                                            for (int x = 0; x < 20; x++) {
+                                                newMap.add(products_items.get(x));
+                                            }
+                                        }
+                                        load_items.addAll(products_items);
                                     } else {
                                         for (Map<String, String> map : products_items) {
                                             if (map.containsValue(category))
-                                                newMap.add(map);
+                                                load_items.add(map);
                                         }
+
+                                        if (load_items.size() >= 20) {
+                                            for (int x = 0; x < 20; x++)
+                                                newMap.add(load_items.get(x));
+                                        } else
+                                            newMap.addAll(load_items);
 
                                         if (newMap.size() == 0) {
                                             no_products.setVisibility(View.VISIBLE);
@@ -544,6 +557,7 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
                                 }
 
                                 adapter = new ProductsAdapter(ProductsActivity.this, R.layout.product_item, newMap);
+
                                 listOfProducts.setAdapter(adapter);
                                 letDialogSleep();
                             }

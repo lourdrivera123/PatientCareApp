@@ -35,22 +35,25 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProductsAdapter extends ArrayAdapter implements View.OnClickListener {
     LayoutInflater inflater;
+    Context context;
+
     TextView product_name, rs_price, cart_text, out_of_stock, is_promo, in_stocks;
     ImageView product_image, cart_icon;
     LinearLayout add_to_cart, root;
     ToggleButton add_to_favorite;
 
-    Context context;
-
     DbHelper db;
     Helpers helpers;
 
-    ArrayList<Map<String, String>> products_items, basket_items;
+    ArrayList<Map<String, String>> products_items;
     ArrayList<Integer> list_favorites;
+
+    int initial_count = 20;
 
     public ProductsAdapter(Context context, int resource, ArrayList<Map<String, String>> objects) {
         super(context, resource, objects);
@@ -62,22 +65,22 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-            convertView = inflater.inflate(R.layout.product_item, parent, false);
+        convertView = inflater.inflate(R.layout.product_item, parent, false);
 
-            product_image = (ImageView) convertView.findViewById(R.id.product_image);
-            product_name = (TextView) convertView.findViewById(R.id.product_name);
-            rs_price = (TextView) convertView.findViewById(R.id.rs_price);
-            add_to_cart = (LinearLayout) convertView.findViewById(R.id.add_to_cart);
-            add_to_favorite = (ToggleButton) convertView.findViewById(R.id.add_to_favorite);
-            cart_icon = (ImageView) convertView.findViewById(R.id.cart_icon);
-            cart_text = (TextView) convertView.findViewById(R.id.cart_text);
-            out_of_stock = (TextView) convertView.findViewById(R.id.out_of_stock);
-            root = (LinearLayout) convertView.findViewById(R.id.root);
-            is_promo = (TextView) convertView.findViewById(R.id.is_promo);
-            in_stocks = (TextView) convertView.findViewById(R.id.in_stocks);
+        product_image = (ImageView) convertView.findViewById(R.id.product_image);
+        product_name = (TextView) convertView.findViewById(R.id.product_name);
+        rs_price = (TextView) convertView.findViewById(R.id.rs_price);
+        add_to_cart = (LinearLayout) convertView.findViewById(R.id.add_to_cart);
+        add_to_favorite = (ToggleButton) convertView.findViewById(R.id.add_to_favorite);
+        cart_icon = (ImageView) convertView.findViewById(R.id.cart_icon);
+        cart_text = (TextView) convertView.findViewById(R.id.cart_text);
+        out_of_stock = (TextView) convertView.findViewById(R.id.out_of_stock);
+        root = (LinearLayout) convertView.findViewById(R.id.root);
+        is_promo = (TextView) convertView.findViewById(R.id.is_promo);
+        in_stocks = (TextView) convertView.findViewById(R.id.in_stocks);
 
-            add_to_cart.setTag(position);
-            add_to_favorite.setTag(position);
+        add_to_cart.setTag(position);
+        add_to_favorite.setTag(position);
 
         if (Integer.parseInt(products_items.get(position).get("available_quantity")) == 0) {
             out_of_stock.setVisibility(View.VISIBLE);
@@ -86,7 +89,6 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
 
         add_to_cart.setOnClickListener(this);
 
-        basket_items = ProductsActivity.basket_items;
         db = new DbHelper(context);
         helpers = new Helpers();
         list_favorites = db.getFavoritesByUserID(SidebarActivity.getUserID());
@@ -141,7 +143,28 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
         product_name.setText(products_items.get(position).get("name"));
         rs_price.setText("Php " + products_items.get(position).get("price") + "/" + products_items.get(position).get("packing"));
 
+        if (reachedEndOfList(position))
+            loadMoreData();
+
         return convertView;
+    }
+
+    private boolean reachedEndOfList(int position) {
+        return position == products_items.size() - 1;
+    }
+
+    private void loadMoreData() {
+        this.initial_count += 20;
+
+        if (ProductsActivity.load_items.size() >= initial_count) {
+            for (int x = (initial_count - 20); x <= initial_count; x++)
+                products_items.add(ProductsActivity.load_items.get(x));
+        } else {
+            for (int x = (initial_count - 20); x <= ProductsActivity.load_items.size(); x++)
+                products_items.add(ProductsActivity.load_items.get(x));
+        }
+
+        this.notifyDataSetChanged();
     }
 
     void AddToCart(HashMap<String, String> map) {
@@ -164,11 +187,11 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                 pdialog.setCancelable(false);
                 pdialog.setMessage("Please wait...");
 
-                for (int x = 0; x < basket_items.size(); x++) {
-                    if (basket_items.get(x).get("product_id").equals(String.valueOf(product_id))) {
+                for (int x = 0; x < ProductsActivity.basket_items.size(); x++) {
+                    if (ProductsActivity.basket_items.get(x).get("product_id").equals(String.valueOf(product_id))) {
                         check += 1;
-                        old_qty = Integer.parseInt(basket_items.get(x).get("quantity"));
-                        server_id = basket_items.get(x).get("server_id");
+                        old_qty = Integer.parseInt(ProductsActivity.basket_items.get(x).get("quantity"));
+                        server_id = ProductsActivity.basket_items.get(x).get("server_id");
                     }
                 }
 
