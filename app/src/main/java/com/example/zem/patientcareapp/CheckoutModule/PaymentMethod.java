@@ -156,7 +156,7 @@ public class PaymentMethod extends AppCompatActivity implements View.OnClickList
                     if(response.getBoolean("success")){
                         order_model.setServer_id(response.getInt("server_id"));
                         if (opc.savePreference(order_model)) {
-                            intent = new Intent(PaymentMethod.this, PromosDiscounts.class);
+                            intent = new Intent(PaymentMethod.this, SummaryActivity.class);
                             intent.putExtra("order_model", order_model);
                             startActivity(intent);
                             PaymentMethod.this.finish();

@@ -70,7 +70,6 @@ public class PatientProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.edit) {
             int edit = 7;
-
             Intent intent = new Intent(getActivity(), EditTabsActivity.class);
             intent.putExtra(EditTabsActivity.EDIT_REQUEST, edit);
             startActivity(intent);

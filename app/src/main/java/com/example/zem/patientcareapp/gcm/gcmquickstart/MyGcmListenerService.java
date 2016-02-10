@@ -83,8 +83,6 @@ public class MyGcmListenerService extends GcmListenerService {
     // [END receive_message]
 
     private void sendNotification(Bundle data) {
-        d("data", data + "");
-//        d("message_fuck", message + "");
         Intent intent;
 
         if( data.getString("intent").equals("ReferralFragment") ) {
@@ -108,20 +106,18 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        try {
-            JSONObject json_msg = new JSONObject(data.getString("message"));
-            d("json_obj", json_msg + "");
-            d("json_obj_title", data.getString("title") + "");
-            d("json_obj_intent", data.getString("intent") + "");
+//        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+//        try {
+//            JSONObject json_msg = new JSONObject(data.getString("message"));
+//            d("json_obj", json_msg + "");
+//            d("json_obj_title", data.getString("title") + "");
+//            d("json_obj_intent", data.getString("intent") + "");
 
-            inboxStyle.setBigContentTitle(data.getString("title"));
+            notificationBuilder.setContentTitle(data.getString("title")).setContentText(data.getString("text"));
 
-            for (int i = 1; i <= json_msg.length(); i++) { inboxStyle.addLine(json_msg.getString(String.valueOf(i))); }
+//        } catch (JSONException e) { e.printStackTrace(); }
 
-        } catch (JSONException e) { e.printStackTrace(); }
-
-        notificationBuilder.setStyle(inboxStyle);
+//        notificationBuilder.setStyle(inboxStyle);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

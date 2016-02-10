@@ -463,35 +463,25 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         LayoutInflater inflater;
         ArrayList<HashMap<String, String>> objects;
 
+        TextView record_date, doctor, clinic;
+
         public SelectionAdapter(Context context, int resource, ArrayList<HashMap<String, String>> objects) {
             super(context, resource, objects);
             inflater = LayoutInflater.from(context);
             this.objects = objects;
         }
 
-        class ViewHolder {
-            TextView record_date, doctor, clinic;
-        }
-
         @Override
         public View getView(int position, View v, ViewGroup parent) {
-            ViewHolder mViewHolder;
+            v = inflater.inflate(R.layout.listview_history_views, parent, false);
 
-            if (v == null) {
-                mViewHolder = new ViewHolder();
-                v = inflater.inflate(R.layout.listview_history_views, parent, false);
+            record_date = (TextView) v.findViewById(R.id.record_date);
+            doctor = (TextView) v.findViewById(R.id.doctor_name);
+            clinic = (TextView) v.findViewById(R.id.clinic);
 
-                mViewHolder.record_date = (TextView) v.findViewById(R.id.record_date);
-                mViewHolder.doctor = (TextView) v.findViewById(R.id.doctor_name);
-                mViewHolder.clinic = (TextView) v.findViewById(R.id.clinic);
-
-                v.setTag(mViewHolder);
-            } else
-                mViewHolder = (ViewHolder) v.getTag();
-
-            mViewHolder.doctor.setText(objects.get(position).get("doctor_name"));
-            mViewHolder.record_date.setText(objects.get(position).get("record_date"));
-            mViewHolder.clinic.setText(objects.get(position).get("clinic_name"));
+            doctor.setText(objects.get(position).get("doctor_name"));
+            record_date.setText(objects.get(position).get("record_date"));
+            clinic.setText(objects.get(position).get("clinic_name"));
 
             return v;
         }

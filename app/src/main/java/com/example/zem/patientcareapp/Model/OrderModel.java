@@ -10,13 +10,16 @@ import java.io.Serializable;
 public class OrderModel implements Serializable {
 
     private int patient_id = 0, branch_id = 0, promo_id = 0, server_id=0;
-    private double coupon_discount=0.0, points_discount = 0.0;
+    private double coupon_discount=0.0, points_discount = 0.0, senior_discount = 0.0;
     private String recipient_name = "", recipient_address = "", recipient_contactNumber = "", delivery_sched="", mode_of_delivery = "", payment_method = "", action ="", coupon_discount_type="";
     public OrderModel(){}
 
     public boolean isValid(){
-        if(!this.getRecipient_name().equals("") && !this.getRecipient_address().equals("") && !this.getRecipient_contactNumber().equals("") && !this.getMode_of_delivery().equals("") && !this.getPayment_method().equals(""))
+        if(!this.getRecipient_name().equals("") && !this.getRecipient_address().equals("") && !this.getRecipient_contactNumber().equals("") && !this.getMode_of_delivery().equals("") && !this.getPayment_method().equals("")){
             return true;
+        } else if(this.getRecipient_address().equals("") && this.getMode_of_delivery().equals("pickup")) {
+            return true;
+        }
 
         return false;
     }
@@ -26,6 +29,14 @@ public class OrderModel implements Serializable {
            return true;
 
         return false;
+    }
+
+    public double getSenior_discount() {
+        return senior_discount;
+    }
+
+    public void setSenior_discount(double senior_discount) {
+        this.senior_discount = senior_discount;
     }
 
     public int getServer_id() {

@@ -27,14 +27,12 @@ import com.example.zem.patientcareapp.Controllers.BasketController;
 import com.example.zem.patientcareapp.Controllers.DbHelper;
 import com.example.zem.patientcareapp.Controllers.PatientController;
 import com.example.zem.patientcareapp.Controllers.SettingController;
-import com.example.zem.patientcareapp.Customizations.GlowingText;
 import com.example.zem.patientcareapp.Interface.ErrorListener;
 import com.example.zem.patientcareapp.Interface.RespondListener;
 import com.example.zem.patientcareapp.Interface.StringRespondListener;
 import com.example.zem.patientcareapp.Model.OrderModel;
 import com.example.zem.patientcareapp.Model.Patient;
 import com.example.zem.patientcareapp.Model.Settings;
-import com.example.zem.patientcareapp.Network.CustomPostRequest;
 import com.example.zem.patientcareapp.Network.GetRequest;
 import com.example.zem.patientcareapp.Customizations.NonScrollListView;
 import com.example.zem.patientcareapp.Network.ListOfPatientsRequest;
@@ -49,12 +47,16 @@ import org.json.JSONException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
+import static android.support.design.widget.Snackbar.make;
 import static android.util.Log.d;
+import static com.example.zem.patientcareapp.Network.CustomPostRequest.send;
+import static com.example.zem.patientcareapp.Network.ListRequestFromCustomURI.getJSONobj;
+import static com.example.zem.patientcareapp.SidebarModule.SidebarActivity.getUserID;
 
 public class SummaryActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -72,6 +74,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
     ArrayList<HashMap<String, String>> items;
     double totalAmount = 0.0;
     double undiscounted_total = 0;
+    double senior_discount = 0;
     NonScrollListView order_summary;
     TextView amount_subtotal, amount_of_coupon_discount, amount_of_points_discount, total_amount, delivery_charge;
     LinearLayout points_layout, coupon_layout, subtotal_layout, total_layout, delivery_charge_layout;
@@ -99,6 +102,11 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
     EditText senior_id_number;
     Button upload_senior_id;
     ImageView senior_picture_id;
+    ProgressBar progress;
+    View view_senior;
+    LinearLayout total_savings_layout;
+//    boolean age_valid_for_senior_discount = false;
+    String senior_validity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +149,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         promo_code_btn_layout = (LinearLayout) findViewById(R.id.promo_code_btn_layout);
         use_points_btn_layout = (LinearLayout) findViewById(R.id.use_points_btn_layout);
         how_to_senior_discount = (TextView) findViewById(R.id.how_to_senior_discount);
-        senior_picture_id = (ImageView) findViewById(R.id.senior_picture_id);
+        total_savings_layout = (LinearLayout) findViewById(R.id.total_savings_layout);
 
         how_to_senior_discount.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -171,9 +179,32 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         patient = pc.getloginPatient(SidebarActivity.getUname());
 
         showBeautifulDialog();
+        getBasketDetails();
+        setOrderDetails();
+        _setActionBar();
 
-        String url_raw = "check_basket?patient_id=" + SidebarActivity.getUserID() + "&branch_id=" + order_model.getBranch_id();
-        ListRequestFromCustomURI.getJSONobj(url_raw, new RespondListener<JSONObject>() {
+        change_id.setOnClickListener(this);
+        order_now_btn.setOnClickListener(this);
+    }
+
+    void _setActionBar(){
+        setSupportActionBar(myToolBar);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Order Summary");
+        myToolBar.setNavigationIcon(R.drawable.ic_back);
+    }
+
+    void setOrderDetails(){
+        order_receiving_option.setText(order_model.getMode_of_delivery());
+        recipient_option.setText(order_model.getRecipient_name());
+        payment_option.setText(helper.decodePaymentCode(order_model.getPayment_method(), order_model.getMode_of_delivery()));
+        recipient_contact_number.setText(order_model.getRecipient_contactNumber());
+    }
+
+    void getBasketDetails(){
+        String url_raw = "check_basket?patient_id=" + getUserID() + "&branch_id=" + order_model.getBranch_id();
+        getJSONobj(url_raw, new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
@@ -190,7 +221,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                             orderCancelled();
                         }
 
-                        StringRequests.getString(SummaryActivity.this, "db/get.php?q=get_patient_points&patient_id=" + SidebarActivity.getUserID(), new StringRespondListener<String>() {
+                        StringRequests.getString(SummaryActivity.this, "db/get.php?q=get_patient_points&patient_id=" + getUserID(), new StringRespondListener<String>() {
                             @Override
                             public void getResult(String response) {
                                 patient.setPoints(Double.parseDouble(response));
@@ -208,19 +239,18 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                                     setBranchNameFromServer();
                                     final_isDelivery = false;
                                     final_expected_points_value = expected_points_value;
-                                    populateView(json_mysql);
+                                    updateSettings(json_mysql);
                                 } else {
                                     address_or_branch.setText("Address for delivery");
                                     address_option.setText(order_model.getRecipient_address());
                                     final_isDelivery = true;
                                     final_expected_points_value = expected_points_value;
-                                    populateView(json_mysql);
+                                    updateSettings(json_mysql);
                                 }
-
                             }
                         }, new ErrorListener<VolleyError>() {
                             public void getError(VolleyError error) {
-                                Log.d("error for sumthing", error + "");
+                                d("error for sumthing", error + "");
                             }
                         });
                     }
@@ -235,73 +265,90 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(getBaseContext(), "Please check your Internet connection", Toast.LENGTH_SHORT).show();
             }
         });
-
-        order_receiving_option.setText(order_model.getMode_of_delivery());
-        recipient_option.setText(order_model.getRecipient_name());
-        payment_option.setText(helper.decodePaymentCode(order_model.getPayment_method(), order_model.getMode_of_delivery()));
-        recipient_contact_number.setText(order_model.getRecipient_contactNumber());
-
-        setSupportActionBar(myToolBar);
-
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Order Summary");
-        myToolBar.setNavigationIcon(R.drawable.ic_back);
-
-        change_id.setOnClickListener(this);
-        order_now_btn.setOnClickListener(this);
     }
 
-
-
-    void populateView(final JSONArray json_mysql) {
+    void updateSettings(final JSONArray json_mysql) {
         GetRequest.getJSONobj(getBaseContext(), "get_settings", "settings", "serverID", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
-                items = bc.convertFromJson(SummaryActivity.this, json_mysql);
-
-                for (HashMap<String, String> item : items) {
-                    String promo_type = item.get("promo_type");
-                    double item_subtotal_value = Double.parseDouble(item.get("item_subtotal"));
-                    double peso_discount = Double.parseDouble(item.get("peso_discount"));
-                    double percentage_discount = Double.parseDouble(item.get("percentage_discount"));
-                    double computed_discount;
-
-                    switch (promo_type) {
-                        case "peso_discount":
-                            computed_discount = item_subtotal_value - peso_discount;
-                            break;
-                        case "percentage_discount":
-                            computed_discount = item_subtotal_value - percentage_discount;
-                            break;
-                        default:
-                            computed_discount = item_subtotal_value;
-                            break;
-                    }
-
-                    undiscounted_total += item_subtotal_value;
-                    totalAmount = totalAmount + computed_discount;
-                }
-
-                //separate method.
-                showTotalDetails();
-
-
-                /* discounts and total block*/
-                SummaryAdapter adapter = new SummaryAdapter(SummaryActivity.this, items);
-                order_summary.setAdapter(adapter);
+                checkSeniorValidity(json_mysql);
             }
         }, new ErrorListener<VolleyError>() {
             public void getError(VolleyError error) {
-                Snackbar.make(root, "Please check network connection.", Snackbar.LENGTH_LONG).show();
+                make(root, "Please check network connection.", Snackbar.LENGTH_LONG).show();
             }
         });
     }
 
+    void checkSeniorValidity(final JSONArray json_mysql) {
+        getJSONobj("getSeniorValidity?patient_id=" + getUserID(), new RespondListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject response) {
+                try {
+                    int age = response.getInt("age");
+                    int isSenior = Integer.parseInt(response.getString("isSenior"));
+                    String senior_citizen_id_number = response.getString("senior_citizen_id_number");
+                    String senior_id_picture = response.getString("senior_id_picture");
+
+                    if (isSenior > 0 && !senior_citizen_id_number.equals("") && !senior_id_picture.equals(""))
+                        senior_validity = "senior_valid";
+                    else {
+                        if (age > 59)
+                            senior_validity = "senior_invalid";
+                        else
+                            senior_validity = "not_senior";
+                    }
+
+                    populateView(json_mysql);
+                } catch (Exception e) {
+                    d("snce", e + "");
+                }
+            }
+        }, new ErrorListener<VolleyError>() {
+            public void getError(VolleyError error) {
+                make(root, "Network error", LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    void populateView(JSONArray json_mysql){
+        items = bc.convertFromJson(SummaryActivity.this, json_mysql);
+
+        for (HashMap<String, String> item : items) {
+            String promo_type = item.get("promo_type");
+            double item_subtotal_value = Double.parseDouble(item.get("item_subtotal"));
+            double peso_discount = Double.parseDouble(item.get("peso_discount"));
+            double percentage_discount = Double.parseDouble(item.get("percentage_discount"));
+            double computed_discount;
+
+            switch (promo_type) {
+                case "peso_discount":
+                    computed_discount = item_subtotal_value - peso_discount;
+                    break;
+                case "percentage_discount":
+                    computed_discount = item_subtotal_value - percentage_discount;
+                    break;
+                default:
+                    computed_discount = item_subtotal_value;
+                    break;
+            }
+
+            undiscounted_total += item_subtotal_value;
+            totalAmount = totalAmount + computed_discount;
+        }
+
+        SummaryAdapter adapter = new SummaryAdapter(SummaryActivity.this, items);
+        order_summary.setAdapter(adapter);
+
+        showTotalDetails();
+    }
+
     void showSeniorValidationDialog(){
-        View view = LayoutInflater.from(getBaseContext()).inflate(R.layout.senior_dialog_layout, null);
-        senior_id_number = (EditText) view.findViewById(R.id.senior_id_number);
-        upload_senior_id = (Button) view.findViewById(R.id.upload_senior_id);
+        view_senior = LayoutInflater.from(getBaseContext()).inflate(R.layout.senior_dialog_layout, null);
+        senior_id_number = (EditText) view_senior.findViewById(R.id.senior_id_number);
+        upload_senior_id = (Button) view_senior.findViewById(R.id.upload_senior_id);
+        senior_picture_id = (ImageView) findViewById(R.id.senior_picture_id);
+        progress = (ProgressBar) findViewById(R.id.progress);
 
         upload_senior_id.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -311,22 +358,16 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                     Intent intent = new Intent(getBaseContext(), ShowPrescriptionDialog.class);
                     intent.putExtra("isForSeniorUpload", true);
                     intent.putExtra("senior_citizen_id_number", senior_id_number.getText().toString());
-                    startActivity(intent);
+                    startActivityForResult(intent, 2);
                 } else
                     senior_id_number.setError("Enter ID number first");
             }
         });
 
         builder = new AlertDialog.Builder(SummaryActivity.this);
-        builder.setView(view);
+        builder.setView(view_senior);
         builder.setCancelable(false);
-        builder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -334,18 +375,58 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         });
         final AlertDialog dialog = builder.create();
         dialog.show();
-        Button theButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        theButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                double points_input = Double.parseDouble(points_txtfield.getText().toString());
+    }
 
-                if (points_input > patient.getPoints() || points_input == 0) {
-                    Snackbar.make(root, "Please input between 1 and " + patient.getPoints(), Snackbar.LENGTH_LONG).show();
-                } else {
-                    order_model.setPoints_discount(points_input);
-                    dialog.dismiss();
-                    showTotalDetails();           }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==2 && data != null)
+        {
+            String imgFile = data.getStringExtra("imgFile");
+            senior_picture_id = (ImageView) view_senior.findViewById(R.id.senior_picture_id);
+            progress = (ProgressBar) view_senior.findViewById(R.id.progress);
+            upload_senior_id = (Button) view_senior.findViewById(R.id.upload_senior_id);
+
+            if (imgFile != null || !imgFile.equals("")) {
+                d("imgFile", imgFile + "");
+                upload_senior_id.setVisibility(View.GONE);
+                senior_picture_id.setVisibility(View.VISIBLE);
+                helper.setImage(imgFile, progress, senior_picture_id);
+                how_to_senior_discount.setVisibility(View.GONE);
+//                label_senior_discount.setText("You will save " + helper.money_format(senior_discount));
+//                total_savings_layout.setVisibility(View.GONE);
+                flushBasketPromos();
+            }
+        }
+    }
+
+    void flushBasketPromos(){
+        ShoppingCartAdapter.total_savings_value = 0;
+        totalAmount = 0;
+        undiscounted_total = 0;
+        HashMap<String, String> hashMap = new HashMap();
+        hashMap.put("patient_id", String.valueOf(getUserID()));
+
+        d("flush", "did I even get here ?");
+        send("flush_user_basket_promos", hashMap, new RespondListener<JSONObject>() {
+            @Override
+            public void getResult(JSONObject response) {
+                d("flush", response+"");
+                try {
+                    if(response.getBoolean("success")){
+                        showBeautifulDialog();
+                        getBasketDetails();
+                    }
+                } catch(Exception e)  {
+                    System.out.println("<flush_user_basket_promos> request error" + e);
+                }
+            }
+        }, new ErrorListener<VolleyError>() {
+            @Override
+            public void getError(VolleyError error) {
+                System.out.println("src: <flush_user_basket_promos>: " + error.toString());
+                d("flush", "wtf ?");
             }
         });
     }
@@ -360,9 +441,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         double points_discount = order_model.getPoints_discount();
-        discounted_total = totalAmount - points_discount - coupon_discount;
 
-                        /* discounts and total block*/
         if (coupon_discount == 0.0)
             coupon_layout.setVisibility(View.GONE);
         else
@@ -376,13 +455,42 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         amount_subtotal.setText(helper.money_format(totalAmount));
         amount_of_coupon_discount.setText(helper.money_format(coupon_discount));
         amount_of_points_discount.setText(helper.money_format(points_discount));
-        total_amount.setText(helper.money_format(discounted_total));
 
-        double senior_discount  = undiscounted_total * .20;
+        senior_discount  = undiscounted_total * .20;
 
         label_expected_points.setText("You will receive " + final_expected_points_value + " points upon order.");
-        label_total_savings.setText("You will save "+ helper.money_format(ShoppingCartAdapter.total_savings_value));
-        label_senior_discount.setText("You will save more ( "+ helper.money_format(senior_discount)+" ) if you validate your Senior Citizen ID");
+        label_total_savings.setText("You will save " + helper.money_format(ShoppingCartAdapter.total_savings_value));
+        discounted_total = totalAmount - points_discount - coupon_discount;
+
+        if(senior_discount > ShoppingCartAdapter.total_savings_value){
+            if(senior_validity.equals("senior_valid")){
+                if(ShoppingCartAdapter.total_savings_value == 0) {
+                    label_total_savings.setVisibility(View.GONE);
+                    label_senior_discount.setVisibility(View.VISIBLE);
+                    how_to_senior_discount.setVisibility(View.GONE);
+                    label_senior_discount.setText("You saved " + helper.money_format(senior_discount + points_discount + coupon_discount) + " from Senior Citizen Discount");
+                    order_model.setSenior_discount(senior_discount);
+                    discounted_total -= senior_discount;
+                } else
+                    flushBasketPromos();
+            } else if(senior_validity.equals("senior_invalid")) {
+                label_senior_discount.setVisibility(View.VISIBLE);
+                how_to_senior_discount.setVisibility(View.VISIBLE);
+                label_senior_discount.setText("You will save more ( " + helper.money_format(senior_discount) + " ) if you validate your Senior Citizen ID");
+            } else {
+                label_senior_discount.setVisibility(View.GONE);
+                how_to_senior_discount.setVisibility(View.GONE);
+                label_total_savings.setVisibility(View.VISIBLE);
+                label_total_savings.setText("You will save " + helper.money_format(ShoppingCartAdapter.total_savings_value + coupon_discount + points_discount));
+            }
+        } else {
+            label_total_savings.setVisibility(View.VISIBLE);
+            label_total_savings.setText("You will save " + helper.money_format(ShoppingCartAdapter.total_savings_value + coupon_discount + points_discount));
+        }
+        if(ShoppingCartAdapter.total_savings_value == 0 && senior_discount == 0){
+            total_savings_layout.setVisibility(View.GONE);
+            subtotal_layout.setVisibility(View.GONE);
+        }
 
         if (final_isDelivery) {
             settings = sc.getAllSettings();
@@ -397,6 +505,8 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                 total_amount.setText(helper.money_format(discounted_total));
             }
         }
+
+        total_amount.setText(helper.money_format(discounted_total));
     }
 
     void showPointsDialog() {
@@ -431,15 +541,11 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                 double points_input = Double.parseDouble(points_txtfield.getText().toString());
 
                 if (points_input > patient.getPoints() || points_input == 0) {
-                    Snackbar.make(root, "Please input between 1 and " + patient.getPoints(), Snackbar.LENGTH_LONG).show();
+                    make(root, "Please input between 1 and " + patient.getPoints(), Snackbar.LENGTH_LONG).show();
                 } else {
                     order_model.setPoints_discount(points_input);
                     dialog.dismiss();
                     showTotalDetails();
-//                    redeem_points.setVisibility(View.GONE);
-//                    points_txtfield.setVisibility(View.GONE);
-//                    points_text.setTextColor(getResources().getColor(R.color.ColorPrimary));
-//                    points_text.setText("Your order total will be discounted ₱ " + order_model.getPoints_discount() + " upon checkout");
                 }
             }
         });
@@ -477,7 +583,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                 final String promo_code = coupon.getText().toString();
                 if (!promo_code.equals("")) {
                     promo_progress.setVisibility(View.VISIBLE);
-                   searchPromoCode(promo_code, dialog);
+                    searchPromoCode(promo_code, dialog);
                 }
             }
         });
@@ -496,7 +602,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                         JSONArray json_mysql = response.getJSONArray("promos");
                         JSONObject obj = json_mysql.getJSONObject(0);
 
-                        d("obj_asd", obj+"");
+                        d("obj_asd", obj + "");
 
                         //free gifts still needed to be discussed
                         promos_map.put("is_free_delivery", obj.getString("is_free_delivery"));
@@ -576,7 +682,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         }, new ErrorListener<VolleyError>() {
             @Override
             public void getError(VolleyError e) {
-                Snackbar.make(root, "Network error", Snackbar.LENGTH_INDEFINITE).show();
+                make(root, "Network error", Snackbar.LENGTH_INDEFINITE).show();
             }
         });
     }
@@ -629,7 +735,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                             Patient patient = pc.getloginPatient(SidebarActivity.getUname());
                             showBeautifulDialog();
                             HashMap<String, String> map = new HashMap<>();
-                            map.put("user_id", String.valueOf(SidebarActivity.getUserID()));
+                            map.put("user_id", String.valueOf(getUserID()));
                             map.put("recipient_name", order_model.getRecipient_name());
                             map.put("recipient_address", order_model.getRecipient_address());
                             map.put("recipient_contactNumber", order_model.getRecipient_contactNumber());
@@ -639,6 +745,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                             map.put("status", "Pending");
                             map.put("coupon_discount", String.valueOf(order_model.getCoupon_discount()));
                             map.put("points_discount", String.valueOf(order_model.getPoints_discount()));
+                            map.put("senior_discount", String.valueOf(order_model.getSenior_discount()));
                             map.put("delivery_charge", String.valueOf(delivery_charge_val));
                             map.put("promo_id", String.valueOf(order_model.getPromo_id()));
                             map.put("promo_type", String.valueOf(order_model.getCoupon_discount_type()));
@@ -647,7 +754,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                             d("mappings", map.toString());
 
                             String url = "verify_cash_payment";
-                            CustomPostRequest.send(url, map, new RespondListener<JSONObject>() {
+                            send(url, map, new RespondListener<JSONObject>() {
                                         @Override
                                         public void getResult(JSONObject response) {
                                             d("b_payresponse", response + "");
@@ -658,19 +765,19 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                                                 } else {
                                                     d("b_check", "true im here");
                                                     //request for orders request
-                                                    GetRequest.getJSONobj(getBaseContext(), "get_orders&patient_id=" + SidebarActivity.getUserID(), "orders", "orders_id", new RespondListener<JSONObject>() {
+                                                    GetRequest.getJSONobj(getBaseContext(), "get_orders&patient_id=" + getUserID(), "orders", "orders_id", new RespondListener<JSONObject>() {
                                                         @Override
                                                         public void getResult(JSONObject response) {
 
                                                             d("b_get_orders", response + "");
 
-                                                            GetRequest.getJSONobj(getBaseContext(), "get_order_details&patient_id=" + SidebarActivity.getUserID(), "order_details", "order_details_id", new RespondListener<JSONObject>() {
+                                                            GetRequest.getJSONobj(getBaseContext(), "get_order_details&patient_id=" + getUserID(), "order_details", "order_details_id", new RespondListener<JSONObject>() {
                                                                 @Override
                                                                 public void getResult(JSONObject response) {
 
                                                                     d("b_get_od", response + "");
 
-                                                                    GetRequest.getJSONobj(getBaseContext(), "get_order_billings&patient_id=" + SidebarActivity.getUserID(), "billings", "billings_id", new RespondListener<JSONObject>() {
+                                                                    GetRequest.getJSONobj(getBaseContext(), "get_order_billings&patient_id=" + getUserID(), "billings", "billings_id", new RespondListener<JSONObject>() {
                                                                         @Override
                                                                         public void getResult(JSONObject response) {
                                                                             d("get_ob", response + "");
