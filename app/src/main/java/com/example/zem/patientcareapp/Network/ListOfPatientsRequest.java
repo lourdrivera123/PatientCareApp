@@ -1,6 +1,5 @@
 package com.example.zem.patientcareapp.Network;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -16,7 +15,7 @@ import org.json.JSONObject;
 
 public class ListOfPatientsRequest {
 
-    public static void getJSONobj(final Context c, final String q, String table_name, final RespondListener<JSONObject> listener, final ErrorListener<VolleyError> errorlistener) {
+    public static void getJSONobj(final String q, String table_name, final RespondListener<JSONObject> listener, final ErrorListener<VolleyError> errorlistener) {
         RequestQueue queue;
         Helpers helpers;
 

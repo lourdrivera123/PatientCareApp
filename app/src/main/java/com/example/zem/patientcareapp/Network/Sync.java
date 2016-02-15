@@ -11,7 +11,6 @@ import com.example.zem.patientcareapp.Controllers.ClinicDoctorController;
 import com.example.zem.patientcareapp.Controllers.DiscountsFreeProductsController;
 import com.example.zem.patientcareapp.Controllers.DoctorController;
 import com.example.zem.patientcareapp.Controllers.DbHelper;
-import com.example.zem.patientcareapp.Controllers.DosageController;
 import com.example.zem.patientcareapp.Controllers.FreeProductsController;
 import com.example.zem.patientcareapp.Controllers.MessageController;
 import com.example.zem.patientcareapp.Controllers.OrderController;
@@ -33,7 +32,6 @@ import com.example.zem.patientcareapp.Model.Clinic;
 import com.example.zem.patientcareapp.Model.ClinicDoctor;
 import com.example.zem.patientcareapp.Model.Consultation;
 import com.example.zem.patientcareapp.Model.Doctor;
-import com.example.zem.patientcareapp.Model.Dosage;
 import com.example.zem.patientcareapp.Model.FreeProducts;
 import com.example.zem.patientcareapp.Model.Patient;
 import com.example.zem.patientcareapp.Model.PatientRecord;
@@ -68,7 +66,6 @@ public class Sync {
     SubSpecialtyController ssp;
     ProductCategoryController pcc;
     ProductSubCategoryController pscc;
-    DosageController dc;
     PatientRecordController prc;
     PatientTreatmentsController ptc;
     DiscountsFreeProductsController dfpc;
@@ -97,7 +94,6 @@ public class Sync {
         ssp = new SubSpecialtyController(context);
         pcc = new ProductCategoryController(context);
         pscc = new ProductSubCategoryController(context);
-        dc = new DosageController(context);
         prc = new PatientRecordController(context);
         ptc = new PatientTreatmentsController(context);
         doctor_controller = new DoctorController(context);
@@ -149,9 +145,6 @@ public class Sync {
                             } else if (tableName.equals("product_subcategories")) {
                                 if (!pscc.insertProductSubCategory(setProductSubCategory(json_object)))
                                     d("sync_17", "wala na save");
-                            } else if (tableName.equals("dosage_format_and_strength")) {
-                                if (!dc.insertDosage(setDosage(json_object)))
-                                    d("sync_16", "wala na save");
                             } else if (tableName.equals("patient_records")) {
                                 if (prc.savePatientRecord(setPatientRecord(json_object), "insert"))
                                     d("sync_14", "wala na save");
@@ -257,18 +250,6 @@ public class Sync {
         return consult;
     }
 
-    public Dosage setDosage(JSONObject json_object) {
-        Dosage dosage = new Dosage();
-        try {
-            dosage.setDosage_id(json_object.getInt("id"));
-            dosage.setProduct_id(json_object.getInt("product_id"));
-            dosage.setName(json_object.getString("name"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return dosage;
-    }
-
     public PatientRecord setPatientRecord(JSONObject json_object) {
         PatientRecord patient_record = new PatientRecord();
         try {
@@ -285,7 +266,7 @@ public class Sync {
             patient_record.setUpdated_at(json_object.getString("updated_at"));
             patient_record.setDeleted_at(json_object.getString("deleted_at"));
         } catch (Exception e) {
-            Log.d("sync1", e+"");
+            Log.d("sync1", e + "");
         }
         return patient_record;
     }
@@ -304,7 +285,7 @@ public class Sync {
             map.put("duration_type", json.getString("duration_type"));
             listOfTreatments.add(map);
         } catch (Exception e) {
-            Log.d("sync2", e+"");
+            Log.d("sync2", e + "");
         }
         return listOfTreatments;
     }
@@ -416,6 +397,8 @@ public class Sync {
 
     public Clinic setClinic(JSONObject json) {
         Clinic clinic = new Clinic();
+
+        Log.d("clinic_json", json + "");
         try {
             clinic.setName(json.getString("name"));
             clinic.setClinicsId(json.getInt("id"));

@@ -71,7 +71,7 @@ public class DoctorController extends DbHelper {
         String sql = "SELECT * FROM " + TBL_DOCTORS;
         Cursor cur = sql_db.rawQuery(sql, null);
         HashMap<String, String> map;
-        ArrayList<HashMap<String, String>> doctors = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> doctors = new ArrayList<>();
 
         String fullname, fname, lname;
         while (cur.moveToNext()) {
@@ -79,7 +79,7 @@ public class DoctorController extends DbHelper {
             fname = Helpers.curGetStr(cur, DOC_FNAME);
             fullname = fname + " " + lname;
 
-            map = new HashMap();
+            map = new HashMap<>();
             map.put("doctor_id", String.valueOf(cur.getInt(cur.getColumnIndex(DOC_DOC_ID))));
             map.put("fullname", fullname);
             doctors.add(map);
@@ -91,7 +91,7 @@ public class DoctorController extends DbHelper {
     }
 
     public ArrayList<HashMap<String, String>> getAllDoctors() {
-        ArrayList<HashMap<String, String>> doctors = new ArrayList();
+        ArrayList<HashMap<String, String>> doctors = new ArrayList<>();
 
         SQLiteDatabase sql_db = dbhelper.getWritableDatabase();
         String sql = "SELECT d.*, s.name FROM " + TBL_DOCTORS + " as d inner join " + SubSpecialtyController.TBL_SUB_SPECIALTIES + " as ss on d.sub_specialty_id = ss.sub_specialty_id inner join " + SpecialtyController.TBL_SPECIALTIES + " as s on ss.specialty_id = s.specialty_id";
@@ -99,7 +99,7 @@ public class DoctorController extends DbHelper {
 
         cur.moveToFirst();
         while (!cur.isAfterLast()) {
-            HashMap<String, String> map = new HashMap();
+            HashMap<String, String> map = new HashMap<>();
             map.put(DOC_DOC_ID, cur.getString(cur.getColumnIndex(DOC_DOC_ID)));
             map.put(DOC_FNAME, cur.getString(cur.getColumnIndex(DOC_FNAME)));
             map.put(DOC_LNAME, cur.getString(cur.getColumnIndex(DOC_LNAME)));
@@ -120,15 +120,15 @@ public class DoctorController extends DbHelper {
     }
 
     public ArrayList<HashMap<Integer, ArrayList<String>>> getSearchDoctors() {
-        ArrayList<HashMap<Integer, ArrayList<String>>> doctors = new ArrayList();
+        ArrayList<HashMap<Integer, ArrayList<String>>> doctors = new ArrayList<>();
         SQLiteDatabase sql_db = dbhelper.getWritableDatabase();
         String sql = "select d.*, s.name as specialty, ss.name as sub_specialty from " + SpecialtyController.TBL_SPECIALTIES + " as s" +
                 " inner join " + SubSpecialtyController.TBL_SUB_SPECIALTIES + " as ss on s.specialty_id = ss.specialty_id inner join " + TBL_DOCTORS + " as d on ss.sub_specialty_id = d.sub_specialty_id";
         Cursor cur = sql_db.rawQuery(sql, null);
 
         while (cur.moveToNext()) {
-            HashMap<Integer, ArrayList<String>> map = new HashMap();
-            ArrayList<String> list = new ArrayList();
+            HashMap<Integer, ArrayList<String>> map = new HashMap<>();
+            ArrayList<String> list = new ArrayList<>();
 
             list.add(cur.getString(cur.getColumnIndex(DOC_LNAME)) + ", " + cur.getString(cur.getColumnIndex(DOC_FNAME)) + " " + cur.getString(cur.getColumnIndex(DOC_MNAME)).substring(0, 1));
             list.add(cur.getString(cur.getColumnIndex(DOC_PRC_NO)));
@@ -176,7 +176,7 @@ public class DoctorController extends DbHelper {
     }
 
     public ArrayList<HashMap<String, String>> getDoctorsInnerJoinClinics() {
-        ArrayList<HashMap<String, String>> listOfDoctorClinic = new ArrayList();
+        ArrayList<HashMap<String, String>> listOfDoctorClinic = new ArrayList<>();
         SQLiteDatabase sql_db = dbhelper.getWritableDatabase();
 
         String sql = "select d.lname, d.mname, d.fname, c.name, c.clinics_id, cd.clinic_sched from " + TBL_DOCTORS + " as d INNER JOIN " +
@@ -185,7 +185,7 @@ public class DoctorController extends DbHelper {
         Cursor cur = sql_db.rawQuery(sql, null);
 
         while (cur.moveToNext()) {
-            HashMap<String, String> map = new HashMap();
+            HashMap<String, String> map = new HashMap<>();
 
             map.put("clinics_id", String.valueOf(cur.getInt(cur.getColumnIndex(ClinicController.SERVER_CLINICS_ID))));
             map.put("fullname", cur.getString(cur.getColumnIndex(DOC_LNAME)) + ", " + cur.getString(cur.getColumnIndex(DOC_FNAME)) + " " + cur.getString(cur.getColumnIndex(DOC_MNAME)).substring(0, 1));

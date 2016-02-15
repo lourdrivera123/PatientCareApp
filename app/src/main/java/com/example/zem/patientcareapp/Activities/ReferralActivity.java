@@ -71,16 +71,17 @@ public class ReferralActivity extends AppCompatActivity implements View.OnClickL
 
         myToolbar = (Toolbar) findViewById(R.id.myToolbar);
         setSupportActionBar(myToolbar);
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(null);
 
         db = new DbHelper(this);
         doctor_controller = new DoctorController(this);
 
-        hashOfUsers = new ArrayList();
-        hashOfDoctors = new ArrayList();
-        listOfReferrals = new ArrayList();
-        tempReferrals = new ArrayList();
+        hashOfUsers = new ArrayList<>();
+        hashOfDoctors = new ArrayList<>();
+        listOfReferrals = new ArrayList<>();
+        tempReferrals = new ArrayList<>();
         cpd_id = 0;
 
         other = (RadioButton) findViewById(R.id.other);
@@ -92,7 +93,7 @@ public class ReferralActivity extends AppCompatActivity implements View.OnClickL
         continueBtn = (Button) findViewById(R.id.continueBtn);
 
         listOfReferrals.clear();
-        referredAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfReferrals);
+        referredAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listOfReferrals);
         listOfNames.setAdapter(referredAdapter);
 
         getAllReferrals();
@@ -219,7 +220,7 @@ public class ReferralActivity extends AppCompatActivity implements View.OnClickL
                         String name = autoUname.getText().toString();
                         String pass = autoPassword.getText().toString();
 
-                        ListOfPatientsRequest.getJSONobj(ReferralActivity.this, "get_clinic_patients&username=" + name + "&password=" + pass, "clinic_patients", new RespondListener<JSONObject>() {
+                        ListOfPatientsRequest.getJSONobj("get_clinic_patients&username=" + name + "&password=" + pass, "clinic_patients", new RespondListener<JSONObject>() {
                             @Override
                             public void getResult(JSONObject response) {
                                 try {
@@ -346,7 +347,7 @@ public class ReferralActivity extends AppCompatActivity implements View.OnClickL
 
         hashOfDoctors = doctor_controller.getAllDoctors();
         for (int d = 0; d < hashOfDoctors.size(); d++) {
-            HashMap<String, String> doc = new HashMap();
+            HashMap<String, String> doc = new HashMap<>();
             doc.put("fullname", hashOfDoctors.get(d).get("fullname"));
             doc.put("referral_id", hashOfDoctors.get(d).get("referral_id"));
             doc.put("user_id", hashOfDoctors.get(d).get("doc_id"));
@@ -355,14 +356,14 @@ public class ReferralActivity extends AppCompatActivity implements View.OnClickL
         }
 
         //for patients
-        ListOfPatientsRequest.getJSONobj(getBaseContext(), "get_patients", "patients", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj("get_patients", "patients", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
                     JSONArray json_array_mysql = response.getJSONArray("patients");
                     for (int x = 0; x < json_array_mysql.length(); x++) {
                         JSONObject json_obj = json_array_mysql.getJSONObject(x);
-                        HashMap<String, String> map = new HashMap();
+                        HashMap<String, String> map = new HashMap<>();
                         map.put("fullname", json_obj.getString("fname") + " " + json_obj.getString("lname"));
                         map.put("referral_id", json_obj.getString("referral_id"));
                         map.put("user_id", json_obj.getString("id"));

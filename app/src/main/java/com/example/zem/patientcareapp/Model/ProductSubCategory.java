@@ -2,9 +2,6 @@ package com.example.zem.patientcareapp.Model;
 
 import java.io.Serializable;
 
-/**
- * Created by User PC on 5/18/2015.
- */
 public class ProductSubCategory implements Serializable {
     String name = "";
     int categoryId;
@@ -17,16 +14,14 @@ public class ProductSubCategory implements Serializable {
 
     }
 
-    /* SETTERS */
-
     public void setId(int id) {
         this.id = id;
     }
 
-
     public void setName(String name) {
         this.name = name;
     }
+
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
@@ -42,9 +37,6 @@ public class ProductSubCategory implements Serializable {
     public void setDeletedAt(String deletedAt) {
         this.deletedAt = deletedAt;
     }
-
-
-    /* GETTERS */
 
     public int getId() {
         return id;

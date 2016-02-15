@@ -25,13 +25,11 @@ public class ClinicController extends DbHelper {
             CLINIC_REGION = "address_region",
             SERVER_CLINICS_ID = "clinics_id";
 
-     // SQL to create table "clinics"
-       public static final String CREATE_TABLE = String.format("CREATE TABLE %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s TEXT, %s TEXT" +
-                     ", %s TEXT, %s  TEXT , %s  TEXT , %s  TEXT" +
-                     ", %s TEXT, %s TEXT, %s TEXT  )",
-                TBL_CLINICS, AI_ID, SERVER_CLINICS_ID, CLINIC_NAME, CLINIC_CONTACT_NO
-             , CLINIC_BARANGAY, CLINIC_CITY, CLINIC_PROVINCE, CLINIC_REGION
-             , CREATED_AT, UPDATED_AT, DELETED_AT);
+    // SQL to create table "clinics"
+    public static final String CREATE_TABLE = String.format("CREATE TABLE %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s TEXT, %s TEXT" +
+                    ", %s TEXT, %s  TEXT , %s  TEXT , %s  TEXT" +
+                    ", %s TEXT, %s TEXT, %s TEXT  )",
+            TBL_CLINICS, AI_ID, SERVER_CLINICS_ID, CLINIC_NAME, CLINIC_CONTACT_NO, CLINIC_BARANGAY, CLINIC_CITY, CLINIC_PROVINCE, CLINIC_REGION, CREATED_AT, UPDATED_AT, DELETED_AT);
 
     public ClinicController(Context context) {
         super(context);
@@ -112,5 +110,5 @@ public class ClinicController extends DbHelper {
 
         return listOfClinics;
     }
-    
+
 }

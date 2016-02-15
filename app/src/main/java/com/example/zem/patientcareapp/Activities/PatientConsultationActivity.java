@@ -74,7 +74,7 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_consultation_layout);
+        setContentView(R.layout.consultation_layout);
 
         myToolBar = (Toolbar) findViewById(R.id.myToolBar);
         setSupportActionBar(myToolBar);

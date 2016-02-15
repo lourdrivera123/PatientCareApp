@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DoctorActivity extends AppCompatActivity implements View.OnClickListener {
-    TextView doctor_name, specialty, clinic_name, clinic_address_first_line, clinic_address_second_line, contact_number;
+    TextView doctor_name, specialty, clinic_name, clinic_schedule, clinic_address_first_line, clinic_address_second_line, contact_number;
     ListView listOfDoctors;
     Toolbar doctorsToolbar;
     Button scheduleConsultation;
@@ -51,7 +52,7 @@ public class DoctorActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = getIntent();
         DoctorController doctor_controller = new DoctorController(this);
 
-        doctorID = intent.getIntExtra(DoctorController.DOC_DOC_ID, 0);
+        doctorID = intent.getIntExtra("doc_id", 0);
         ClinicController cc = new ClinicController(this);
         hashClinicsByDoctorID = cc.getClinicByDoctorID(doctorID);
 
@@ -66,6 +67,8 @@ public class DoctorActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         setSupportActionBar(doctorsToolbar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Doctor Information");
         doctorsToolbar.setNavigationIcon(R.drawable.ic_back);
@@ -101,7 +104,10 @@ public class DoctorActivity extends AppCompatActivity implements View.OnClickLis
             clinic_address_first_line = (TextView) v.findViewById(R.id.clinic_address_first_line);
             clinic_address_second_line = (TextView) v.findViewById(R.id.clinic_address_second_line);
             contact_number = (TextView) v.findViewById(R.id.contact_number);
+            clinic_schedule = (TextView) v.findViewById(R.id.clinic_schedule);
             String firstLine, secondLine, building = "", barangay = "";
+
+            Log.d("hashClinics", hashClinicsByDoctorID + "");
 
 //            if (!hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_BUILDING).equals(""))
 //                building = "#" + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_BUILDING);
@@ -113,10 +119,11 @@ public class DoctorActivity extends AppCompatActivity implements View.OnClickLis
 //                    ", " + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_REGION) +
 //                    ", Philippines, " + hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_ZIP);
 
-            clinic_name.setText(hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_NAME));
+            clinic_name.setText(hashClinicsByDoctorID.get(position).get("name"));
+            contact_number.setText("Contact #: " + hashClinicsByDoctorID.get(position).get("contact_no"));
+            clinic_schedule.setText(hashClinicsByDoctorID.get(position).get("clinic_sched"));
 //            clinic_address_first_line.setText(firstLine);
 //            clinic_address_second_line.setText(secondLine);
-            contact_number.setText(hashClinicsByDoctorID.get(position).get(ClinicController.CLINIC_CONTACT_NO));
 
             return v;
         }

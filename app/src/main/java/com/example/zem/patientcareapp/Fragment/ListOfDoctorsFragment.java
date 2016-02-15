@@ -56,9 +56,8 @@ public class ListOfDoctorsFragment extends Fragment implements TextWatcher, Adap
         doctor_controller = new DoctorController(getActivity());
         queue = VolleySingleton.getInstance().getRequestQueue();
 
-        arrayOfSearchDoctors = new ArrayList();
-        listOfSearchDoctors = new ArrayList();
-
+        arrayOfSearchDoctors = new ArrayList<>();
+        listOfSearchDoctors = new ArrayList<>();
 
         search_doctor = (EditText) rootView.findViewById(R.id.search_doctor);
         noUserFound = (TextView) rootView.findViewById(R.id.noUserFound);
@@ -87,9 +86,9 @@ public class ListOfDoctorsFragment extends Fragment implements TextWatcher, Adap
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        int ID = Integer.parseInt(doctor_items.get(position).get(doctor_controller.DOC_DOC_ID));
+        int ID = Integer.parseInt(doctor_items.get(position).get("doc_id"));
         Intent intent = new Intent(getActivity(), DoctorActivity.class);
-        intent.putExtra(doctor_controller.DOC_DOC_ID, ID);
+        intent.putExtra("doc_id", ID);
         startActivity(intent);
     }
 
@@ -118,9 +117,9 @@ public class ListOfDoctorsFragment extends Fragment implements TextWatcher, Adap
                         noUserFound.setVisibility(View.GONE);
                         list_of_doctors.setVisibility(View.VISIBLE);
 
-                        HashMap<String, String> hash = new HashMap();
+                        HashMap<String, String> hash = new HashMap<>();
 
-                        hash.put(doctor_controller.DOC_DOC_ID, String.valueOf(key));
+                        hash.put("doc_id", String.valueOf(key));
                         hash.put("fullname", values.get(0));
                         hash.put("name", values.get(2));
                         doctor_items.add(hash);

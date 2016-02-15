@@ -71,7 +71,6 @@
             android:id="@+id/referredBy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Firstname Lastname (Referral ID)"
             android:inputType="textMultiLine"
             android:lines="1"
             android:maxLines="1"

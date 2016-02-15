@@ -89,7 +89,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
 
         proceed_to_checkout.setOnClickListener(this);
 
-        ListOfPatientsRequest.getJSONobj(ShoppingCartActivity.this, "get_nocode_promos", "promos", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj("get_nocode_promos", "promos", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {

@@ -123,6 +123,19 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
+            android:name=".Activities.SearchAllProductsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".SwipeTabsModule.MasterTabActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
@@ -137,6 +150,10 @@
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".Activities.SelectedProductActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".Activities.ProductCategoriesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
@@ -159,10 +176,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".ShowPrescriptionDialog"

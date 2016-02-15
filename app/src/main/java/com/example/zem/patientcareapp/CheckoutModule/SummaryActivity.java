@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +35,6 @@ import com.example.zem.patientcareapp.Model.Settings;
 import com.example.zem.patientcareapp.Network.GetRequest;
 import com.example.zem.patientcareapp.Customizations.NonScrollListView;
 import com.example.zem.patientcareapp.Network.ListOfPatientsRequest;
-import com.example.zem.patientcareapp.Network.ListRequestFromCustomURI;
 import com.example.zem.patientcareapp.Network.StringRequests;
 import com.example.zem.patientcareapp.R;
 import com.example.zem.patientcareapp.ShowPrescriptionDialog;
@@ -60,53 +58,40 @@ import static com.example.zem.patientcareapp.SidebarModule.SidebarActivity.getUs
 
 public class SummaryActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static AppCompatDialog pDialog;
     public static HashMap<String, String> promos_map;
-    Toolbar myToolBar;
-    Button change_id, order_now_btn, promo_code_btn, use_points_btn;
-    OrderModel order_model;
+    ArrayList<HashMap<String, String>> items;
+
     Intent get_intent;
+    ProgressBar promo_progress, progress;
+    AlertDialog.Builder builder;
+    public static AppCompatDialog pDialog;
+
+    OrderModel order_model;
     DbHelper dbHelper;
     Helpers helper;
+    Patient patient;
     PatientController pc;
     BasketController bc;
     SettingController sc;
-    ArrayList<HashMap<String, String>> items;
-    double totalAmount = 0.0;
-    double undiscounted_total = 0;
-    double senior_discount = 0;
     NonScrollListView order_summary;
-    TextView amount_subtotal, amount_of_coupon_discount, amount_of_points_discount, total_amount, delivery_charge;
-    LinearLayout points_layout, coupon_layout, subtotal_layout, total_layout, delivery_charge_layout;
-    TextView order_receiving_option, address_option, recipient_option, payment_option, recipient_contact_number, address_or_branch;
-    LinearLayout root;
-    LinearLayout promo_code_btn_layout, use_points_btn_layout;
     Settings settings;
-    double delivery_charge_val = 0;
-    double discounted_total = 0;
-    AlertDialog.Builder builder;
-    TextView label_expected_points, label_total_savings, label_senior_discount;
-    String msg;
-    double final_peso_discount, final_percentage_discount, final_min_purchase = 0;
-    String final_free_gift, final_free_delivery, final_qty_required = "";
-    EditText coupon;
-    ProgressBar promo_progress;
-    TextView message_after_promo_input;
-    String modeOfDelivery = "";
+
+    double totalAmount = 0.0, undiscounted_total = 0, senior_discount = 0, final_expected_points_value;
+    double final_peso_discount, final_percentage_discount, final_min_purchase = 0, delivery_charge_val = 0, discounted_total = 0;
     boolean final_isDelivery;
-    double final_expected_points_value;
-    EditText points_txtfield;
-    TextView points_text;
-    Patient patient;
-    TextView how_to_senior_discount;
-    EditText senior_id_number;
-    Button upload_senior_id;
+    String final_free_gift, final_free_delivery, final_qty_required = "", msg, modeOfDelivery = "", senior_validity;
+
+    Toolbar myToolBar;
+    Button upload_senior_id, change_id, order_now_btn, promo_code_btn, use_points_btn;
+    TextView order_receiving_option, address_option, recipient_option, payment_option, recipient_contact_number, address_or_branch;
+    TextView label_expected_points, label_total_savings, label_senior_discount, message_after_promo_input;
+    TextView amount_subtotal, amount_of_coupon_discount, amount_of_points_discount, total_amount, delivery_charge, points_text, how_to_senior_discount;
+    LinearLayout root, promo_code_btn_layout, use_points_btn_layout;
+    LinearLayout points_layout, coupon_layout, subtotal_layout, total_layout, delivery_charge_layout, total_savings_layout;
+    EditText points_txtfield, coupon, senior_id_number;
     ImageView senior_picture_id;
-    ProgressBar progress;
     View view_senior;
-    LinearLayout total_savings_layout;
-//    boolean age_valid_for_senior_discount = false;
-    String senior_validity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +136,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         how_to_senior_discount = (TextView) findViewById(R.id.how_to_senior_discount);
         total_savings_layout = (LinearLayout) findViewById(R.id.total_savings_layout);
 
-        how_to_senior_discount.setOnClickListener(new View.OnClickListener(){
+        how_to_senior_discount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showSeniorValidationDialog();
@@ -187,7 +172,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         order_now_btn.setOnClickListener(this);
     }
 
-    void _setActionBar(){
+    void _setActionBar() {
         setSupportActionBar(myToolBar);
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -195,14 +180,14 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         myToolBar.setNavigationIcon(R.drawable.ic_back);
     }
 
-    void setOrderDetails(){
+    void setOrderDetails() {
         order_receiving_option.setText(order_model.getMode_of_delivery());
         recipient_option.setText(order_model.getRecipient_name());
         payment_option.setText(helper.decodePaymentCode(order_model.getPayment_method(), order_model.getMode_of_delivery()));
         recipient_contact_number.setText(order_model.getRecipient_contactNumber());
     }
 
-    void getBasketDetails(){
+    void getBasketDetails() {
         String url_raw = "check_basket?patient_id=" + getUserID() + "&branch_id=" + order_model.getBranch_id();
         getJSONobj(url_raw, new RespondListener<JSONObject>() {
             @Override
@@ -311,7 +296,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    void populateView(JSONArray json_mysql){
+    void populateView(JSONArray json_mysql) {
         items = bc.convertFromJson(SummaryActivity.this, json_mysql);
 
         for (HashMap<String, String> item : items) {
@@ -343,7 +328,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         showTotalDetails();
     }
 
-    void showSeniorValidationDialog(){
+    void showSeniorValidationDialog() {
         view_senior = LayoutInflater.from(getBaseContext()).inflate(R.layout.senior_dialog_layout, null);
         senior_id_number = (EditText) view_senior.findViewById(R.id.senior_id_number);
         upload_senior_id = (Button) view_senior.findViewById(R.id.upload_senior_id);
@@ -353,8 +338,8 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         upload_senior_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String senior_id_number_s  = senior_id_number.getText().toString();
-                if(!senior_id_number_s.equals("")) {
+                String senior_id_number_s = senior_id_number.getText().toString();
+                if (!senior_id_number_s.equals("")) {
                     Intent intent = new Intent(getBaseContext(), ShowPrescriptionDialog.class);
                     intent.putExtra("isForSeniorUpload", true);
                     intent.putExtra("senior_citizen_id_number", senior_id_number.getText().toString());
@@ -378,11 +363,9 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==2 && data != null)
-        {
+        if (requestCode == 2 && data != null) {
             String imgFile = data.getStringExtra("imgFile");
             senior_picture_id = (ImageView) view_senior.findViewById(R.id.senior_picture_id);
             progress = (ProgressBar) view_senior.findViewById(R.id.progress);
@@ -401,11 +384,11 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    void flushBasketPromos(){
+    void flushBasketPromos() {
         ShoppingCartAdapter.total_savings_value = 0;
         totalAmount = 0;
         undiscounted_total = 0;
-        HashMap<String, String> hashMap = new HashMap();
+        HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("patient_id", String.valueOf(getUserID()));
 
         d("flush", "did I even get here ?");
@@ -431,7 +414,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    void showTotalDetails(){
+    void showTotalDetails() {
         double coupon_discount = order_model.getCoupon_discount();
         d("coupon_discount_", coupon_discount + "");
 
@@ -456,16 +439,16 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         amount_of_coupon_discount.setText(helper.money_format(coupon_discount));
         amount_of_points_discount.setText(helper.money_format(points_discount));
 
-        senior_discount  = undiscounted_total * .20;
+        senior_discount = undiscounted_total * .20;
 
         label_expected_points.setText("You will receive " + final_expected_points_value + " points upon order.");
         label_total_savings.setText("You will save " + helper.money_format(ShoppingCartAdapter.total_savings_value));
         discounted_total = totalAmount - points_discount - coupon_discount;
         subtotal_layout.setVisibility(View.VISIBLE);
 
-        if(senior_discount > ShoppingCartAdapter.total_savings_value){
-            if(senior_validity.equals("senior_valid")){
-                if(ShoppingCartAdapter.total_savings_value == 0) {
+        if (senior_discount > ShoppingCartAdapter.total_savings_value) {
+            if (senior_validity.equals("senior_valid")) {
+                if (ShoppingCartAdapter.total_savings_value == 0) {
                     label_total_savings.setVisibility(View.GONE);
                     label_senior_discount.setVisibility(View.VISIBLE);
                     how_to_senior_discount.setVisibility(View.GONE);
@@ -474,7 +457,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                     discounted_total -= senior_discount;
                 } else
                     flushBasketPromos();
-            } else if(senior_validity.equals("senior_invalid")) {
+            } else if (senior_validity.equals("senior_invalid")) {
                 label_senior_discount.setVisibility(View.VISIBLE);
                 how_to_senior_discount.setVisibility(View.VISIBLE);
                 label_senior_discount.setText("You will save more ( " + helper.money_format(senior_discount) + " ) if you validate your Senior Citizen ID");
@@ -494,7 +477,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         d("gd", ShoppingCartAdapter.total_savings_value + "");
         d("gd", senior_discount + "");
 
-        if(ShoppingCartAdapter.total_savings_value == 0 && totalAmount == discounted_total){
+        if (ShoppingCartAdapter.total_savings_value == 0 && totalAmount == discounted_total) {
             total_savings_layout.setVisibility(View.GONE);
             subtotal_layout.setVisibility(View.GONE);
         }
@@ -522,7 +505,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         points_text = (TextView) view.findViewById(R.id.points_text);
 
         points_txtfield.setText(String.valueOf(patient.getPoints()));
-        points_text.setText(" out of "+ patient.getPoints() + " points");
+        points_text.setText(" out of " + patient.getPoints() + " points");
 
         builder = new AlertDialog.Builder(SummaryActivity.this);
         builder.setView(view);
@@ -598,7 +581,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
 
     void searchPromoCode(String promo_code, final AlertDialog dialog) {
         promos_map = new HashMap<>();
-        ListOfPatientsRequest.getJSONobj(SummaryActivity.this, "check_promo_code&promo_code=" + promo_code, "promos", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj("check_promo_code&promo_code=" + promo_code, "promos", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 d("response_promo", response + "");
@@ -647,11 +630,6 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                             order_model.setCoupon_discount_type("percentage_discount");
                         }
 
-//                        if (final_free_gift.equals("1")) {
-//                            msg = "You got free gift, upon purchase.";
-//                            order_model.setCoupon_discount_type("free_gift");
-//                        }
-
                         if (final_free_delivery.equals("1")) {
                             msg = "You got free delivery.";
                             order_model.setCoupon_discount_type("free_delivery");
@@ -683,7 +661,6 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 } catch (Exception e) {
 //                                Snackbar.make(root, e + "", Snackbar.LENGTH_INDEFINITE).show();
-                    d("err", e + "");
                 }
             }
         }, new ErrorListener<VolleyError>() {

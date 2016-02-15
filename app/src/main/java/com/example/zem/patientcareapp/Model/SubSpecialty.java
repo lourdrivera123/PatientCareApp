@@ -2,9 +2,6 @@ package com.example.zem.patientcareapp.Model;
 
 import java.io.Serializable;
 
-/**
- * Created by Zem on 6/4/2015.
- */
 public class SubSpecialty implements Serializable {
 
     private String name = "", created_at = "", updated_at = "", deleted_at = "";

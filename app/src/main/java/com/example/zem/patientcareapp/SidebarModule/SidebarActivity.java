@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -23,7 +22,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -35,10 +33,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.example.zem.patientcareapp.Activities.ShoppingCartActivity;
@@ -50,7 +46,6 @@ import com.example.zem.patientcareapp.Controllers.PatientRecordController;
 import com.example.zem.patientcareapp.Controllers.PatientTreatmentsController;
 import com.example.zem.patientcareapp.Fragment.HomeTileFragment;
 import com.example.zem.patientcareapp.Fragment.ListOfDoctorsFragment;
-import com.example.zem.patientcareapp.Fragment.MessagesFragment;
 import com.example.zem.patientcareapp.Fragment.OrdersFragment;
 import com.example.zem.patientcareapp.Fragment.PatientHistoryFragment;
 import com.example.zem.patientcareapp.Fragment.PatientProfileFragment;
@@ -300,6 +295,7 @@ public class SidebarActivity extends AppCompatActivity {
                 startActivity(new Intent(SidebarActivity.this, ShoppingCartActivity.class));
             }
         });
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -421,7 +417,7 @@ public class SidebarActivity extends AppCompatActivity {
     private void getAllBasketItems() {
         String url_raw = "get_basket_items&patient_id=" + SidebarActivity.getUserID() + "&table=baskets";
 
-        ListOfPatientsRequest.getJSONobj(SidebarActivity.this, url_raw, "baskets", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj(url_raw, "baskets", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {

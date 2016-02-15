@@ -62,9 +62,6 @@ import static android.util.Log.d;
 import static com.example.zem.patientcareapp.Network.CustomPostRequest.send;
 import static java.lang.System.out;
 
-/**
- * Created by Zem on 11/3/2015.
- */
 public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, AdapterView.OnItemClickListener {
 
@@ -125,6 +122,7 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
         root = (LinearLayout) findViewById(R.id.root);
 
         setSupportActionBar(mytoolbar);
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Select Branch");
         mytoolbar.setNavigationIcon(R.drawable.ic_back);
@@ -157,8 +155,8 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
         // before loop:
-        final List<Marker> markers = new ArrayList<Marker>();
-        final List<Marker> same_region_markers = new ArrayList<Marker>();
+        final List<Marker> markers = new ArrayList<>();
+        final List<Marker> same_region_markers = new ArrayList<>();
 
 
         GetRequest.getJSONobj(getBaseContext(), "google_distance_matrix&mylocation_lat=" + 7.163199 + "&mylocation_long=" + 125.577526, "branches", "branches_id", new RespondListener<JSONObject>() {
@@ -362,13 +360,14 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
         confirmationDialog1.show();
     }
 
-    void redirect(){
-        startActivity(new Intent(this, ProductsActivity.class));
+    void redirect() {
+        startActivity(new Intent(this, ProductCategoriesActivity.class));
+//        startActivity(new Intent(this, ProductsActivity.class));
         this.finish();
     }
 
-    void saveSelectedBranchOnline(final OrderModel order_model){
-        HashMap<String, String> hashMap = new HashMap();
+    void saveSelectedBranchOnline(final OrderModel order_model) {
+        HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put(OrderPreferenceController.ORDER_PREFERENCES_BRANCH_ID, String.valueOf(order_model.getBranch_id()));
         hashMap.put(OrderPreferenceController.ORDER_PREFERENCES_PATIENT_ID, String.valueOf(SidebarActivity.getUserID()));
         hashMap.put(OrderPreferenceController.ORDER_PREFERENCES_RECIPIENT_NAME, String.valueOf(order_model.getRecipient_name()));
@@ -387,9 +386,9 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
             public void getResult(JSONObject response) {
                 try {
                     d("orderprefresponse", response + "");
-                    if(response.getBoolean("success")){
+                    if (response.getBoolean("success")) {
                         order_model.setServer_id(response.getInt("server_id"));
-                        if(opc.saveSelectedBranch(order_model)){
+                        if (opc.saveSelectedBranch(order_model)) {
                             redirect();
                         } else {
                             make(root, "Cannot save branch on local database", LENGTH_LONG).show();
@@ -409,11 +408,11 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
         });
     }
 
-    void flushBasketOnline(){
+    void flushBasketOnline() {
         StringRequests.getString(GoogleMapsActivity.this, "db/get.php?q=empty_basket_to_change_branch&patient_id=" + SidebarActivity.getUserID(), new StringRespondListener<String>() {
             @Override
             public void getResult(String response) {
-                if(response.equals("deleted")){
+                if (response.equals("deleted")) {
                     order_model.setMode_of_delivery("");
                     order_model.setPayment_method("");
                     order_model.setRecipient_address("");

@@ -159,7 +159,7 @@ public class PromosDiscounts extends AppCompatActivity implements View.OnClickLi
     }
 
     void searchPromoCode(String promo_code) {
-        ListOfPatientsRequest.getJSONobj(PromosDiscounts.this, "check_promo_code&promo_code=" + promo_code, "promos", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj("check_promo_code&promo_code=" + promo_code, "promos", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 Log.d("response_promo", response + "");

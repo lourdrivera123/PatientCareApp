@@ -12,9 +12,6 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 
-/**
- * Created by User PC on 12/21/2015.
- */
 public class RoundedAvatarDrawable extends Drawable {
     private final Bitmap mBitmap;
     private final Paint mPaint;
@@ -87,11 +84,6 @@ public class RoundedAvatarDrawable extends Drawable {
     @Override
     public int getIntrinsicHeight() {
         return mBitmapHeight;
-    }
-
-    public void setAntiAlias(boolean aa) {
-        mPaint.setAntiAlias(aa);
-        invalidateSelf();
     }
 
     @Override

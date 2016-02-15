@@ -6,9 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.zem.patientcareapp.Model.ClinicDoctor;
 
-/**
- * Created by Zem on 11/23/2015.
- */
 public class ClinicDoctorController extends DbHelper {
 
     DbHelper dbhelper;
@@ -22,9 +19,9 @@ public class ClinicDoctorController extends DbHelper {
             CD_CLINIC_SCHED = "clinic_sched",
             CD_IS_ACTIVE = "is_active";
 
-// SQL to create table "clinic_doctor"
-     public static final String CREATE_TABLE = String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INT )",
-                TBL_CLINIC_DOCTOR, AI_ID, CD_SERVER_ID, CD_CLINIC_ID, CD_DOCTOR_ID, CD_CLINIC_SCHED, CD_IS_ACTIVE);
+    // SQL to create table "clinic_doctor"
+    public static final String CREATE_TABLE = String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INT )",
+            TBL_CLINIC_DOCTOR, AI_ID, CD_SERVER_ID, CD_CLINIC_ID, CD_DOCTOR_ID, CD_CLINIC_SCHED, CD_IS_ACTIVE);
 
     public ClinicDoctorController(Context context) {
         super(context);

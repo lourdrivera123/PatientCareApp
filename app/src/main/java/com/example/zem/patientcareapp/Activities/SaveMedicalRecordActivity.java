@@ -86,6 +86,8 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
 
         medRecord_toolbar = (Toolbar) findViewById(R.id.medRecord_toolbar);
         setSupportActionBar(medRecord_toolbar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setTitle("New Record");
 

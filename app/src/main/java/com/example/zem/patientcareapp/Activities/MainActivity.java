@@ -47,7 +47,7 @@ import static com.example.zem.patientcareapp.Network.GetRequest.getJSONobj;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     EditText username_txtfield, password_txtfield;
-    TextView signup, forgotpw;
+    TextView signup;
     LinearLayout login, root;
     Toolbar login_toolbar;
 
@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sync = new Sync();
 
         signup = (TextView) findViewById(R.id.signup);
-        forgotpw = (TextView) findViewById(R.id.forgot_password);
         login = (LinearLayout) findViewById(R.id.login);
         root = (LinearLayout) findViewById(R.id.root);
         username_txtfield = (EditText) findViewById(R.id.username_txtfield);
@@ -99,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         password_txtfield.setTransformationMethod(new PasswordTransformationMethod());
 
         signup.setOnClickListener(this);
-        forgotpw.setOnClickListener(this);
         login.setOnClickListener(this);
     }
 

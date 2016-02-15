@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/toolbar"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -17,97 +18,74 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/d10"
-        android:layout_marginLeft="@dimen/d10"
-        android:layout_marginRight="@dimen/d10"
-        android:layout_marginTop="@dimen/d10"
+        android:layout_height="0dp"
+        android:layout_weight=".9"
+        android:background="@android:drawable/dialog_holo_light_frame"
         android:orientation="vertical">
 
-        <ScrollView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="vertical"
+            android:padding="@dimen/d10">
+
+            <TextView
+                android:id="@+id/doctor_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/specialty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:layout_marginTop="5dp"
+            android:background="@color/toolbar" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_marginTop="@dimen/d10"
+            android:orientation="vertical"
+            android:padding="@dimen/d10">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/d10"
+                android:text="CLINIC INFORMATION"
+                android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:orientation="horizontal">
+            <ListView
+                android:id="@+id/listOfDoctors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.4"
-                        android:paddingRight="@dimen/d20">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".1"
+        android:gravity="bottom">
 
-                        <ImageView
-                            android:id="@+id/image_holder"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@mipmap/doctor_photo" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.6"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/doctor_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:text="Villareal, Mary Joy, MI. PhD"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/specialty"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:text="(Cardiologist, cardiosublogist)"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/scheduleConsultation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/partner_toolbar"
-                    android:drawableLeft="@mipmap/ic_add_new_schedule"
-                    android:gravity="center_vertical"
-                    android:text="Schedule Consultation"
-                    android:textAlignment="gravity"
-                    android:textColor="@color/white" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/d20"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/d10"
-                        android:text="CLINIC INFORMATION"
-                        android:textStyle="bold" />
-
-                    <ListView
-                        android:id="@+id/listOfDoctors"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </LinearLayout>
-            </LinearLayout>
-        </ScrollView>
+        <Button
+            android:id="@+id/scheduleConsultation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradient_button"
+            android:clickable="true"
+            android:text="Schedule Consultation"
+            android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>

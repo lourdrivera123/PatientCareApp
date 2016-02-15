@@ -128,8 +128,6 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
             public void onClick(DialogInterface dialog, int which) {
                 final int record_id = Integer.parseInt(hashHistory.get(pos).get("record_id"));
 
-                Log.d("record_id", record_id + "");
-
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("table", "patient_records");
                 hashMap.put("request", "crud");
