@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="lightGreen">#93F9B9</color>
-    <color name="Accent">#92CCA6</color>
+    <color name="Accent">#54C571</color>
     <color name="toolbar">#1D976C</color>
     <color name="partner_toolbar">#458B74</color>
     <color name="DarkGreen">#4A766E</color>
@@ -9,7 +9,6 @@
     <color name="shadow_color">#626262</color>
     <color name="ColorPrimary">#1D976C</color>
 
-    <color name="white">#FFFFFF</color>
     <color name="shadow">#D6D6D6</color>
     <color name="black">#000000</color>
     <color name="blue">#00abea</color>
@@ -23,4 +22,5 @@
     <color name="color_preloader_start">#000000</color>
     <color name="color_preloader_center">#000000</color>
     <color name="color_preloader_end">#ff56a9c7</color>
+    <color name="yellow">#EAC117</color>
 </resources>

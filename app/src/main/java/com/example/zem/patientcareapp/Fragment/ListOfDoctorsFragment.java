@@ -76,7 +76,7 @@ public class ListOfDoctorsFragment extends Fragment implements TextWatcher, Adap
 
         arrayOfSearchDoctors.addAll(doctor_items);
 
-        adapter = new ListOfDoctorsAdapter(getActivity(), R.layout.list_item_doctors_fragment, doctor_items);
+        adapter = new ListOfDoctorsAdapter(getActivity(), doctor_items);
         list_of_doctors = (ListView) rootView.findViewById(R.id.list_of_doctors);
         list_of_doctors.setAdapter(adapter);
 

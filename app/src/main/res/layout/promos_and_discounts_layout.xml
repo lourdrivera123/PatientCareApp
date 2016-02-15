@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/toolbar"
-    android:orientation="vertical"
-    android:id="@+id/root">
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/myToolBar"
@@ -28,8 +28,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="vertical"
-                android:layout_weight=".9">
+                android:layout_weight=".9"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/redeem_points_card"
@@ -67,32 +67,32 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:orientation="horizontal"
                         android:focusable="true"
-                        android:focusableInTouchMode="true">
+                        android:focusableInTouchMode="true"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
                         <EditText
                             android:id="@+id/points_txtfield"
                             android:layout_width="0dp"
-                            android:layout_weight=".3"
                             android:layout_height="match_parent"
                             android:layout_marginTop="5dp"
-                            android:singleLine="true"
-                            android:lines="1"
-                            android:textSize="14sp"
-                            android:gravity="right|center"
-                            android:inputType="numberDecimal"
+                            android:layout_weight=".3"
                             android:digits="0123456789.,"
-                            android:imeOptions="actionDone"/>
+                            android:gravity="right|center"
+                            android:imeOptions="actionDone"
+                            android:inputType="numberDecimal"
+                            android:lines="1"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/points_text"
                             android:layout_width="0dp"
-                            android:layout_weight=".7"
                             android:layout_height="match_parent"
-                            android:text=" points out of 100"
+                            android:layout_weight=".7"
                             android:gravity="left|center"
+                            android:text=" points out of 100"
                             android:textSize="14sp" />
 
 
@@ -105,7 +105,7 @@
                         android:background="@color/partner_toolbar"
                         android:clickable="true"
                         android:text="Use Points"
-                        android:textColor="@color/white"/>
+                        android:textColor="@android:color/white" />
 
                 </LinearLayout>
 
@@ -134,28 +134,28 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:orientation="vertical"
                         android:focusable="true"
-                        android:focusableInTouchMode="true">
+                        android:focusableInTouchMode="true"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
                         <EditText
                             android:id="@+id/coupon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Enter coupon promo here"
-                            android:textSize="14sp"
+                            android:lines="1"
                             android:singleLine="true"
-                            android:lines="1" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/message_after_promo_input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center"
                             android:text="Sorry, cannot find the promo code"
                             android:textSize="14sp"
-                            android:gravity="center"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                         <ProgressBar
                             android:id="@+id/promo_progress"
@@ -163,7 +163,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:indeterminate="true"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                     </LinearLayout>
 
@@ -174,7 +174,7 @@
                         android:background="@color/partner_toolbar"
                         android:clickable="true"
                         android:text="Search Promo Code"
-                        android:textColor="@color/white"/>
+                        android:textColor="@android:color/white" />
 
                 </LinearLayout>
 
@@ -195,10 +195,8 @@
                     android:clickable="true"
                     android:drawableRight="@mipmap/ic_next"
                     android:text="Next"
-                    android:textColor="@color/white" />
-
+                    android:textColor="@android:color/white" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

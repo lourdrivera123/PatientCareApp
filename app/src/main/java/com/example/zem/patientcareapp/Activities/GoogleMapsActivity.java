@@ -362,7 +362,6 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
 
     void redirect() {
         startActivity(new Intent(this, ProductCategoriesActivity.class));
-//        startActivity(new Intent(this, ProductsActivity.class));
         this.finish();
     }
 

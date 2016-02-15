@@ -30,13 +30,15 @@
                 android:layout_marginRight="@dimen/d10"
                 android:gravity="center"
                 android:text="Clinic's record"
-                android:textColor="@color/white" />
+                android:textColor="@android:color/white" />
 
-            <ImageButton
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/clinicRecord"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/circle_selector"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:scaleType="center"
                 android:src="@drawable/ic_clinic_note" />
         </LinearLayout>
 
@@ -53,13 +55,15 @@
                 android:layout_marginRight="@dimen/d10"
                 android:gravity="center"
                 android:text="Personal record"
-                android:textColor="@color/white" />
+                android:textColor="@android:color/white" />
 
-            <ImageButton
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/personalRecord"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/circle_selector"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:scaleType="center"
                 android:src="@drawable/ic_personal_note" />
         </LinearLayout>
     </LinearLayout>

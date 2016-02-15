@@ -40,7 +40,8 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = inflater.inflate(R.layout.drawer_list_item, null);
+        if (convertView == null)
+            convertView = inflater.inflate(R.layout.drawer_list_item, parent, false);
 
         ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
         TextView txtTitle = (TextView) convertView.findViewById(R.id.title);

@@ -34,7 +34,7 @@
                 android:background="@color/partner_toolbar"
                 android:padding="3dp"
                 android:text="Customer Ordering"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
             <TextView
@@ -42,7 +42,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/d10"
-                android:hint="Firstname Lastname"
                 android:textSize="13sp" />
 
             <TextView
@@ -51,7 +50,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="top|left"
-                android:hint="Complete Mailing Address"
                 android:textSize="13sp" />
 
             <TextView
@@ -59,7 +57,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:hint="Contact Contact Number"
                 android:textSize="13sp" />
 
             <TextView
@@ -69,7 +66,7 @@
                 android:background="@color/partner_toolbar"
                 android:padding="3dp"
                 android:text="Recipient of Order"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
             <CheckBox
@@ -125,7 +122,7 @@
                 android:background="@color/partner_toolbar"
                 android:padding="3dp"
                 android:text="Select ECE branch to serve you:"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
             <Spinner
@@ -141,7 +138,7 @@
                 android:background="@color/partner_toolbar"
                 android:padding="3dp"
                 android:text="Delivery Options:"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
             <RadioGroup
@@ -176,7 +173,7 @@
                 android:background="@color/partner_toolbar"
                 android:padding="3dp"
                 android:text="Payment Options:"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
             <RadioGroup
@@ -214,7 +211,7 @@
                 android:layout_marginTop="20dp"
                 android:background="@color/partner_toolbar"
                 android:text="Proceed"
-                android:textColor="@color/white" />
+                android:textColor="@android:color/white" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

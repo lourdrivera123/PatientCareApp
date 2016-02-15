@@ -86,6 +86,6 @@
             android:background="@drawable/gradient_button"
             android:clickable="true"
             android:text="Schedule Consultation"
-            android:textColor="@color/white" />
+            android:textColor="@android:color/white" />
     </LinearLayout>
 </LinearLayout>

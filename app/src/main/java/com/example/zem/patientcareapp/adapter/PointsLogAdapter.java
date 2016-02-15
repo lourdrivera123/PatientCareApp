@@ -18,15 +18,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-/**
- * Created by lourdrivera on 1/18/2016.
- */
 public class PointsLogAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<HashMap<String, String>> hashOfPointsLog;
 
-    public PointsLogAdapter(Context context, ArrayList<HashMap<String, String>> hashOfPointsLog){
+    public PointsLogAdapter(Context context, ArrayList<HashMap<String, String>> hashOfPointsLog) {
         this.context = context;
         this.hashOfPointsLog = hashOfPointsLog;
     }
@@ -48,19 +45,15 @@ public class PointsLogAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater mInflater = (LayoutInflater)
-                    context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView = mInflater.inflate(R.layout.points_log_item, null);
-        }
+        if (convertView == null)
+            convertView = LayoutInflater.from(context).inflate(R.layout.points_log_item, parent, false);
 
         TextView date_acquired = (TextView) convertView.findViewById(R.id.date_acquired);
         TextView note = (TextView) convertView.findViewById(R.id.note);
 
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date1 = null;
-            date1 = formatter.parse(hashOfPointsLog.get(position).get("created_at"));
+            Date date1 = formatter.parse(hashOfPointsLog.get(position).get("created_at"));
 
             SimpleDateFormat fd = new SimpleDateFormat("MMM d, yyyy - h:mm a");
             String formatted_date = fd.format(date1);

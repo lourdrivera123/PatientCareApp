@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/partner_toolbar"
                 android:text="Upload ID picture and submit"
-                android:textColor="@color/white"/>
+                android:textColor="@android:color/white"/>
 
             <TextView
                 android:id="@+id/message_after_promo_input"

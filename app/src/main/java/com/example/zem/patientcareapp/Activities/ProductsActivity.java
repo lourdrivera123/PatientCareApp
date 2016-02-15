@@ -246,6 +246,7 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 startActivity(new Intent(getBaseContext(), GoogleMapsActivity.class));
+                ProductsActivity.this.finish();
                 return false;
             }
         });

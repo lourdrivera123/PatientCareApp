@@ -1,47 +1,8 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Base.Theme.AppCompat.Light">
         <item name="android:displayOptions">useLogo|showHome</item>
-    </style>
-
-    <!-- Btn Controls Layout -->
-    <style name="btn_controls_layout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_centerHorizontal">true</item>
-    </style>
-
-    <!-- Btn Controls -->
-    <style name="btn_controls">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawableLeft">@mipmap/ic_checkout_ready</item>
-        <item name="android:layout_below">@+id/lv_items</item>
-        <item name="android:layout_alignLeft">@+id/update_cart</item>
-        <item name="android:paddingLeft">80dp</item>
-        <item name="android:paddingRight">80dp</item>
-        <item name="android:paddingTop">2dp</item>
-        <item name="android:paddingBottom">2dp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:background">@color/partner_toolbar</item>
-        <item name="android:textSize">17sp</item>
-    </style>
-
-    <!-- Checkout Button -->
-    <style name="btn_checkout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawableLeft">@mipmap/ic_checkout_white</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:background">@color/partner_toolbar</item>
-        <item name="android:paddingLeft">65dp</item>
-        <item name="android:paddingRight">65dp</item>
-        <item name="android:layout_weight">1</item>
     </style>
 
     <style name="Theme.MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -75,8 +36,8 @@
 
     <style name="toggleButton" parent="android:Theme.Black">
         <item name="android:buttonStyleToggle">@style/Widget.Button.Toggle</item>
-        <item name="android:textOn"></item>
-        <item name="android:textOff"></item>
+        <item name="android:textOn" />
+        <item name="android:textOff" />
     </style>
 
     <style name="ForDialogTheme" parent="android:style/Theme.Dialog">

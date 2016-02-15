@@ -33,6 +33,6 @@
         android:layout_marginTop="@dimen/d10"
         android:background="@color/partner_toolbar"
         android:text="Submit"
-        android:textColor="@color/white" />
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

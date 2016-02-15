@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,9 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -52,7 +52,7 @@ import java.util.HashMap;
 public class TrialPrescriptionFragment extends Fragment implements View.OnClickListener {
     GridView gridView;
     RelativeLayout root;
-    ImageButton add_pres;
+    FloatingActionButton add_pres;
 
     public static ArrayList<HashMap<String, String>> uploadsByUser;
     ArrayList<String> arrayOfPrescriptions;
@@ -76,7 +76,7 @@ public class TrialPrescriptionFragment extends Fragment implements View.OnClickL
         helper = new Helpers();
 
         gridView = (GridView) rootView.findViewById(R.id.gridView);
-        add_pres = (ImageButton) rootView.findViewById(R.id.add_pres);
+        add_pres = (FloatingActionButton) rootView.findViewById(R.id.add_pres);
         root = (RelativeLayout) rootView.findViewById(R.id.root);
 
         patientID = SidebarActivity.getUserID();
@@ -126,7 +126,7 @@ public class TrialPrescriptionFragment extends Fragment implements View.OnClickL
                 public void onClick(DialogInterface dialog, int which) {
                     final int serverID = Integer.parseInt(uploadsByUser.get(menuInfo.position).get(PatientPrescriptionController.PRESCRIPTIONS_SERVER_ID));
                     final String filename = uploadsByUser.get(menuInfo.position).get(PatientPrescriptionController.PRESCRIPTIONS_FILENAME);
-                    HashMap<String, String> hashMap = new HashMap();
+                    HashMap<String, String> hashMap = new HashMap<>();
                     hashMap.put("table", "patient_prescriptions");
                     hashMap.put("request", "crud");
                     hashMap.put("action", "delete_prescription");
@@ -191,14 +191,12 @@ public class TrialPrescriptionFragment extends Fragment implements View.OnClickL
         startActivity(intent);
     }
 
-    private class ImageAdapter extends ArrayAdapter<String> {
+    private class ImageAdapter extends BaseAdapter {
         String[] image_urls;
         private LayoutInflater inflater;
         private DisplayImageOptions options;
 
         public ImageAdapter(Context context, ArrayList<String> uploadsByUser) {
-            super(context, R.layout.item_grid_image, uploadsByUser);
-
             inflater = LayoutInflater.from(context);
             image_urls = uploadsByUser.toArray(new String[uploadsByUser.size()]);
 
@@ -219,18 +217,23 @@ public class TrialPrescriptionFragment extends Fragment implements View.OnClickL
         }
 
         @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
         public long getItemId(int position) {
             return position;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = inflater.inflate(R.layout.item_grid_image, parent, false);
-            assert view != null;
+            if (convertView == null)
+                convertView = inflater.inflate(R.layout.item_grid_image, parent, false);
 
-            ImageView imageView = (ImageView) view.findViewById(R.id.image);
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
             imageView.setTag(position);
-            final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
+            final ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.progress);
             progressBar.setTag(position);
 
             com.nostra13.universalimageloader.core.ImageLoader.getInstance()
@@ -257,13 +260,13 @@ public class TrialPrescriptionFragment extends Fragment implements View.OnClickL
                         }
                     });
 
-            return view;
+            return convertView;
         }
     }
 
     public ArrayList<String> refreshPrescriptionList() {
         uploadsByUser = ppc.getPrescriptionByUserID(patientID);
-        ArrayList<String> prescriptionArray = new ArrayList();
+        ArrayList<String> prescriptionArray = new ArrayList<>();
 
         for (int x = 0; x < uploadsByUser.size(); x++) {
             prescriptionArray.add(uploadsByUser.get(x).get(PatientPrescriptionController.PRESCRIPTIONS_FILENAME));

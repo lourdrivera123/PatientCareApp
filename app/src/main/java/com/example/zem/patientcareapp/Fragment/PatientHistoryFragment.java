@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -18,10 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -50,7 +50,7 @@ import java.util.HashMap;
 
 public class PatientHistoryFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
     ListView list_of_history;
-    ImageButton add_record;
+    FloatingActionButton add_record;
     TextView noResults;
     LinearLayout root;
 
@@ -77,7 +77,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         arrayOfRecords = new ArrayList<>();
         selectedList = new ArrayList<>();
 
-        add_record = (ImageButton) rootView.findViewById(R.id.add_record);
+        add_record = (FloatingActionButton) rootView.findViewById(R.id.add_record);
         noResults = (TextView) rootView.findViewById(R.id.noResults);
         list_of_history = (ListView) rootView.findViewById(R.id.list_of_history);
         root = (LinearLayout) rootView.findViewById(R.id.root);
@@ -99,7 +99,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         prc = new PatientRecordController(getActivity());
         hashHistory = prc.getAllPatientRecords();
 
-        mAdapter = new SelectionAdapter(getActivity(), R.layout.listview_history_views, hashHistory);
+        mAdapter = new SelectionAdapter(getActivity(), hashHistory);
         list_of_history.setAdapter(mAdapter);
 
         if (hashHistory.size() == 0) {
@@ -193,7 +193,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                 dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
                 dialog.setContentView(R.layout.add_new_med_records);
 
-                ImageButton clinicRecord = (ImageButton) dialog.findViewById(R.id.clinicRecord);
+                FloatingActionButton clinicRecord = (FloatingActionButton) dialog.findViewById(R.id.clinicRecord);
                 clinicRecord.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -228,7 +228,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                     }
                 });
 
-                final ImageButton personalRecord = (ImageButton) dialog.findViewById(R.id.personalRecord);
+                final FloatingActionButton personalRecord = (FloatingActionButton) dialog.findViewById(R.id.personalRecord);
                 personalRecord.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -249,7 +249,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
 
         hashHistory.clear();
         hashHistory = prc.getAllPatientRecords();
-        mAdapter = new SelectionAdapter(getActivity(), R.layout.listview_history_views, hashHistory);
+        mAdapter = new SelectionAdapter(getActivity(), hashHistory);
         list_of_history.setAdapter(mAdapter);
     }
 
@@ -457,21 +457,36 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         }
     }
 
-    private class SelectionAdapter extends ArrayAdapter {
+    private class SelectionAdapter extends BaseAdapter {
         LayoutInflater inflater;
         ArrayList<HashMap<String, String>> objects;
 
         TextView record_date, doctor, clinic;
 
-        public SelectionAdapter(Context context, int resource, ArrayList<HashMap<String, String>> objects) {
-            super(context, resource, objects);
+        public SelectionAdapter(Context context, ArrayList<HashMap<String, String>> objects) {
             inflater = LayoutInflater.from(context);
             this.objects = objects;
         }
 
         @Override
+        public int getCount() {
+            return objects.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
         public View getView(int position, View v, ViewGroup parent) {
-            v = inflater.inflate(R.layout.listview_history_views, parent, false);
+            if (v == null)
+                v = inflater.inflate(R.layout.listview_history_views, parent, false);
 
             record_date = (TextView) v.findViewById(R.id.record_date);
             doctor = (TextView) v.findViewById(R.id.doctor_name);
