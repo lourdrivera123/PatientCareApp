@@ -19,6 +19,7 @@ import com.example.zem.patientcareapp.Interface.RespondListener;
 import com.example.zem.patientcareapp.Interface.StringRespondListener;
 import com.example.zem.patientcareapp.Model.Patient;
 import com.example.zem.patientcareapp.Network.ListOfPatientsRequest;
+import com.example.zem.patientcareapp.Network.ListRequestFromCustomURI;
 import com.example.zem.patientcareapp.Network.StringRequests;
 import com.example.zem.patientcareapp.R;
 import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
@@ -147,7 +148,7 @@ public class ReferralFragment extends Fragment {
         });
 
 
-        ListOfPatientsRequest.getJSONobj(getActivity(), "get_patients_downlines&referral_id=" + ptnt.getReferral_id(), "patients", new RespondListener<JSONObject>() {
+        ListRequestFromCustomURI.getJSONobj("api/get-downlines/" + ptnt.getReferral_id(), new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
@@ -156,7 +157,15 @@ public class ReferralFragment extends Fragment {
 
                         Log.d("downlines", json_mysql + "");
 
+//                        HashMap map = new HashMap();
+//                        map.put("fname", "Name");
+//                        map.put("lname", "");
+//                        map.put("level", "Level");
+//                        map.put("created_at", "Registered");
+
                         items = pc.convertFromJson(json_mysql);
+//                        items.add(map);
+
                         downlinesAdapter = new DownlinesAdapter(getActivity(), items);
                         downlines.setAdapter(downlinesAdapter);
                     }

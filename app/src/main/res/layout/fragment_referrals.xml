@@ -122,13 +122,26 @@
                     android:layout_height="1dip"
                     android:background="@color/ColorPrimary" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:padding="16dp">
+                    <include android:id="@+id/title"
+                        layout="@layout/downlines_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+
                 <com.example.zem.patientcareapp.Customizations.NonScrollListView
                     android:id="@+id/downlines"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@color/partner_toolbar"
                     android:dividerHeight="1dp"
-                    android:padding="16dp" />
+                    android:paddingTop="0dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="16dp"/>
 
             </LinearLayout>
 

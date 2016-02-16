@@ -53,6 +53,7 @@ public class DownlinesAdapter extends BaseAdapter {
 
         TextView full_name = (TextView) convertView.findViewById(R.id.full_name);
         TextView date_referred = (TextView) convertView.findViewById(R.id.date_referred);
+        TextView level = (TextView) convertView.findViewById(R.id.level);
 
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -67,6 +68,7 @@ public class DownlinesAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         full_name.setText(hashOfDownlines.get(position).get("fname")+" "+hashOfDownlines.get(position).get("lname"));
+        level.setText(hashOfDownlines.get(position).get("level"));
 
         return convertView;
     }

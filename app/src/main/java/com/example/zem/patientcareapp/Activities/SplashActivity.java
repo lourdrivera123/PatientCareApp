@@ -38,7 +38,7 @@ public class SplashActivity extends Activity {
     public static final String PREFS_NAME = "firstTimeUsePref";
     int identifier = 0;
     //identifier in future runs must be 13 since we made 13 network requests, if you want to add a network request in splash activity please add the max identifier too
-    int max_identifier = 13;
+    int max_identifier = 9;
     String[] requestsArray, tableNamesArray, serverIdsArray;
 //    boolean onPauseisFired = false;
 

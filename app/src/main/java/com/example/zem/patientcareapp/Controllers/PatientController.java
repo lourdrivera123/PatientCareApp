@@ -256,6 +256,7 @@ public class PatientController extends DbHelper {
                 HashMap<String, String> map = new HashMap();
                 map.put("fname", obj.getString("fname"));
                 map.put("lname", obj.getString("lname"));
+                map.put("level", obj.getString("level"));
                 map.put("created_at", obj.getString("created_at"));
 
                 points_list.add(map);

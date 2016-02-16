@@ -104,7 +104,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
     ImageView senior_picture_id;
     ProgressBar progress;
     View view_senior;
-    LinearLayout total_savings_layout;
+    LinearLayout total_savings_layout, senior_discount_layout;
 //    boolean age_valid_for_senior_discount = false;
     String senior_validity;
 
@@ -150,6 +150,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         use_points_btn_layout = (LinearLayout) findViewById(R.id.use_points_btn_layout);
         how_to_senior_discount = (TextView) findViewById(R.id.how_to_senior_discount);
         total_savings_layout = (LinearLayout) findViewById(R.id.total_savings_layout);
+        senior_discount_layout = (LinearLayout) findViewById(R.id.senior_discount_layout);
 
         how_to_senior_discount.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -452,7 +453,7 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
         else
             points_layout.setVisibility(View.VISIBLE);
 
-        amount_subtotal.setText(helper.money_format(totalAmount));
+        amount_subtotal.setText(helper.money_format(undiscounted_total));
         amount_of_coupon_discount.setText(helper.money_format(coupon_discount));
         amount_of_points_discount.setText(helper.money_format(points_discount));
 
@@ -487,6 +488,9 @@ public class SummaryActivity extends AppCompatActivity implements View.OnClickLi
             }
         } else {
             senior_discount = 0;
+//            senior_discount_layout.setVisibility(View.GONE);
+            label_senior_discount.setVisibility(View.GONE);
+            how_to_senior_discount.setVisibility(View.GONE);
             label_total_savings.setVisibility(View.VISIBLE);
             label_total_savings.setText("You will save " + helper.money_format(ShoppingCartAdapter.total_savings_value + coupon_discount + points_discount));
         }
