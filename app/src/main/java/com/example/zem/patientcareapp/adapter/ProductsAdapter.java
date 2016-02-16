@@ -35,7 +35,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ProductsAdapter extends ArrayAdapter implements View.OnClickListener {
@@ -64,7 +63,6 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
         convertView = inflater.inflate(R.layout.product_item, parent, false);
 
         product_image = (ImageView) convertView.findViewById(R.id.product_image);
@@ -156,12 +154,12 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
     private void loadMoreData() {
         this.initial_count += 20;
 
-        if (ProductsActivity.load_items.size() >= initial_count) {
+        if (ProductsActivity.products_items.size() >= initial_count) {
             for (int x = (initial_count - 20); x <= initial_count; x++)
-                products_items.add(ProductsActivity.load_items.get(x));
+                products_items.add(ProductsActivity.products_items.get(x));
         } else {
-            for (int x = (initial_count - 20); x <= ProductsActivity.load_items.size(); x++)
-                products_items.add(ProductsActivity.load_items.get(x));
+            for (int x = (initial_count - 20); x <= ProductsActivity.products_items.size(); x++)
+                products_items.add(ProductsActivity.products_items.get(x));
         }
 
         this.notifyDataSetChanged();

@@ -13,7 +13,7 @@
         android:gravity="center"
         android:text="There are no promos/discount ongoing"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:visibility="gone" />
 
     <ListView

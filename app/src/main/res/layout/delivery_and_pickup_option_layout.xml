@@ -90,7 +90,7 @@
                             android:background="#0000"
                             android:clickable="false"
                             android:text="Delivery"
-                            android:textColor="@color/white" />
+                            android:textColor="@android:color/white" />
 
                     </LinearLayout>
 
@@ -129,7 +129,7 @@
                             android:background="#0000"
                             android:clickable="false"
                             android:text="Pick up"
-                            android:textColor="@color/white" />
+                            android:textColor="@android:color/white" />
 
                     </LinearLayout>
 

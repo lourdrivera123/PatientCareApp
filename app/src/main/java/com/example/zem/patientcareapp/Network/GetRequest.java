@@ -13,6 +13,7 @@ import com.example.zem.patientcareapp.Controllers.UpdateController;
 import com.example.zem.patientcareapp.Interface.ErrorListener;
 import com.example.zem.patientcareapp.Interface.RespondListener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GetRequest {
@@ -25,17 +26,26 @@ public class GetRequest {
         queue = VolleySingleton.getInstance().getRequestQueue();
         helpers = new Helpers();
         upc = new UpdateController(c);
+        final String url = helpers.get_url(q, table_name);
 
-        JsonObjectRequest jsonrequest = new JsonObjectRequest(Request.Method.GET, helpers.get_url(q, table_name), new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonrequest = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Sync sync = new Sync();
-                sync.init(c, table_name, table_id, response);
                 try {
-                    upc.updateLastUpdatedTable(table_name, response.getString("latest_updated_at"));
-                } catch (Exception e) {
-                    System.out.print("<GetRequest> something wrong with json: " + e);
+                    //condition here must not be success cause it still return 1, it shuold be something like if the table name
+                    //is not on response json array
+                    if(response.getInt("success") > 0){
+                        Sync sync = new Sync();
+                        sync.init(c, table_name, table_id, response);
+                            upc.updateLastUpdatedTable(table_name, response.getString("latest_updated_at"));
+
+                    } else {
+                        System.out.print("<"+url+">Response is good but there is no need to update sqlite columns since there are no records - dafuq im still missing delete sqlite records !");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
                 listener.getResult(response);
             }
         }, new Response.ErrorListener() {

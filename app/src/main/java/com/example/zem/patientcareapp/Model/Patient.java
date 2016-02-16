@@ -2,9 +2,6 @@ package com.example.zem.patientcareapp.Model;
 
 import java.io.Serializable;
 
-/**
- * Created by User PC on 5/4/2015.
- */
 public class Patient implements Serializable {
 
     private String fname = "", mname = "", lname = "", username = "", password = "",
@@ -14,8 +11,11 @@ public class Patient implements Serializable {
             optional_address = "", address_street = "", barangay = "", municipality = "", province = "", region = "", senior_citizen_id_number ="", senior_id_picture = "";
 
     int id = 0, serverID = 0, barangay_id = 0, isSenior = 0;
-
     double points = 0;
+
+    public Patient() {
+
+    }
 
     public double getPoints() {
         return points;
@@ -23,10 +23,6 @@ public class Patient implements Serializable {
 
     public void setPoints(double points) {
         this.points = points;
-    }
-
-    public Patient() {
-
     }
 
     public String getSenior_citizen_id_number() {

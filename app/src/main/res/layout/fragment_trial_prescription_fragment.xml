@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@id/root"
     android:background="@color/toolbar">
 
     <GridView
@@ -25,11 +25,13 @@
         android:layout_alignParentBottom="true"
         android:gravity="bottom|right">
 
-        <ImageButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/add_pres"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:background="@drawable/circle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:scaleType="center"
             android:src="@mipmap/ic_action" />
     </LinearLayout>
 </RelativeLayout>

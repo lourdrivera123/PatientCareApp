@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/gradient_button"
                 android:text="Have Promo Code? "
-                android:textColor="@color/white" />
+                android:textColor="@android:color/white" />
 
             </LinearLayout>
 
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/gradient_button"
                     android:text="Use your points ?"
-                    android:textColor="@color/white" />
+                    android:textColor="@android:color/white" />
 
             </LinearLayout>
 
@@ -285,7 +285,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Validate Now"
-                            android:textColor="@color/white"
+                            android:textColor="@android:color/white"
                             android:textSize="15sp"
                             android:background="@drawable/gradient_button"/>
 
@@ -319,7 +319,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/gradient_button"
                     android:text="Order Now"
-                    android:textColor="@color/white" />
+                    android:textColor="@android:color/white" />
 
             </LinearLayout>
 
@@ -354,7 +354,7 @@
                         android:layout_weight=".3"
                         android:background="@drawable/gradient_button"
                         android:text="Edit"
-                        android:textColor="@color/white" />
+                        android:textColor="@android:color/white" />
 
                 </LinearLayout>
 

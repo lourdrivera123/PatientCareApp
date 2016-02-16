@@ -17,12 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -43,6 +41,7 @@ import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
 import com.example.zem.patientcareapp.adapter.ProductsAdapter;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.zem.patientcareapp.ConfigurationModule.Helpers;
@@ -53,17 +52,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProductsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class ProductsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     ListView listOfProducts;
     Toolbar myToolBar;
     LinearLayout results_layout, root;
     TextView noOfResults, no_products, branch_selected;
     public static TextView number_of_notif;
     ImageButton go_to_cart;
-    Spinner spinner_categories;
 
     ProductsAdapter adapter;
-    ArrayAdapter spinner_adapter;
 
     Helpers helpers;
     RequestQueue queue;
@@ -75,14 +72,13 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
 
     Intent get_intent;
 
-    public static ArrayList<Map<String, String>> temp_products_items = new ArrayList<>(), products_items = new ArrayList<>(), basket_items, load_items;
+    public static ArrayList<Map<String, String>> temp_products_items = new ArrayList<>(), products_items = new ArrayList<>(), basket_items;
     public static ArrayList<HashMap<String, String>> specific_no_code;
     public static HashMap<String, String> map = new HashMap<>();
     ArrayList<HashMap<Integer, HashMap<String, String>>> searchProducts = new ArrayList<>();
-    ArrayList<String> categories = new ArrayList<>();
 
     public static int is_finish;
-    int promo_id = 0;
+    int promo_id = 0, category_id = -1;
 
     public static AppCompatDialog pDialog;
     AlertDialog.Builder builder;
@@ -96,7 +92,6 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
         root = (LinearLayout) findViewById(R.id.root);
         noOfResults = (TextView) findViewById(R.id.noOfResults);
         listOfProducts = (ListView) findViewById(R.id.listOfProducts);
-        spinner_categories = (Spinner) findViewById(R.id.spinner_categories);
         no_products = (TextView) findViewById(R.id.no_products);
         branch_selected = (TextView) findViewById(R.id.branch_selected);
 
@@ -116,14 +111,14 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
         order_model = opc.getOrderPreference();
 
         showOverLay(this);
-        getProductCategories();
 
         get_intent = getIntent();
         promo_id = get_intent.getIntExtra("promo_id", 0);
+        category_id = get_intent.getIntExtra("category_id", -1);
 
         setBranchNameFromServer();
 
-        ListOfPatientsRequest.getJSONobj(this, "get_nocode_promos", "promos", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj("get_nocode_promos", "promos", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
@@ -161,8 +156,9 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
             }
         });
 
+        getProductsByCategoryID();
+
         listOfProducts.setOnItemClickListener(this);
-        spinner_categories.setOnItemSelectedListener(this);
     }
 
     void setBranchNameFromServer() {
@@ -250,6 +246,7 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 startActivity(new Intent(getBaseContext(), GoogleMapsActivity.class));
+                ProductsActivity.this.finish();
                 return false;
             }
         });
@@ -267,7 +264,6 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 results_layout.setVisibility(View.GONE);
-                spinner_categories.setSelection(0);
                 adapter = new ProductsAdapter(ProductsActivity.this, R.layout.product_item, temp_products_items);
                 listOfProducts.setAdapter(adapter);
                 return true;
@@ -283,7 +279,7 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
         int product_id = Integer.parseInt(ss.get("product_id"));
 
         Intent intent = new Intent(this, SelectedProductActivity.class);
-        intent.putExtra(SelectedProductActivity.PRODUCT_ID, product_id);
+        intent.putExtra("productID", product_id);
         startActivity(intent);
     }
 
@@ -358,15 +354,14 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
                 Snackbar.make(root, prod_name + " is added to your favorites", Snackbar.LENGTH_SHORT).show();
             else
                 Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
-        } else {
+        } else
             db.removeFavorite(SidebarActivity.getUserID(), product_id);
-        }
     }
 
     void getAllBasketItems() {
         String url_raw = "get_basket_items&patient_id=" + SidebarActivity.getUserID() + "&table=baskets";
 
-        ListOfPatientsRequest.getJSONobj(ProductsActivity.this, url_raw, "baskets", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj(url_raw, "baskets", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
@@ -443,173 +438,127 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
-        no_products.setVisibility(View.GONE);
-        listOfProducts.setVisibility(View.VISIBLE);
-        final String category = categories.get(position);
-        products_items.clear();
-        searchProducts.clear();
-        temp_products_items.clear();
+    void getProductsByCategoryID() {
+        if (category_id >= 0) {
+            no_products.setVisibility(View.GONE);
+            listOfProducts.setVisibility(View.VISIBLE);
+            products_items.clear();
+            searchProducts.clear();
+            temp_products_items.clear();
+            String url = null;
 
-        showBeautifulDialog();
+            showBeautifulDialog();
 
-        ListOfPatientsRequest.getJSONobj(getBaseContext(), "get_products&branch_id=" + order_model.getBranch_id() + "&patient_id=" + SidebarActivity.getUserID(), "products", new RespondListener<JSONObject>() {
+            if (category_id == 0) {
+                ArrayList<Integer> fave_IDs = db.getFavoritesByUserID(SidebarActivity.getUserID());
+
+                if (fave_IDs.size() > 0) {
+                    String ids = fave_IDs.toString().replace("[", "").replace("]", "");
+                    url = "get_favorite_products&branch_id=" + order_model.getBranch_id() + "&patient_id=" + SidebarActivity.getUserID() + "&list_of_ids=" + ids;
+                } else {
+                    letDialogSleep();
+                    no_products.setVisibility(View.VISIBLE);
+                    listOfProducts.setVisibility(View.GONE);
+                }
+            } else
+                url = "get_categorized_products&branch_id=" + order_model.getBranch_id() + "&patient_id=" + SidebarActivity.getUserID() + "&cat_id=" + category_id;
+
+            if (url != null) {
+                ListOfPatientsRequest.getJSONobj(url, "products", new RespondListener<JSONObject>() {
                     @Override
                     public void getResult(JSONObject response) {
                         try {
-                            int success = response.getInt("success");
-
-                            if (success == 1) {
+                            if (response.getInt("success") > 0) {
                                 JSONArray json_array = response.getJSONArray("products");
-
-                                for (int x = 0; x < json_array.length(); x++) {
-                                    JSONObject obj = json_array.getJSONObject(x);
-
-                                    HashMap<String, String> map = new HashMap<>();
-                                    map.put("product_id", obj.getString("id"));
-                                    map.put("subcategory_id", String.valueOf(obj.getInt("subcategory_id")));
-                                    map.put("name", obj.getString("name"));
-                                    map.put("generic_name", obj.getString("generic_name"));
-                                    map.put("description", obj.getString("description"));
-                                    map.put("prescription_required", String.valueOf(obj.getInt("prescription_required")));
-                                    map.put("price", String.valueOf(obj.getInt("price")));
-                                    map.put("unit", obj.getString("unit"));
-                                    map.put("packing", obj.getString("packing"));
-                                    map.put("qty_per_packing", String.valueOf(obj.getInt("qty_per_packing")));
-                                    map.put("temp_basket_qty", "0");
-                                    map.put("category_name", obj.getString("cat_name"));
-                                    map.put("category_id", String.valueOf(obj.getInt("cat_id")));
-                                    map.put("available_quantity", String.valueOf(obj.getInt("available_quantity")));
-                                    map.put("in_cart", String.valueOf(obj.getInt("in_cart")));
-                                    products_items.add(map);
-
-                                    HashMap<Integer, HashMap<String, String>> hash = new HashMap<>();
-                                    HashMap<String, String> temp = new HashMap<>();
-                                    temp.put("product_name", map.get("name"));
-                                    temp.put("generic_name", map.get("generic_name"));
-                                    hash.put(obj.getInt("id"), temp);
-                                    searchProducts.add(hash);
-                                }
-                                temp_products_items.addAll(products_items);
-                                ArrayList<Map<String, String>> newMap = new ArrayList<>();
-                                load_items = new ArrayList<>();
-
-                                if (promo_id > 0) { //IF GIKAN SA PROMOFRAGMENT
-                                    ArrayList<HashMap<String, String>> spec_promo = new ArrayList<>();
-                                    spec_promo.clear();
-
-                                    for (int x = 0; x < specific_no_code.size(); x++) {
-                                        if (Integer.parseInt(specific_no_code.get(x).get("promo_id")) == promo_id) {
-                                            spec_promo.add(specific_no_code.get(x));
-                                        }
-                                    }
-
-                                    for (int x = 0; x < products_items.size(); x++) {
-                                        for (int y = 0; y < spec_promo.size(); y++) {
-                                            if (products_items.get(x).get("product_id").equals(spec_promo.get(y).get("product_id")))
-                                                newMap.add(products_items.get(x));
-                                        }
-                                    }
-
-                                    promo_id = 0;
-                                } else { //IF GIKAN SA HOMETILEFRAGMENT
-                                    if (category.equals("Favorites")) {
-                                        ArrayList<Integer> fave_IDs = db.getFavoritesByUserID(SidebarActivity.getUserID());
-
-                                        if (fave_IDs.size() > 0) {
-                                            for (int x = 0; x < fave_IDs.size(); x++) {
-                                                String product_id = String.valueOf(fave_IDs.get(x));
-
-                                                for (Map<String, String> map : products_items) {
-                                                    if (map.get("product_id").equals(product_id))
-                                                        newMap.add(map);
-                                                }
-                                            }
-                                        } else {
-                                            no_products.setVisibility(View.VISIBLE);
-                                            listOfProducts.setVisibility(View.GONE);
-                                        }
-                                    } else if (category.equals("All")) {
-                                        if (products_items.size() > 20) {
-                                            for (int x = 0; x < 20; x++) {
-                                                newMap.add(products_items.get(x));
-                                            }
-                                        }
-                                        load_items.addAll(products_items);
-                                    } else {
-                                        for (Map<String, String> map : products_items) {
-                                            if (map.containsValue(category))
-                                                load_items.add(map);
-                                        }
-
-                                        if (load_items.size() >= 20) {
-                                            for (int x = 0; x < 20; x++)
-                                                newMap.add(load_items.get(x));
-                                        } else
-                                            newMap.addAll(load_items);
-
-                                        if (newMap.size() == 0) {
-                                            no_products.setVisibility(View.VISIBLE);
-                                            listOfProducts.setVisibility(View.GONE);
-                                        }
-                                    }
-                                }
-
-                                adapter = new ProductsAdapter(ProductsActivity.this, R.layout.product_item, newMap);
-
-                                listOfProducts.setAdapter(adapter);
-                                letDialogSleep();
+                                setCategoryAdapter(json_array);
+                            } else {
+                                no_products.setVisibility(View.VISIBLE);
+                                listOfProducts.setVisibility(View.GONE);
                             }
-                        } catch (Exception e) {
-                            Log.d("exception1", e + "");
-                            Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            Log.d("exception5", e + "");
+                            Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                         }
                         letDialogSleep();
                     }
                 }, new ErrorListener<VolleyError>() {
                     public void getError(VolleyError error) {
                         letDialogSleep();
-                        Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
+                        Log.d("exception2", error + "");
+                        Snackbar.make(root, "Network Error", Snackbar.LENGTH_SHORT).show();
                     }
-                }
-        );
+                });
+            }
+        } else
+            Snackbar.make(root, "Please select a Product category", Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    void setCategoryAdapter(JSONArray array) {
+        try {
+            final ArrayList<Map<String, String>> newMap = new ArrayList<>();
 
-    }
+            for (int x = 0; x < array.length(); x++) {
+                JSONObject obj = array.getJSONObject(x);
 
-    public void getProductCategories() {
-        categories.add("All");
-        categories.add("Favorites");
+                HashMap<String, String> map = new HashMap<>();
+                map.put("product_id", obj.getString("id"));
+                map.put("subcategory_id", String.valueOf(obj.getInt("subcategory_id")));
+                map.put("name", obj.getString("name"));
+                map.put("generic_name", obj.getString("generic_name"));
+                map.put("description", obj.getString("description"));
+                map.put("prescription_required", String.valueOf(obj.getInt("prescription_required")));
+                map.put("price", String.valueOf(obj.getInt("price")));
+                map.put("unit", obj.getString("unit"));
+                map.put("packing", obj.getString("packing"));
+                map.put("qty_per_packing", String.valueOf(obj.getInt("qty_per_packing")));
+                map.put("temp_basket_qty", "0");
+                map.put("category_name", obj.getString("cat_name"));
+                map.put("category_id", String.valueOf(obj.getInt("cat_id")));
+                map.put("available_quantity", String.valueOf(obj.getInt("available_quantity")));
+                map.put("in_cart", String.valueOf(obj.getInt("in_cart")));
+                products_items.add(map);
 
-        ListOfPatientsRequest.getJSONobj(getBaseContext(), "get_product_categories", "product_categories", new RespondListener<JSONObject>() {
-            @Override
-            public void getResult(JSONObject response) {
-                try {
-                    int success = response.getInt("success");
+                HashMap<Integer, HashMap<String, String>> hash = new HashMap<>();
+                HashMap<String, String> temp = new HashMap<>();
+                temp.put("product_name", map.get("name"));
+                temp.put("generic_name", map.get("generic_name"));
+                hash.put(obj.getInt("id"), temp);
+                searchProducts.add(hash);
+            }
+            temp_products_items.addAll(products_items);
 
-                    if (success == 1) {
-                        JSONArray json_array = response.getJSONArray("product_categories");
+            if (promo_id > 0) { //IF GIKAN SA PROMOFRAGMENT
+                ArrayList<HashMap<String, String>> spec_promo = new ArrayList<>();
+                spec_promo.clear();
 
-                        for (int x = 0; x < json_array.length(); x++) {
-                            JSONObject obj = json_array.getJSONObject(x);
-                            categories.add(obj.getString("name"));
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.d("exception2", e + "");
-                    Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
+                for (int x = 0; x < specific_no_code.size(); x++) {
+                    if (Integer.parseInt(specific_no_code.get(x).get("promo_id")) == promo_id)
+                        spec_promo.add(specific_no_code.get(x));
                 }
-                spinner_adapter = new ArrayAdapter<>(ProductsActivity.this, R.layout.spinner_toolbar_item, categories);
-                spinner_categories.setAdapter(spinner_adapter);
+
+                for (int x = 0; x < products_items.size(); x++) {
+                    for (int y = 0; y < spec_promo.size(); y++) {
+                        if (products_items.get(x).get("product_id").equals(spec_promo.get(y).get("product_id")))
+                            newMap.add(products_items.get(x));
+                    }
+                }
+
+                promo_id = 0;
+            } else { //IF GIKAN SA HOMETILEFRAGMENT
+                if (products_items.size() >= 20) {
+                    for (int x = 0; x < 20; x++)
+                        newMap.add(products_items.get(x));
+                } else
+                    newMap.addAll(products_items);
             }
-        }, new ErrorListener<VolleyError>() {
-            public void getError(VolleyError error) {
-                Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
-            }
-        });
+
+            adapter = new ProductsAdapter(ProductsActivity.this, R.layout.product_item, newMap);
+            listOfProducts.setAdapter(adapter);
+        } catch (Exception e) {
+            Log.d("exception1", e + "");
+            Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
+        }
+
+        letDialogSleep();
     }
 }

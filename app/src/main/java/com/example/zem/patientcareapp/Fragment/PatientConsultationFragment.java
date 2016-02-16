@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -47,7 +48,7 @@ import java.util.HashMap;
 
 public class PatientConsultationFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
     ListView listOfConsultations;
-    ImageButton add_consultation;
+    FloatingActionButton add_consultation;
     Button accept_btn, reject_btn;
     RelativeLayout root;
     View triangle;
@@ -72,7 +73,7 @@ public class PatientConsultationFragment extends Fragment implements View.OnClic
         View rootView = inflater.inflate(R.layout.fragment_patient_consultation_fragment, container, false);
 
         listOfConsultations = (ListView) rootView.findViewById(R.id.consultation_schedules);
-        add_consultation = (ImageButton) rootView.findViewById(R.id.add_consultation);
+        add_consultation = (FloatingActionButton) rootView.findViewById(R.id.add_consultation);
         root = (RelativeLayout) rootView.findViewById(R.id.root);
 
         add_consultation.setOnClickListener(this);

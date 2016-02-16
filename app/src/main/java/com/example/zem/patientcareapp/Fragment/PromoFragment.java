@@ -53,7 +53,7 @@ public class PromoFragment extends Fragment {
         pdialog.setMessage("Please wait...");
         pdialog.show();
 
-        ListOfPatientsRequest.getJSONobj(getActivity(), "get_nocode_promos", "promos", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj("get_nocode_promos", "promos", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
@@ -123,8 +123,8 @@ public class PromoFragment extends Fragment {
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            View view = inflater.inflate(R.layout.item_promo_products, parent, false);
+        public View getView(final int position, View view, ViewGroup parent) {
+            view = inflater.inflate(R.layout.item_promo_products, parent, false);
 
             title = (TextView) view.findViewById(R.id.title);
             applicability = (TextView) view.findViewById(R.id.applicability);

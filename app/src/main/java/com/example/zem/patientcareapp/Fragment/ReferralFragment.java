@@ -33,10 +33,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by User PC on 1/4/2016.
- */
-
 public class ReferralFragment extends Fragment {
     TextView referralsLvlLimit;
     LinearLayout parent;
@@ -73,23 +69,6 @@ public class ReferralFragment extends Fragment {
         ptnt = pc.getCurrentLoggedInPatient();
         patient = pc.getloginPatient(SidebarActivity.getUname());
 
-        ListOfPatientsRequest.getJSONobj(getActivity(), "get_settings", "settings", new RespondListener<JSONObject>() {
-            @Override
-            public void getResult(JSONObject response) {
-                try {
-                    if(response.getInt("success") > 0){
-                        JSONArray json_mysql = response.getJSONArray("settings");
-                    }
-                } catch (JSONException e) {
-                    Log.d("referrals_exception", e + "");
-                }
-            }
-        }, new ErrorListener<VolleyError>() {
-            public void getError(VolleyError error) {
-                Snackbar.make(container, "Network Error", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-
         StringRequests.getString(getActivity(), "db/get.php?q=get_patient_points&patient_id=" + SidebarActivity.getUserID(), new StringRespondListener<String>() {
             @Override
             public void getResult(String response) {
@@ -103,7 +82,7 @@ public class ReferralFragment extends Fragment {
             }
         });
 
-        ListOfPatientsRequest.getJSONobj(getActivity(), "get_patient_referral_commissions&patient_id=" + SidebarActivity.getUserID(), "referral_commission", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj("get_patient_referral_commissions&patient_id=" + SidebarActivity.getUserID(), "referral_commission", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
@@ -124,7 +103,7 @@ public class ReferralFragment extends Fragment {
             }
         });
 
-        ListOfPatientsRequest.getJSONobj(getActivity(), "get_used_points&patient_id=" + SidebarActivity.getUserID(), "used_points", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj("get_used_points&patient_id=" + SidebarActivity.getUserID(), "used_points", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {

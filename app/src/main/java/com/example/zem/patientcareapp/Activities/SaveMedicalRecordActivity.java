@@ -86,6 +86,8 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
 
         medRecord_toolbar = (Toolbar) findViewById(R.id.medRecord_toolbar);
         setSupportActionBar(medRecord_toolbar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setTitle("New Record");
 
@@ -97,10 +99,10 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
 
         arrayOfDoctors = doctor_controller.getDoctorName();
         arrayOfClinics = cc.getAllClinics();
-        listOfDoctors = new ArrayList();
-        listOfClinics = new ArrayList();
-        listOfTreatments = new ArrayList();
-        treatments_items = new ArrayList();
+        listOfDoctors = new ArrayList<>();
+        listOfClinics = new ArrayList<>();
+        listOfTreatments = new ArrayList<>();
+        treatments_items = new ArrayList<>();
 
         for (int x = 0; x < arrayOfDoctors.size(); x++)
             listOfDoctors.add(arrayOfDoctors.get(x).get("fullname"));
@@ -108,7 +110,7 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
         for (int x = 0; x < arrayOfClinics.size(); x++)
             listOfClinics.add(arrayOfClinics.get(x).get("clinic_name"));
 
-        search_clinics_adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfClinics);
+        search_clinics_adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listOfClinics);
         search_clinic.setAdapter(search_clinics_adapter);
         search_clinic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,7 +121,7 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
             }
         });
 
-        search_doctor_adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfDoctors);
+        search_doctor_adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listOfDoctors);
         search_doctor.setAdapter(search_doctor_adapter);
         search_doctor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -130,7 +132,7 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
             }
         });
 
-        treatmentsAdapter = new ArrayAdapter(this, R.layout.treatments_list_layout, listOfTreatments);
+        treatmentsAdapter = new ArrayAdapter<>(this, R.layout.treatments_list_layout, listOfTreatments);
         list_of_treatments.setAdapter(treatmentsAdapter);
 
         list_of_treatments.setOnCreateContextMenuListener(this);
@@ -184,7 +186,7 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
                     pDialog.setMessage("Please wait...");
                     pDialog.show();
 
-                    HashMap<String, String> map = new HashMap();
+                    HashMap<String, String> map = new HashMap<>();
                     map.put("request", "crud");
                     map.put("action", "insert");
                     map.put("table", "patient_records");
@@ -319,7 +321,7 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
                     if (s_dosage.equals(""))
                         dosage.setError("Field required");
                 } else {
-                    HashMap<String, String> map = new HashMap();
+                    HashMap<String, String> map = new HashMap<>();
                     map.put("medicine_name", s_medicine);
                     map.put("dosage", s_dosage);
                     treatments_items.add(map);
@@ -338,7 +340,7 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
             JSONArray master_arr = new JSONArray();
 
             for (int x = 0; x < treatments_items.size(); x++) {
-                HashMap<String, String> hash = new HashMap();
+                HashMap<String, String> hash = new HashMap<>();
 
                 hash.put("patient_records_id", String.valueOf(last_inserted_id));
                 hash.put("medicine_id", "0");
@@ -352,7 +354,7 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
             final JSONObject json_to_be_passed = new JSONObject();
             json_to_be_passed.put("json_treatments", master_arr);
 
-            HashMap<String, String> hash = new HashMap();
+            HashMap<String, String> hash = new HashMap<>();
             hash.put("table", "patient_treatments");
             hash.put("request", "crud");
             hash.put("action", "multiple_insert");
@@ -364,10 +366,10 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
                     try {
                         if (prc.savePatientRecord(record, "insert")) {
                             int start_id = response.getInt("last_inserted_id");
-                            ArrayList<HashMap<String, String>> newTreatments = new ArrayList();
+                            ArrayList<HashMap<String, String>> newTreatments = new ArrayList<>();
 
                             for (int x = 0; x < treatments_items.size(); x++) {
-                                HashMap<String, String> map = new HashMap();
+                                HashMap<String, String> map = new HashMap<>();
                                 map.put("patient_records_id", String.valueOf(last_inserted_id));
                                 map.put("treatments_id", String.valueOf(start_id));
                                 map.put("medicine_name", treatments_items.get(x).get("medicine_name"));

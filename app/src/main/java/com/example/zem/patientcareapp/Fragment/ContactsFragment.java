@@ -66,8 +66,8 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
         address_province = (Spinner) rootView.findViewById(R.id.address_province);
         root = (LinearLayout) rootView.findViewById(R.id.root);
 
-        hashOfRegions = new ArrayList();
-        listOfRegions = new ArrayList();
+        hashOfRegions = new ArrayList<>();
+        listOfRegions = new ArrayList<>();
 
         intent = EditTabsActivity.intent;
         dbhelper = new DbHelper(getActivity());
@@ -91,21 +91,21 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
         }
 
         showprogress();
-        ListOfPatientsRequest.getJSONobj(getActivity(), "get_regions", "regions", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj("get_regions", "regions", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
 
                     JSONArray json_array_mysql = response.getJSONArray("regions");
 
-                    HashMap<String, String> map_placeholder = new HashMap();
+                    HashMap<String, String> map_placeholder = new HashMap<>();
                     map_placeholder.put("name", "Select Region");
                     map_placeholder.put("code", "Select Region");
                     map_placeholder.put("region_server_id", "0");
                     hashOfRegions.add(map_placeholder);
 
                     for (int x = 0; x < json_array_mysql.length(); x++) {
-                        HashMap<String, String> map_region = new HashMap();
+                        HashMap<String, String> map_region = new HashMap<>();
                         JSONObject json_obj = json_array_mysql.getJSONObject(x);
                         map_region.put("name", json_obj.getString("name"));
                         map_region.put("code", json_obj.getString("code"));
@@ -116,7 +116,7 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
                     for (int y = 0; y < hashOfRegions.size(); y++)
                         listOfRegions.add(hashOfRegions.get(y).get("name"));
 
-                    regions_adapter = new ArrayAdapter(getActivity(), R.layout.address_spinner_list_item, listOfRegions);
+                    regions_adapter = new ArrayAdapter<>(getActivity(), R.layout.address_spinner_list_item, listOfRegions);
                     address_region.setAdapter(regions_adapter);
 
                     if (intent.getIntExtra("signup", 0) > 0) {
@@ -167,29 +167,29 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
                 break;
 
             case R.id.address_region:
-                hashOfProvinces = new ArrayList();
-                listOfProvinces = new ArrayList();
+                hashOfProvinces = new ArrayList<>();
+                listOfProvinces = new ArrayList<>();
                 final int region_server_id = Integer.parseInt(hashOfRegions.get(position).get("region_server_id"));
 
                 if (region_server_id == 0) {
-                    HashMap<String, String> map_placeholder = new HashMap();
+                    HashMap<String, String> map_placeholder = new HashMap<>();
                     map_placeholder.put("name", "Select Province");
                     map_placeholder.put("province_server_id", "0");
                     map_placeholder.put("region_server_id", "0");
                     hashOfProvinces.add(map_placeholder);
                     listOfProvinces.add(hashOfProvinces.get(0).get("name"));
 
-                    provinces_adapter = new ArrayAdapter(getActivity(), R.layout.address_spinner_list_item, listOfProvinces);
+                    provinces_adapter = new ArrayAdapter<>(getActivity(), R.layout.address_spinner_list_item, listOfProvinces);
                     address_province.setAdapter(provinces_adapter);
                 } else {
                     showprogress();
-                    ListOfPatientsRequest.getJSONobj(getActivity(), "get_provinces&region_id=" + region_server_id, "provinces", new RespondListener<JSONObject>() {
+                    ListOfPatientsRequest.getJSONobj("get_provinces&region_id=" + region_server_id, "provinces", new RespondListener<JSONObject>() {
                         @Override
                         public void getResult(JSONObject response) {
                             try {
                                 JSONArray json_array_mysql = response.getJSONArray("provinces");
                                 for (int x = 0; x < json_array_mysql.length(); x++) {
-                                    HashMap<String, String> map = new HashMap();
+                                    HashMap<String, String> map = new HashMap<>();
                                     JSONObject json_obj = json_array_mysql.getJSONObject(x);
                                     map.put("name", json_obj.getString("name"));
                                     map.put("province_server_id", json_obj.getString("id"));
@@ -200,7 +200,7 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
                                 for (int y = 0; y < hashOfProvinces.size(); y++)
                                     listOfProvinces.add(hashOfProvinces.get(y).get("name"));
 
-                                provinces_adapter = new ArrayAdapter(getActivity(), R.layout.address_spinner_list_item, listOfProvinces);
+                                provinces_adapter = new ArrayAdapter<>(getActivity(), R.layout.address_spinner_list_item, listOfProvinces);
                                 address_province.setAdapter(provinces_adapter);
 
                                 if (intent.getIntExtra("signup", 0) > 0) {
@@ -237,11 +237,11 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
                 break;
 
             case R.id.address_province:
-                hashOfMunicipalities = new ArrayList();
-                listOfMunicipalities = new ArrayList();
+                hashOfMunicipalities = new ArrayList<>();
+                listOfMunicipalities = new ArrayList<>();
                 final int province_server_id = Integer.parseInt(hashOfProvinces.get(position).get("province_server_id"));
                 if (province_server_id == 0) {
-                    HashMap<String, String> map_placeholder = new HashMap();
+                    HashMap<String, String> map_placeholder = new HashMap<>();
                     map_placeholder.put("name", "Select Municipality");
                     map_placeholder.put("municipality_server_id", "0");
                     map_placeholder.put("province_server_id", "0");
@@ -249,17 +249,17 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
 
                     listOfMunicipalities.add(hashOfMunicipalities.get(0).get("name"));
 
-                    municipalities_adapter = new ArrayAdapter(getActivity(), R.layout.address_spinner_list_item, listOfMunicipalities);
+                    municipalities_adapter = new ArrayAdapter<>(getActivity(), R.layout.address_spinner_list_item, listOfMunicipalities);
                     address_city_municipality.setAdapter(municipalities_adapter);
                 } else {
                     showprogress();
-                    ListOfPatientsRequest.getJSONobj(getActivity(), "get_municipalities&province_id=" + province_server_id, "municipalities", new RespondListener<JSONObject>() {
+                    ListOfPatientsRequest.getJSONobj("get_municipalities&province_id=" + province_server_id, "municipalities", new RespondListener<JSONObject>() {
                         @Override
                         public void getResult(JSONObject response) {
                             try {
                                 JSONArray json_array_mysql = response.getJSONArray("municipalities");
                                 for (int x = 0; x < json_array_mysql.length(); x++) {
-                                    HashMap<String, String> map = new HashMap();
+                                    HashMap<String, String> map = new HashMap<>();
                                     JSONObject json_obj = json_array_mysql.getJSONObject(x);
                                     map.put("name", json_obj.getString("name"));
                                     map.put("municipality_server_id", json_obj.getString("id"));
@@ -270,7 +270,7 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
                                 for (int y = 0; y < hashOfMunicipalities.size(); y++)
                                     listOfMunicipalities.add(hashOfMunicipalities.get(y).get("name"));
 
-                                municipalities_adapter = new ArrayAdapter(getActivity(), R.layout.address_spinner_list_item, listOfMunicipalities);
+                                municipalities_adapter = new ArrayAdapter<>(getActivity(), R.layout.address_spinner_list_item, listOfMunicipalities);
                                 address_city_municipality.setAdapter(municipalities_adapter);
 
                                 if (intent.getIntExtra("signup", 0) > 0) {
@@ -307,11 +307,11 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
                 break;
 
             case R.id.address_city_municipality:
-                hashOfBarangays = new ArrayList();
-                listOfBarangays = new ArrayList();
+                hashOfBarangays = new ArrayList<>();
+                listOfBarangays = new ArrayList<>();
                 final int municipality_server_id = Integer.parseInt(hashOfMunicipalities.get(position).get("municipality_server_id"));
                 if (municipality_server_id == 0) {
-                    HashMap<String, String> map_placeholder = new HashMap();
+                    HashMap<String, String> map_placeholder = new HashMap<>();
                     map_placeholder.put("name", "Select Barangay");
                     map_placeholder.put("barangay_server_id", "0");
                     map_placeholder.put("municipality_server_id", "0");
@@ -319,17 +319,17 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
 
                     listOfBarangays.add(hashOfBarangays.get(0).get("name"));
 
-                    barangays_adapter = new ArrayAdapter(getActivity(), R.layout.address_spinner_list_item, listOfBarangays);
+                    barangays_adapter = new ArrayAdapter<>(getActivity(), R.layout.address_spinner_list_item, listOfBarangays);
                     address_barangay.setAdapter(barangays_adapter);
                 } else {
                     showprogress();
-                    ListOfPatientsRequest.getJSONobj(getActivity(), "get_barangays&municipality_id=" + municipality_server_id, "barangays", new RespondListener<JSONObject>() {
+                    ListOfPatientsRequest.getJSONobj("get_barangays&municipality_id=" + municipality_server_id, "barangays", new RespondListener<JSONObject>() {
                         @Override
                         public void getResult(JSONObject response) {
                             try {
                                 JSONArray json_array_mysql = response.getJSONArray("barangays");
                                 for (int x = 0; x < json_array_mysql.length(); x++) {
-                                    HashMap<String, String> map = new HashMap();
+                                    HashMap<String, String> map = new HashMap<>();
                                     JSONObject json_obj = json_array_mysql.getJSONObject(x);
                                     map.put("name", json_obj.getString("name"));
                                     map.put("barangay_server_id", json_obj.getString("id"));
@@ -340,7 +340,7 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
                                 for (int y = 0; y < hashOfBarangays.size(); y++)
                                     listOfBarangays.add(hashOfBarangays.get(y).get("name"));
 
-                                barangays_adapter = new ArrayAdapter(getActivity(), R.layout.address_spinner_list_item, listOfBarangays);
+                                barangays_adapter = new ArrayAdapter<>(getActivity(), R.layout.address_spinner_list_item, listOfBarangays);
                                 address_barangay.setAdapter(barangays_adapter);
 
                                 if (intent.getIntExtra("signup", 0) > 0) {

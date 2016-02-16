@@ -1,9 +1,7 @@
 package com.example.zem.patientcareapp.Model;
 
-/**
- * Created by User PC on 9/30/2015.
- */
 public class Settings {
+
     private int serverID, lvl_limit, delivery_minimum = 0;
     private double points, points_to_peso, referral_comm, comm_variation, delivery_charge = 0.0;
     private String created_at, updated_at, deleted_at = "";

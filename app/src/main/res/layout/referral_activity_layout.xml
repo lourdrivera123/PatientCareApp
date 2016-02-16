@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/toolbar"
-    android:id="@+id/root"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -71,7 +71,6 @@
             android:id="@+id/referredBy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Firstname Lastname (Referral ID)"
             android:inputType="textMultiLine"
             android:lines="1"
             android:maxLines="1"
@@ -101,6 +100,6 @@
             android:clickable="true"
             android:drawableRight="@mipmap/ic_next"
             android:text="Save"
-            android:textColor="@color/white" />
+            android:textColor="@android:color/white" />
     </LinearLayout>
 </LinearLayout>

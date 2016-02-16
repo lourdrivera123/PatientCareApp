@@ -152,11 +152,8 @@
                     android:clickable="true"
                     android:drawableRight="@mipmap/ic_next"
                     android:text="Next"
-                    android:textColor="@color/white" />
-
+                    android:textColor="@android:color/white" />
             </LinearLayout>
         </LinearLayout>
-
     </ScrollView>
-
 </LinearLayout>

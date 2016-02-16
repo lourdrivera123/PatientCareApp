@@ -13,7 +13,6 @@
             android:id="@+id/doctor_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dr. Zemiel Asma"
             android:textColor="#040404"
             android:textSize="15sp"
             android:typeface="sans" />
@@ -22,7 +21,6 @@
             android:id="@+id/clinic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Davao Doctors Hospital"
             android:textSize="10sp"
             android:textStyle="bold" />
 
@@ -30,7 +28,6 @@
             android:id="@+id/record_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="02/23/1995"
             android:textSize="10sp"
             android:textStyle="bold" />
     </LinearLayout>

@@ -10,27 +10,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Doctor's Clinic"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/clinic_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/contact_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="0907 884 3578" />
+        android:gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/clinic_address_first_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="#86 Acacia St., Cabantian" />
+        android:gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/clinic_address_second_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Dexter City, Davao del Sur, Philippines, 8000" />
+        android:gravity="center_horizontal" />
 </LinearLayout>

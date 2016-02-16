@@ -24,7 +24,7 @@
                 android:gravity="center"
                 android:text="No records found"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:visibility="gone" />
 
             <ListView
@@ -41,11 +41,13 @@
             android:layout_alignParentBottom="true"
             android:gravity="bottom|right">
 
-            <ImageButton
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/add_record"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:background="@drawable/circle_selector"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:clickable="true"
+                android:scaleType="center"
                 android:src="@mipmap/ic_action" />
         </LinearLayout>
     </RelativeLayout>

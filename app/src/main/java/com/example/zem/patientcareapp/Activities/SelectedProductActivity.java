@@ -53,7 +53,6 @@ import java.util.Map;
 public class SelectedProductActivity extends AppCompatActivity implements View.OnClickListener {
     int get_productID = 0, temp_qty = 1, qtyPerPacking = 1, available_qty = 0;
     public static int is_resumed = 0;
-    public static final String PRODUCT_ID = "productID";
 
     LinearLayout add_to_cart, out_of_stock, edit_layout;
     RelativeLayout root;
@@ -120,7 +119,7 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        get_productID = intent.getIntExtra(PRODUCT_ID, 0);
+        get_productID = intent.getIntExtra("productID", 0);
 
         showBeautifulDialog();
         product = getProductWithImage(get_productID);
@@ -222,7 +221,7 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                 showBeautifulDialog();
 
                 String url_raw = "get_basket_items&patient_id=" + SidebarActivity.getUserID() + "&table=baskets";
-                ListOfPatientsRequest.getJSONobj(SelectedProductActivity.this, url_raw, "baskets", new RespondListener<JSONObject>() {
+                ListOfPatientsRequest.getJSONobj(url_raw, "baskets", new RespondListener<JSONObject>() {
                     @Override
                     public void getResult(JSONObject response) {
                         try {
@@ -440,7 +439,7 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
         final ArrayList<String> filenames = new ArrayList<>();
         final Product prod = new Product();
 
-        ListOfPatientsRequest.getJSONobj(this, "get_selected_product_with_image&product_id=" + product_id + "&branch_id=" + order_model.getBranch_id(), "products", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj("get_selected_product_with_image&product_id=" + product_id + "&branch_id=" + order_model.getBranch_id(), "products", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
@@ -514,7 +513,7 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
     private void getAllBasketItems() {
         String url_raw = "get_basket_items&patient_id=" + SidebarActivity.getUserID() + "&table=baskets";
 
-        ListOfPatientsRequest.getJSONobj(SelectedProductActivity.this, url_raw, "baskets", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj(url_raw, "baskets", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
@@ -528,7 +527,7 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
 
                         if (count > 0) {
                             number_of_notif.setVisibility(View.VISIBLE);
-                            number_of_notif.setText(count + "");
+                            number_of_notif.setText(String.valueOf(count));
                         }
                     } else
                         number_of_notif.setVisibility(View.GONE);

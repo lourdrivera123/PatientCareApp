@@ -46,9 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Zem on 6/16/2015.
- */
 public class PayPalCheckout extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -62,7 +59,7 @@ public class PayPalCheckout extends Activity {
 
     private static final int REQUEST_CODE_PAYMENT = 1;
 
-    private List<PayPalItem> productsInCart = new ArrayList<PayPalItem>();
+    private List<PayPalItem> productsInCart = new ArrayList<>();
 
     DbHelper dbHelper;
     BasketController bc;
@@ -106,9 +103,8 @@ public class PayPalCheckout extends Activity {
         modeOfDelivery = om.getMode_of_delivery();
         payment_method = om.getPayment_method();
 
-        PayPalConfiguration object = new PayPalConfiguration();
-        object = object.acceptCreditCards(false);
-
+//        PayPalConfiguration object = new PayPalConfiguration();
+//        object = object.acceptCreditCards(false);
 
         // Starting PayPal service
         Intent intent = new Intent(this, PayPalService.class);
@@ -192,7 +188,7 @@ public class PayPalCheckout extends Activity {
         dialog.show();
 
         String url_raw = "get_basket_details&patient_id=" + SidebarActivity.getUserID();
-        ListOfPatientsRequest.getJSONobj(this, url_raw, "baskets", new RespondListener<JSONObject>() {
+        ListOfPatientsRequest.getJSONobj(url_raw, "baskets", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 try {
@@ -222,10 +218,6 @@ public class PayPalCheckout extends Activity {
                             items_paypal = productsInCart.toArray(items_paypal);
 
                             subtotal = PayPalItem.getItemTotal(items_paypal);
-
-                            HashMap<String, String> hashMap = new HashMap();
-
-                            hashMap.put("amount_in_php", String.valueOf(subtotal));
 
                             launchPayPalPayment();
                         } else {
@@ -285,65 +277,57 @@ public class PayPalCheckout extends Activity {
 
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "verify payment: " + response.toString());
 
-                try {
-                    JSONObject res = new JSONObject(response);
+                //request for orders request
+                GetRequest.getJSONobj(getBaseContext(), "get_orders&patient_id=" + SidebarActivity.getUserID(), "orders", "orders_id", new RespondListener<JSONObject>() {
+                    @Override
+                    public void getResult(JSONObject response) {
+                        //request for order_details request
+                        GetRequest.getJSONobj(getBaseContext(), "get_order_details&patient_id=" + SidebarActivity.getUserID(), "order_details", "order_details_id", new RespondListener<JSONObject>() {
+                            @Override
+                            public void getResult(JSONObject response) {
 
-                    //request for orders request
-                    GetRequest.getJSONobj(getBaseContext(), "get_orders&patient_id=" + SidebarActivity.getUserID(), "orders", "orders_id", new RespondListener<JSONObject>() {
-                        @Override
-                        public void getResult(JSONObject response) {
-                            //request for order_details request
-                            GetRequest.getJSONobj(getBaseContext(), "get_order_details&patient_id=" + SidebarActivity.getUserID(), "order_details", "order_details_id", new RespondListener<JSONObject>() {
-                                @Override
-                                public void getResult(JSONObject response) {
+                                //request for order_details request
+                                GetRequest.getJSONobj(getBaseContext(), "get_order_billings&patient_id=" + SidebarActivity.getUserID(), "billings", "billings_id", new RespondListener<JSONObject>() {
+                                    @Override
+                                    public void getResult(JSONObject response) {
+                                        try {
+                                            productsInCart.clear();
+                                            String timestamp_ordered = response.getString("server_timestamp");
 
-                                    //request for order_details request
-                                    GetRequest.getJSONobj(getBaseContext(), "get_order_billings&patient_id=" + SidebarActivity.getUserID(), "billings", "billings_id", new RespondListener<JSONObject>() {
-                                        @Override
-                                        public void getResult(JSONObject response) {
-                                            try {
-                                                productsInCart.clear();
-                                                String timestamp_ordered = response.getString("server_timestamp");
+                                            Intent order_intent = new Intent(getBaseContext(), SidebarActivity.class);
+                                            order_intent.putExtra("payment_from", "paypal");
+                                            order_intent.putExtra("timestamp_ordered", timestamp_ordered);
+                                            order_intent.putExtra("select", 5);
+                                            startActivity(order_intent);
 
-                                                Intent order_intent = new Intent(getBaseContext(), SidebarActivity.class);
-                                                order_intent.putExtra("payment_from", "paypal");
-                                                order_intent.putExtra("timestamp_ordered", timestamp_ordered);
-                                                order_intent.putExtra("select", 5);
-                                                startActivity(order_intent);
-
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
                                         }
-                                    }, new ErrorListener<VolleyError>() {
-                                        public void getError(VolleyError error) {
-                                            Log.d("Error", error + "");
-                                            Toast.makeText(getBaseContext(), "Couldn't refresh list. Please check your Internet connection", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
 
-                                }
-                            }, new ErrorListener<VolleyError>() {
-                                public void getError(VolleyError error) {
-                                    Log.d("Error", error + "");
-                                    Toast.makeText(getBaseContext(), "Couldn't refresh list. Please check your Internet connection", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    }, new ErrorListener<VolleyError>() {
-                        public void getError(VolleyError error) {
-                            Log.d("Error", error + "");
-                            Toast.makeText(getBaseContext(), "Couldn't refresh list. Please check your Internet connection", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    finish();
+                                    }
+                                }, new ErrorListener<VolleyError>() {
+                                    public void getError(VolleyError error) {
+                                        Log.d("Error", error + "");
+                                        Toast.makeText(getBaseContext(), "Couldn't refresh list. Please check your Internet connection", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                            }
+                        }, new ErrorListener<VolleyError>() {
+                            public void getError(VolleyError error) {
+                                Log.d("Error", error + "");
+                                Toast.makeText(getBaseContext(), "Couldn't refresh list. Please check your Internet connection", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }, new ErrorListener<VolleyError>() {
+                    public void getError(VolleyError error) {
+                        Log.d("Error", error + "");
+                        Toast.makeText(getBaseContext(), "Couldn't refresh list. Please check your Internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                finish();
 
                 // hiding the progress dialog
                 hidepDialog();
@@ -365,7 +349,7 @@ public class PayPalCheckout extends Activity {
             protected Map<String, String> getParams() {
                 Patient patient = pc.getloginPatient(SidebarActivity.getUname());
 
-                Map<String, String> map = new HashMap<String, String>();
+                Map<String, String> map = new HashMap<>();
                 map.put("paymentId", paymentId);
                 map.put("paymentClientJson", payment_client);
                 map.put("patient_id", String.valueOf(patient.getServerID()));

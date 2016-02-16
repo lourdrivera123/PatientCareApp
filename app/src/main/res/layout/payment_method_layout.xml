@@ -92,7 +92,7 @@
                             android:background="#0000"
                             android:clickable="false"
                             android:text="Cash On Delivery or Pick Up"
-                            android:textColor="@color/white" />
+                            android:textColor="@android:color/white" />
 
                     </LinearLayout>
 
@@ -121,7 +121,7 @@
                             android:background="#0000"
                             android:clickable="false"
                             android:text="Visa or Mastercard"
-                            android:textColor="@color/white" />
+                            android:textColor="@android:color/white" />
 
                     </LinearLayout>
 
@@ -150,13 +150,9 @@
                             android:background="#0000"
                             android:clickable="false"
                             android:text="PayPal"
-                            android:textColor="@color/white" />
-
+                            android:textColor="@android:color/white" />
                     </LinearLayout>
-
-
                 </LinearLayout>
-
             </LinearLayout>
 
         </LinearLayout>

@@ -29,6 +29,14 @@ public class DbHelper extends SQLiteOpenHelper {
     String sql_favorites = String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s INTEGER)",
             TBL_FAVORITES, AI_ID, FAVE_PRODUCT_ID, FAVE_USER_ID);
 
+    //SEARCH_HISTORY
+    static final String TBL_SEARCH_HISTORY = "search_history",
+            HISTORY_USER_ID = "user_id",
+            HISTORY_KEYWORD = "keyword";
+
+    String sql_search_history = String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s TEXT)",
+            TBL_SEARCH_HISTORY, AI_ID, HISTORY_USER_ID, HISTORY_KEYWORD);
+
     public DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -37,6 +45,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(sql_favorites);
+        db.execSQL(sql_search_history);
         db.execSQL(DoctorController.CREATE_TABLE);
         db.execSQL(SpecialtyController.CREATE_TABLE);
         db.execSQL(SubSpecialtyController.CREATE_TABLE);
@@ -44,7 +53,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(PatientController.CREATE_TABLE);
         db.execSQL(ProductCategoryController.CREATE_TABLE);
         db.execSQL(ProductSubCategoryController.CREATE_TABLE);
-        db.execSQL(DosageController.CREATE_TABLE);
         db.execSQL(PatientRecordController.CREATE_TABLE);
         db.execSQL(ClinicController.CREATE_TABLE);
         db.execSQL(ClinicDoctorController.CREATE_TABLE);
@@ -69,7 +77,6 @@ public class DbHelper extends SQLiteOpenHelper {
         insertTableNamesToUpdates(SubSpecialtyController.TBL_SUB_SPECIALTIES, db);
         insertTableNamesToUpdates(ProductCategoryController.TBL_PRODUCT_CATEGORIES, db);
         insertTableNamesToUpdates(ProductSubCategoryController.TBL_PRODUCT_SUBCATEGORIES, db);
-        insertTableNamesToUpdates(DosageController.TBL_DOSAGE, db);
         insertTableNamesToUpdates(PatientRecordController.TBL_PATIENT_RECORDS, db);
         insertTableNamesToUpdates(ClinicController.TBL_CLINICS, db);
         insertTableNamesToUpdates(PatientPrescriptionController.TBL_PATIENT_PRESCRIPTIONS, db);
@@ -117,7 +124,84 @@ public class DbHelper extends SQLiteOpenHelper {
         return row > 0;
     }
 
-    /////////////////////////////////GET METHODS//////////////////////////////////
+    public boolean insertSearchHistory(int user_id, String keyword) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues val = new ContentValues();
+        String sql = "SELECT * FROM " + TBL_SEARCH_HISTORY + " WHERE " + HISTORY_KEYWORD + " = '" + keyword + "'";
+        Cursor cur = db.rawQuery(sql, null);
+
+        if (!cur.moveToNext()) {
+            val.put(HISTORY_USER_ID, user_id);
+            val.put(HISTORY_KEYWORD, keyword);
+
+            db.insert(TBL_SEARCH_HISTORY, null, val);
+        }
+
+        cur.close();
+        db.close();
+
+        return true;
+    }
+
+    //////////////////////////DELETE METHODS//////////////////////////////////////
+    public boolean deleteFromTable(int serverID, String tableName, String column_serverID) {
+        SQLiteDatabase db = getWritableDatabase();
+        long deletedID = db.delete(tableName, column_serverID + " = " + serverID, null);
+
+        db.close();
+        return deletedID > 0;
+    }
+
+    public boolean removeFavorite(int user_id, int product_id) {
+        SQLiteDatabase db = getWritableDatabase();
+        long deleted_id = db.delete(TBL_FAVORITES, "product_id = " + product_id + " AND user_id = " + user_id, null);
+
+        db.close();
+        return deleted_id > 0;
+    }
+
+    public boolean deleteHistoryByUserID(int user_id) {
+        SQLiteDatabase db = getWritableDatabase();
+        long id = db.delete(TBL_SEARCH_HISTORY, HISTORY_USER_ID + " = " + user_id, null);
+
+        db.close();
+
+        return id > 0;
+    }
+
+    /////////////////////////GET METHODS/////////////////////////////
+    public ArrayList<Integer> getFavoritesByUserID(int user_id) {
+        ArrayList<Integer> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        String sql = "SELECT * FROM " + TBL_FAVORITES + " WHERE " + FAVE_USER_ID + " = " + user_id;
+        Cursor cur = db.rawQuery(sql, null);
+
+        while (cur.moveToNext()) {
+            list.add(cur.getInt(cur.getColumnIndex(FAVE_PRODUCT_ID)));
+        }
+
+        cur.close();
+        db.close();
+
+        return list;
+    }
+
+    public ArrayList<String> getAllHistoryByUser(int user_id) {
+        ArrayList<String> history = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        String sql = "SELECT * FROM " + TBL_SEARCH_HISTORY + " WHERE " + HISTORY_USER_ID + " = " + user_id;
+        Cursor cur = db.rawQuery(sql, null);
+
+        while (cur.moveToNext()) {
+            history.add(cur.getString(cur.getColumnIndex(HISTORY_KEYWORD)));
+        }
+
+        cur.close();
+        db.close();
+
+        return history;
+    }
+
     public JSONArray getAllJSONArrayFrom(String tbl_name) {
         SQLiteDatabase db = getWritableDatabase();
         String sql = "SELECT * FROM " + tbl_name;
@@ -138,7 +222,7 @@ public class DbHelper extends SQLiteOpenHelper {
                             rowObject.put(cursor.getColumnName(i), "");
                         }
                     } catch (Exception e) {
-                        Log.d("dbhelper1", e+"");
+                        Log.d("dbhelper1", e + "");
                     }
                 }
             }
@@ -148,39 +232,5 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return resultSet;
-    }
-
-    //////////////////////////DELETE METHODS//////////////////////////////////////
-    public boolean deleteFromTable(int serverID, String tableName, String column_serverID) {
-        SQLiteDatabase db = getWritableDatabase();
-        long deletedID = db.delete(tableName, column_serverID + " = " + serverID, null);
-
-        db.close();
-        return deletedID > 0;
-    }
-
-    public boolean removeFavorite(int user_id, int product_id) {
-        SQLiteDatabase db = getWritableDatabase();
-        long deleted_id = db.delete(TBL_FAVORITES, "product_id = " + product_id + " AND user_id = " + user_id, null);
-
-        db.close();
-        return deleted_id > 0;
-    }
-
-    /////////////////////////GET METHODS/////////////////////////////
-    public ArrayList<Integer> getFavoritesByUserID(int user_id) {
-        ArrayList<Integer> list = new ArrayList<>();
-        SQLiteDatabase db = getWritableDatabase();
-        String sql = "SELECT * FROM " + TBL_FAVORITES + " WHERE " + FAVE_USER_ID + " = " + user_id;
-        Cursor cur = db.rawQuery(sql, null);
-
-        while (cur.moveToNext()) {
-            list.add(cur.getInt(cur.getColumnIndex(FAVE_PRODUCT_ID)));
-        }
-
-        cur.close();
-        db.close();
-
-        return list;
     }
 }
