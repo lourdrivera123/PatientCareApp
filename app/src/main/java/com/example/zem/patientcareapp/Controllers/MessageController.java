@@ -79,8 +79,9 @@ public class MessageController extends DbHelper {
             map.put("serverID", String.valueOf(cur.getInt(cur.getColumnIndex(MSGS_SERVER_ID))));
             array.add(map);
         }
-        sql_db.close();
+
         cur.close();
+        sql_db.close();
 
         return array;
     }
@@ -99,8 +100,9 @@ public class MessageController extends DbHelper {
             messages.setDate(cur.getString(cur.getColumnIndex(CREATED_AT)));
             messages.setIsRead(cur.getInt(cur.getColumnIndex(IS_READ)));
         }
-        sql_db.close();
+
         cur.close();
+        sql_db.close();
 
         return messages;
     }

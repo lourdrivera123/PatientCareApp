@@ -63,8 +63,8 @@ public class ProductSubCategoryController extends DbHelper {
             x++;
             cur.moveToNext();
         }
-        sql_db.close();
         cur.close();
+        sql_db.close();
         String[] arr = new String[list.size()];
         return list.toArray(arr);
     }
@@ -85,9 +85,8 @@ public class ProductSubCategoryController extends DbHelper {
             subCategory.setUpdatedAt(cur.getString(cur.getColumnIndex(UPDATED_AT)));
             subCategory.setDeletedAt(cur.getString(cur.getColumnIndex(DELETED_AT)));
         }
-
-        sql_db.close();
         cur.close();
+        sql_db.close();
         return subCategory;
     }
 

@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.util.Log.d;
+
 public class ProductsAdapter extends ArrayAdapter implements View.OnClickListener {
     LayoutInflater inflater;
     Context context;
@@ -211,11 +213,13 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                                 int success = response.getInt("success");
 
                                 if (success == 1) {
-                                    ProductsActivity.transferHashMap(hashMap);
-                                    Snackbar.make(v, "Your cart has been updated", Snackbar.LENGTH_SHORT).show();
+                                    if (response.getBoolean("has_contents")) {
+                                        ProductsActivity.transferHashMap(hashMap);
+                                        Snackbar.make(v, "Your cart has been updated", Snackbar.LENGTH_SHORT).show();
+                                    }
                                 }
                             } catch (JSONException e) {
-                                Log.d("prod_adapter6", e + "");
+                                d("prod_adapter6", e + "");
                                 Snackbar.make(v, "Networ error", Snackbar.LENGTH_SHORT).show();
                             }
                             pdialog.dismiss();
@@ -223,7 +227,7 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                     }, new ErrorListener<VolleyError>() {
                         public void getError(VolleyError error) {
                             pdialog.dismiss();
-                            Log.d("prod_adapter5", error + "");
+                            d("prod_adapter5", error + "");
                             Snackbar.make(v, "Network error", Snackbar.LENGTH_SHORT).show();
                         }
                     });
@@ -262,12 +266,14 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                                                 int success = response.getInt("success");
 
                                                 if (success == 1) {
-                                                    hashMap.put("server_id", String.valueOf(response.getInt("last_inserted_id")));
-                                                    ProductsActivity.transferHashMap(hashMap);
-                                                    Snackbar.make(v, "New item has been added to your cart", Snackbar.LENGTH_SHORT).show();
+                                                    if (response.getBoolean("has_contents")) {
+                                                        hashMap.put("server_id", String.valueOf(response.getInt("last_inserted_id")));
+                                                        ProductsActivity.transferHashMap(hashMap);
+                                                        Snackbar.make(v, "New item has been added to your cart", Snackbar.LENGTH_SHORT).show();
+                                                    }
                                                 }
                                             } catch (JSONException e) {
-                                                Log.d("prod_adapter4", e + "");
+                                                d("prod_adapter4", e + "");
                                                 Snackbar.make(v, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                                             }
                                             pdialog.dismiss();
@@ -275,7 +281,7 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                                     }, new ErrorListener<VolleyError>() {
                                         public void getError(VolleyError error) {
                                             pdialog.dismiss();
-                                            Log.d("prod_adapter3", error + "");
+                                            d("prod_adapter3", error + "");
                                             Snackbar.make(v, "Network error", Snackbar.LENGTH_SHORT).show();
                                         }
                                     });
@@ -308,6 +314,8 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                         hashMap.put("prescription_id", "0");
                         hashMap.put("is_approved", "1");
 
+                        d("params_pa", hashMap + "");
+
                         PostRequest.send(context, hashMap, new RespondListener<JSONObject>() {
                             @Override
                             public void getResult(JSONObject response) {
@@ -315,12 +323,14 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                                     int success = response.getInt("success");
 
                                     if (success == 1) {
-                                        hashMap.put("server_id", String.valueOf(response.getInt("last_inserted_id")));
-                                        ProductsActivity.transferHashMap(hashMap);
-                                        Snackbar.make(v, "New item has been added to your cart", Snackbar.LENGTH_SHORT).show();
+                                        if (response.getBoolean("has_contents")) {
+                                            hashMap.put("server_id", String.valueOf(response.getInt("last_inserted_id")));
+                                            ProductsActivity.transferHashMap(hashMap);
+                                            Snackbar.make(v, "New item has been added to your cart", Snackbar.LENGTH_SHORT).show();
+                                        }
                                     }
                                 } catch (Exception e) {
-                                    Log.d("prod_adapter2", e + "");
+                                    d("prod_adapter2", e + "");
                                     Snackbar.make(v, "Server error occurred" + "", Snackbar.LENGTH_SHORT).show();
                                 }
                                 pdialog.dismiss();
@@ -328,7 +338,7 @@ public class ProductsAdapter extends ArrayAdapter implements View.OnClickListene
                         }, new ErrorListener<VolleyError>() {
                             public void getError(VolleyError error) {
                                 pdialog.dismiss();
-                                Log.d("prod_adapter1", error + "");
+                                d("prod_adapter1", error + "");
                                 Snackbar.make(v, "Network error", Snackbar.LENGTH_SHORT).show();
                             }
                         });

@@ -1,16 +1,19 @@
 package com.example.zem.patientcareapp.Activities;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,9 +21,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,12 +35,15 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.example.zem.patientcareapp.AlarmModule.AlarmService;
+import com.example.zem.patientcareapp.Controllers.ClinicController;
 import com.example.zem.patientcareapp.Controllers.DoctorController;
 import com.example.zem.patientcareapp.Controllers.DbHelper;
 import com.example.zem.patientcareapp.Controllers.PatientConsultationController;
+import com.example.zem.patientcareapp.Controllers.SpecialtyController;
 import com.example.zem.patientcareapp.Model.Consultation;
 import com.example.zem.patientcareapp.Interface.ErrorListener;
 import com.example.zem.patientcareapp.Interface.RespondListener;
+import com.example.zem.patientcareapp.Network.GetRequest;
 import com.example.zem.patientcareapp.Network.PostRequest;
 import com.example.zem.patientcareapp.R;
 import com.example.zem.patientcareapp.SidebarModule.SidebarActivity;
@@ -46,30 +55,46 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.TimeZone;
 
-public class PatientConsultationActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener, CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener, TextWatcher {
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
+import static android.support.design.widget.Snackbar.make;
+import static android.util.Log.d;
+import static com.example.zem.patientcareapp.Network.GetRequest.getJSONobj;
+
+public class PatientConsultationActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener, CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener {
     DbHelper dbhelper;
     PatientConsultationController pcc;
     Consultation consult;
     AlarmService alarmService;
     DoctorController dc;
+    ClinicController cc;
+    SpecialtyController sc;
 
     LinearLayout setDate, setAlarmedTime, root;
     TextView txtDate, txtAlarmedTime;
     CheckBox checkAlarm;
     AutoCompleteTextView search_doctor;
-    Spinner spinner_clinic;
     Toolbar myToolBar;
 
-    Calendar cal;
-    ArrayAdapter<String> doctorAdapter, clinicAdapter;
+    ListView doctors_list;
+    AlertDialog dialog;
 
-    ArrayList<HashMap<String, String>> doctorsHashmap, doctorClinicHashmap;
-    ArrayList<String> listOfClinic, listOfDoctors;
+    Calendar cal;
+    ArrayAdapter<String> doctorAdapter, clinicAdapter, specialtyAdapter, citiesMunicipalitiesAdapter, doctorListAdapter, specialty_names_adapter, clinic_names_adapter;
+
+    ArrayList<HashMap<String, String>> doctorsHashmap, doctorClinicHashmap, specialtiesHashmap, citiesMunicipalitiesHashmap;
+    ArrayList<String> listOfClinic, listOfDoctors, listOfSpecialties, listOfCitiesMunicipalities;
 
     String request;
     int hour, minute, new_hour, new_min, isAlarm;
     static int doctor_id = 0;
     static String time_alarm = "";
+    int the_chosen_doctor = 0;
+
+    AlertDialog.Builder builder;
+    View view_dialog_picker;
+    Button choose_doctor_btn, search_specialty_btn, search_place_btn, search_clinic_btn;
+    EditText filter_doctor_search;
+    TextView the_chosen_one;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,14 +108,20 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
         dbhelper = new DbHelper(this);
         dc = new DoctorController(this);
         pcc = new PatientConsultationController(this);
+        cc = new ClinicController(this);
+        sc = new SpecialtyController(this);
 
         alarmService = new AlarmService(this);
         Intent getIntent = getIntent();
         listOfDoctors = new ArrayList();
         listOfClinic = new ArrayList();
+        listOfSpecialties = new ArrayList<>();
+        listOfCitiesMunicipalities = new ArrayList<>();
 
         doctorClinicHashmap = dc.getDoctorsInnerJoinClinics();
         doctorsHashmap = dc.getAllDoctors();
+        specialtiesHashmap = dc.getSpecialties();
+        citiesMunicipalitiesHashmap = cc.getClinicCitiesList();
 
         setDate = (LinearLayout) findViewById(R.id.setDate);
         setAlarmedTime = (LinearLayout) findViewById(R.id.setAlarmedTime);
@@ -98,40 +129,53 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
         txtAlarmedTime = (TextView) findViewById(R.id.txtAlarmedTime);
         checkAlarm = (CheckBox) findViewById(R.id.checkAlarm);
         search_doctor = (AutoCompleteTextView) findViewById(R.id.search_doctor);
-        spinner_clinic = (Spinner) findViewById(R.id.spinner_clinic);
         root = (LinearLayout) findViewById(R.id.root);
+        doctors_list = (ListView) findViewById(R.id.doctors_list);
+        search_specialty_btn = (Button) findViewById(R.id.search_specialty_btn);
+        search_place_btn = (Button) findViewById(R.id.search_place_btn);
+        search_clinic_btn = (Button) findViewById(R.id.search_clinic_btn);
+        filter_doctor_search = (EditText) findViewById(R.id.filter_doctor_search);
+        the_chosen_one = (TextView) findViewById(R.id.the_chosen_one);
 
         cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         hour = cal.get(Calendar.HOUR_OF_DAY);
         minute = cal.get(Calendar.MINUTE);
 
-        for (int i = 0; i < doctorsHashmap.size(); i++)
-            listOfDoctors.add(doctorsHashmap.get(i).get("fullname"));
 
-        doctorAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfDoctors);
-        search_doctor.setAdapter(doctorAdapter);
+        for (int i = 0; i < specialtiesHashmap.size(); i++)
+            listOfSpecialties.add(specialtiesHashmap.get(i).get("name"));
 
-        listOfClinic.add("Choose a Clinic");
-        clinicAdapter = new ArrayAdapter(this, R.layout.spinner_clinics_by_doctors, listOfClinic);
-        spinner_clinic.setAdapter(clinicAdapter);
+        for (int i = 0; i < citiesMunicipalitiesHashmap.size(); i++)
+            listOfCitiesMunicipalities.add(citiesMunicipalitiesHashmap.get(i).get("address_city_municipality"));
 
-        if (getIntent.getStringExtra("request").equals("add")) {
-            String doctor = "";
+        /*
+        * Call Populate Doctor Listview Method
+        * */
+        populateDoctorListView();
 
-            if (getIntent.getIntExtra("doctorID", 0) > 0) {
-                doctor_id = getIntent.getIntExtra("doctorID", 0);
+        filter_doctor_search.addTextChangedListener(new TextWatcher() {
 
-                for (int i = 0; i < doctorsHashmap.size(); i++) {
-                    if (Integer.parseInt(doctorsHashmap.get(i).get("doc_id")) == doctor_id) {
-                        doctor = doctorsHashmap.get(i).get("fullname");
-                        search_doctor.setText(doctor);
-                    }
-                }
-
-                prepareSpinner(doctor);
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                // When user changed the Text
+                PatientConsultationActivity.this.doctorListAdapter.getFilter().filter(cs);
             }
 
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                          int arg3) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        if (getIntent.getStringExtra("request").equals("add")) {
             request = "add";
             consult = new Consultation();
 
@@ -154,11 +198,31 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
             txtDate.setText(cal.get(Calendar.YEAR) + "-" + month + "-" + check_date);
         }
 
-        search_doctor.setOnItemClickListener(this);
-        search_doctor.addTextChangedListener(this);
         setDate.setOnClickListener(this);
         setAlarmedTime.setOnClickListener(this);
         checkAlarm.setOnCheckedChangeListener(this);
+        search_specialty_btn.setOnClickListener(this);
+        search_place_btn.setOnClickListener(this);
+        search_clinic_btn.setOnClickListener(this);
+    }
+
+    public void populateDoctorListView() {
+        listOfDoctors = new ArrayList();
+        for (int i = 0; i < doctorsHashmap.size(); i++)
+            listOfDoctors.add(doctorsHashmap.get(i).get("fullname"));
+
+        d("doctor_log", listOfDoctors + "");
+
+        doctorListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, listOfDoctors);
+        doctors_list.setAdapter(doctorListAdapter);
+
+        doctors_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                the_chosen_doctor = Integer.parseInt(doctorsHashmap.get(i).get("doc_id"));
+                showsearchDialog("clinic_chooser");
+            }
+        });
     }
 
     @Override
@@ -168,27 +232,302 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
         return true;
     }
 
+    public void showsearchDialog(String filter) {
+        if (filter.equals("specialty")) {
+            view_dialog_picker = LayoutInflater.from(getBaseContext()).inflate(R.layout.show_search_specialty_dialog, null);
+            final ListView lv = (ListView) view_dialog_picker.findViewById(R.id.list_of_something_to_choose);
+            final EditText search_text = (EditText) view_dialog_picker.findViewById(R.id.search_bar_for_dialog);
+
+            /*
+            * Populating Doctor Specialty List View
+            */
+            getJSONobj(getBaseContext(), "get_doctor_specialties", "specialties", "specialty_id", new RespondListener<JSONObject>() {
+                @Override
+                public void getResult(JSONObject response) {
+                    getJSONobj(getBaseContext(), "get_doctor_sub_specialties", "sub_specialties", "sub_specialty_id", new RespondListener<JSONObject>() {
+                        @Override
+                        public void getResult(JSONObject response) {
+                            d("pc", "specialty and sub specialty updated");
+                            ArrayList<HashMap<String, String>> specialty_hashmap = sc.getAllSpecialties();
+                            d("sc", specialty_hashmap + "");
+                            ArrayList<String> specialty_names_list = new ArrayList();
+
+                            for (int i = 0; i < specialty_hashmap.size(); i++)
+                                specialty_names_list.add(specialty_hashmap.get(i).get("specialty_name"));
+
+                            specialty_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, android.R.layout.simple_expandable_list_item_1, specialty_names_list);
+                            lv.setAdapter(specialty_names_adapter);
+                        }
+                    }, new ErrorListener<VolleyError>() {
+                        public void getError(VolleyError error) {
+                            make(root, "Network error", LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }, new ErrorListener<VolleyError>() {
+                public void getError(VolleyError error) {
+                    make(root, "Network error", LENGTH_SHORT).show();
+                }
+            });
+
+            /*
+            *  Watching for search_text changes
+            *  Then filter the specialyadapter using the search_text value
+            */
+            search_text.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    PatientConsultationActivity.this.specialty_names_adapter.getFilter().filter(charSequence);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+            /*
+            * Item click listener for specialty listview
+            * In real world terms this is when the user selects a specialty
+            * */
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    /*
+                    * Insert the reload doctors list here with a specialty filter
+                    * */
+                    String val = specialtiesHashmap.get(i).get("name");
+                    doctorsHashmap = dc.getAllDoctorsWithFilter("specialty", val);
+                    d("dh", doctorsHashmap + "");
+                    populateDoctorListView();
+                    letDialogSleep();
+                }
+            });
+        } else if (filter.equals("place")) {
+            view_dialog_picker = LayoutInflater.from(getBaseContext()).inflate(R.layout.show_place_dialog, null);
+            final ListView lv = (ListView) view_dialog_picker.findViewById(R.id.list_of_something_to_choose);
+            final EditText search_text = (EditText) view_dialog_picker.findViewById(R.id.search_bar_for_dialog);
+
+            getJSONobj(getBaseContext(), "get_clinics", "clinics", "clinics_id", new RespondListener<JSONObject>() {
+                @Override
+                public void getResult(JSONObject response) {
+                    d("cc_place", "clinic controller updated");
+                    ArrayList<HashMap<String, String>> clinic_hashmap = cc.getClinicCitiesList();
+                    d("cc", clinic_hashmap + "");
+                    ArrayList<String> clinic_names_list = new ArrayList();
+//
+                    for (int i = 0; i < clinic_hashmap.size(); i++)
+                        clinic_names_list.add(clinic_hashmap.get(i).get("address_city_municipality"));
+
+                    clinic_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, android.R.layout.simple_expandable_list_item_1, clinic_names_list);
+                    lv.setAdapter(clinic_names_adapter);
+                }
+            }, new ErrorListener<VolleyError>() {
+                public void getError(VolleyError error) {
+                    make(root, "Network error", LENGTH_SHORT).show();
+                }
+            });
+
+              /*
+            *  Watching for search_text changes
+            *  Then filter the clinic_names_adapter using the search_text value
+            *  But note that clinic_names_adapter here is used to display Cities of clinics
+            */
+            search_text.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    PatientConsultationActivity.this.clinic_names_adapter.getFilter().filter(charSequence);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+             /*
+            * Item click listener for place listview
+            * In real world terms this is when the user selects a place
+            * */
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    /*
+                    * Insert the reload doctors list here with a place from clinics filter
+                    * */
+                    String val = citiesMunicipalitiesHashmap.get(i).get("address_city_municipality");
+                    doctorsHashmap = dc.getAllDoctorsWithFilter("places", val);
+                    d("dh", doctorsHashmap + "");
+                    populateDoctorListView();
+                    letDialogSleep();
+                }
+            });
+        } else if (filter.equals("clinic")) {
+            view_dialog_picker = LayoutInflater.from(getBaseContext()).inflate(R.layout.show_clinic_dialog, null);
+            final ListView lv = (ListView) view_dialog_picker.findViewById(R.id.list_of_something_to_choose);
+            final EditText search_text = (EditText) view_dialog_picker.findViewById(R.id.search_bar_for_dialog);
+
+            getJSONobj(getBaseContext(), "get_clinics", "clinics", "clinics_id", new RespondListener<JSONObject>() {
+                @Override
+                public void getResult(JSONObject response) {
+                    d("cc", "clinic controller updated");
+                    ArrayList<HashMap<String, String>> clinic_hashmap = cc.getAllClinics();
+                    d("cc", clinic_hashmap + "");
+                    ArrayList<String> clinic_names_list = new ArrayList();
+//
+                    for (int i = 0; i < clinic_hashmap.size(); i++)
+                        clinic_names_list.add(clinic_hashmap.get(i).get("clinic_name"));
+
+                    clinic_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, android.R.layout.simple_expandable_list_item_1, clinic_names_list);
+                    lv.setAdapter(clinic_names_adapter);
+                }
+            }, new ErrorListener<VolleyError>() {
+                public void getError(VolleyError error) {
+                    make(root, "Network error", LENGTH_SHORT).show();
+                }
+            });
+
+               /*
+            *  Watching for search_text changes
+            *  Then filter the clinic_names_adapter using the search_text value
+            *  Note that this is the original Clinic Listing so clinic_names_adapter
+            *  is used to display list of clinic names
+            */
+            search_text.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    PatientConsultationActivity.this.clinic_names_adapter.getFilter().filter(charSequence);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+              /*
+            * Item click listener for clinic listview
+            * In real world terms this is when the user selects a clinic
+            * */
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    /*
+                    * Insert the reload doctors list here with a place from clinics filter
+                    * */
+                    String val = doctorClinicHashmap.get(i).get("clinics_id");
+                    doctorsHashmap = dc.getAllDoctorsWithFilter("clinic", val);
+                    d("dh", doctorsHashmap + "");
+                    populateDoctorListView();
+                    letDialogSleep();
+                }
+            });
+        } else if (filter.equals("clinic_chooser")) {
+            view_dialog_picker = LayoutInflater.from(getBaseContext()).inflate(R.layout.show_clinic_dialog, null);
+            final ListView lv = (ListView) view_dialog_picker.findViewById(R.id.list_of_something_to_choose);
+            final EditText search_text = (EditText) view_dialog_picker.findViewById(R.id.search_bar_for_dialog);
+
+            getJSONobj(getBaseContext(), "get_clinics", "clinics", "clinics_id", new RespondListener<JSONObject>() {
+                @Override
+                public void getResult(JSONObject response) {
+
+                    getJSONobj(getBaseContext(), "get_clinic_doctor", "clinic_doctor", "clinic_doctor_id", new RespondListener<JSONObject>() {
+                        @Override
+                        public void getResult(JSONObject response) {
+                            final ArrayList<HashMap<String, String>> clinic_hashmap = cc.getDoctorClinics(the_chosen_doctor);
+                            d("chosen_doctor_clinics", clinic_hashmap + "");
+                            ArrayList<String> clinic_names_list = new ArrayList();
+//
+                            for (int i = 0; i < clinic_hashmap.size(); i++)
+                                clinic_names_list.add(clinic_hashmap.get(i).get("clinic_name"));
+
+                            ArrayAdapter clinic_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, android.R.layout.simple_expandable_list_item_1, clinic_names_list);
+                            lv.setAdapter(clinic_names_adapter);
+
+                            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    d("clinic_id =", clinic_hashmap.get(i).get("clinics_id") + "");
+                                    consult.setClinicID(Integer.parseInt(clinic_hashmap.get(i).get("clinics_id")));
+                                    consult.setDoctorID(the_chosen_doctor);
+                                    String c_name = clinic_hashmap.get(i).get("clinic_name");
+                                    String d_name = clinic_hashmap.get(i).get("doctor_name");
+                                    the_chosen_one.setText("Doctor: "+d_name+" \nClinic: "+c_name);
+                                    letDialogSleep();
+                                }
+                            });
+                        }
+                    }, new ErrorListener<VolleyError>() {
+                        public void getError(VolleyError error) {
+                            make(root, "Network error", LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }, new ErrorListener<VolleyError>() {
+                public void getError(VolleyError error) {
+                    make(root, "Network error", LENGTH_SHORT).show();
+                }
+            });
+
+               /*
+            *  Watching for search_text changes
+            *  Then filter the clinic_names_adapter using the search_text value
+            *  Note that clinic_names_adapter here is used to
+            *  display clinics of Selected Doctor only
+            */
+            search_text.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    PatientConsultationActivity.this.clinic_names_adapter.getFilter().filter(charSequence);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+        }
+
+        builder = new AlertDialog.Builder(PatientConsultationActivity.this);
+        builder.setView(view_dialog_picker);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    void letDialogSleep() {
+        dialog.dismiss();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int check = 0;
 
         if (item.getItemId() == R.id.save) {
-            if (search_doctor.getText().toString().equals("")) {
-                search_doctor.setError("Field required");
-                check += 1;
-            } else if (listOfClinic.get(0).equals("Choose a Doctor")) {
-                search_doctor.setError("Name not found");
-                check += 1;
-            }
-
             if (check == 0) {
-                for (int i = 0; i < doctorClinicHashmap.size(); i++) {
-                    if (doctorClinicHashmap.get(i).get("clinic_name").equals(spinner_clinic.getSelectedItem().toString()))
-                        consult.setClinicID(Integer.parseInt(doctorClinicHashmap.get(i).get("clinics_id")));
-                }
-
                 consult.setPatientID(SidebarActivity.getUserID());
-                consult.setDoctorID(doctor_id);
                 consult.setDate(txtDate.getText().toString());
                 consult.setIsAlarmed(isAlarm);
                 consult.setAlarmedTime(time_alarm);
@@ -207,6 +546,8 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
                 hashMap.put("time", "");
                 hashMap.put("is_alarm", String.valueOf(consult.getIsAlarmed()));
                 hashMap.put("alarm_time", consult.getAlarmedTime());
+                hashMap.put("comment_doctor", "");
+                hashMap.put("comment_patient", "");
 
                 final ProgressDialog pdialog = new ProgressDialog(this);
                 pdialog.setMessage("Please wait...");
@@ -216,25 +557,26 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
                     @Override
                     public void getResult(JSONObject response) {
                         try {
+                            d("response", response + "");
                             consult.setServerID(response.getInt("last_inserted_id"));
                             consult.setCreated_at(response.getString("created_at"));
 
                             if (pcc.savePatientConsultation(consult, request)) {
                                 alarmService.patientConsultationReminder();
                                 PatientConsultationActivity.this.finish();
-                                Snackbar.make(root, "Your request has been submitted. Please wait for your confirmation.", Snackbar.LENGTH_SHORT).show();
+                                make(root, "Your request has been submitted. Please wait for your confirmation.", LENGTH_SHORT).show();
                             } else
-                                Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
+                                make(root, "Error occurred", LENGTH_SHORT).show();
                         } catch (Exception e) {
-                            Log.d("patient_consultation", e + "");
-                            Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
+                            d("patient_consultation", e + "");
+                            make(root, "Server error occurred", LENGTH_SHORT).show();
                         }
                         pdialog.dismiss();
                     }
                 }, new ErrorListener<VolleyError>() {
                     public void getError(VolleyError error) {
                         pdialog.dismiss();
-                        Snackbar.make(root, "Network Error", Snackbar.LENGTH_SHORT).show();
+                        make(root, "Network Error", LENGTH_SHORT).show();
                     }
                 });
             }
@@ -269,6 +611,18 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
                 RadialTimePickerDialogFragment timePickerDialog = RadialTimePickerDialogFragment.newInstance(this, new_hour, minute, DateFormat.is24HourFormat(PatientConsultationActivity.this));
 
                 timePickerDialog.show(getSupportFragmentManager(), "timePickerDialogFragment");
+                break;
+
+            case R.id.search_specialty_btn:
+                showsearchDialog("specialty");
+                break;
+
+            case R.id.search_place_btn:
+                showsearchDialog("place");
+                break;
+
+            case R.id.search_clinic_btn:
+                showsearchDialog("clinic");
                 break;
         }
     }
@@ -343,7 +697,7 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
         }
     }
 
-    @Override
+   /* @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
     }
@@ -364,5 +718,5 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
     @Override
     public void afterTextChanged(Editable s) {
 
-    }
+    }*/
 }

@@ -123,14 +123,16 @@ public class ProductCategoriesActivity extends AppCompatActivity implements View
                     int count = 0;
 
                     if (success == 1) {
-                        JSONArray json_mysql = response.getJSONArray("baskets");
+                        if (response.getBoolean("has_contents")) {
+                            JSONArray json_mysql = response.getJSONArray("baskets");
 
-                        for (int x = 0; x < json_mysql.length(); x++)
-                            count += 1;
+                            for (int x = 0; x < json_mysql.length(); x++)
+                                count += 1;
 
-                        if (count > 0) {
-                            number_of_notif.setVisibility(View.VISIBLE);
-                            number_of_notif.setText(String.valueOf(count));
+                            if (count > 0) {
+                                number_of_notif.setVisibility(View.VISIBLE);
+                                number_of_notif.setText(String.valueOf(count));
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -179,16 +181,18 @@ public class ProductCategoriesActivity extends AppCompatActivity implements View
                     int success = response.getInt("success");
 
                     if (success == 1) {
-                        JSONArray json_array = response.getJSONArray("product_categories");
+                        if(response.getBoolean("has_contents")){
+                            JSONArray json_array = response.getJSONArray("product_categories");
 
-                        for (int x = 0; x < json_array.length(); x++) {
-                            JSONObject obj = json_array.getJSONObject(x);
-                            HashMap<String, String> new_map = new HashMap<>();
-                            new_map.put("category_id", obj.getString("id"));
-                            new_map.put("category_name", obj.getString("name"));
-                            new_map.put("background_color", obj.getString("background_color"));
-                            new_map.put("background_icon", "");
-                            categories.add(new_map);
+                            for (int x = 0; x < json_array.length(); x++) {
+                                JSONObject obj = json_array.getJSONObject(x);
+                                HashMap<String, String> new_map = new HashMap<>();
+                                new_map.put("category_id", obj.getString("id"));
+                                new_map.put("category_name", obj.getString("name"));
+                                new_map.put("background_color", obj.getString("background_color"));
+                                new_map.put("background_icon", "");
+                                categories.add(new_map);
+                            }
                         }
                     }
                 } catch (Exception e) {

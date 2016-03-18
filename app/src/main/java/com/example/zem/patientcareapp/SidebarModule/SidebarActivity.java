@@ -424,6 +424,8 @@ public class SidebarActivity extends AppCompatActivity {
                     int success = response.getInt("success");
                     int count = 0;
                     if (success == 1) {
+                        if(response.getBoolean("has_contents")) {
+
                         JSONArray json_mysql = response.getJSONArray("baskets");
 
                         for (int x = 0; x < json_mysql.length(); x++)
@@ -433,6 +435,7 @@ public class SidebarActivity extends AppCompatActivity {
                             number_of_notif.setVisibility(View.VISIBLE);
                             number_of_notif.setText(String.valueOf(count));
                         }
+                       }
                     } else
                         number_of_notif.setVisibility(View.GONE);
                 } catch (Exception e) {

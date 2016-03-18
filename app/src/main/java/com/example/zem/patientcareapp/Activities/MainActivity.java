@@ -272,6 +272,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         editor.putString(name, uname);
                                         editor.putString(pass, helpers.md5(password));
                                         editor.apply();
+                                        editor.commit();
 
                                         String patient_image_name = patient_json_array_mysql.getJSONObject(0).getString("photo");
                                         if (!patient_image_name.equals(""))

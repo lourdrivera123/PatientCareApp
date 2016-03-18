@@ -35,17 +35,18 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static android.util.Log.d;
+
 public class HomeTileFragment extends Fragment implements View.OnClickListener {
+    static int patientID;
     LinearLayout orderLayout, refillLayout, pointsLayout, prescriptionLayout, consultationLayout;
     TextView notifConsultation;
     LinearLayout root;
-
     DbHelper db;
     PatientConsultationController pcc;
     PatientTreatmentsController ptc;
     PatientRecordController prc;
     OrderPreferenceController opc;
-    static int patientID;
     Context context;
 
     View rootView;
@@ -89,25 +90,28 @@ public class HomeTileFragment extends Fragment implements View.OnClickListener {
                     int success = response.getInt("success");
 
                     if (success == 1) {
-                        JSONArray json_mysql = response.getJSONArray("consultations");
-                        notifConsultation.setVisibility(View.VISIBLE);
+                        if (response.getBoolean("has_contents")) {
+                            JSONArray json_mysql = response.getJSONArray("consultations");
+                            notifConsultation.setVisibility(View.VISIBLE);
 
-                        for (int x = 0; x < json_mysql.length(); x++) {
-                            JSONObject obj = json_mysql.getJSONObject(x);
+                            for (int x = 0; x < json_mysql.length(); x++) {
+                                JSONObject obj = json_mysql.getJSONObject(x);
 
-                            if (!pcc.updateSomeConsultation(obj))
-                                Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
+                                d("pcc_json", obj + "");
+                                if (!pcc.updateSomeConsultation(obj))
+                                    Snackbar.make(root, "Cannot Update Consultation", Snackbar.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 } catch (Exception e) {
-                    Log.d("home1", e + "");
+                    d("home1", e + "");
                     Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                 }
             }
         }, new ErrorListener<VolleyError>() {
             @Override
             public void getError(VolleyError e) {
-                Log.d("home2", e + "");
+                d("home2", e + "");
                 Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
             }
         });

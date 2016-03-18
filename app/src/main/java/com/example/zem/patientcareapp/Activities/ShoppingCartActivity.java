@@ -96,27 +96,29 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                     int success = response.getInt("success");
 
                     if (success == 1) {
-                        JSONArray json_mysql = response.getJSONArray("promos");
+                        if (response.getBoolean("has_contents")) {
+                            JSONArray json_mysql = response.getJSONArray("promos");
 
-                        for (int x = 0; x < json_mysql.length(); x++) {
-                            JSONObject obj = json_mysql.getJSONObject(x);
-                            HashMap<String, String> map = new HashMap<>();
+                            for (int x = 0; x < json_mysql.length(); x++) {
+                                JSONObject obj = json_mysql.getJSONObject(x);
+                                HashMap<String, String> map = new HashMap<>();
 
-                            if (obj.getString("product_applicability").equals("SPECIFIC_PRODUCTS")) {
-                                map.put("promo_id", obj.getString("pr_promo_id"));
-                                map.put("minimum_purchase", obj.getString("minimum_purchase"));
-                                map.put("quantity_required", obj.getString("quantity_required"));
-                                map.put("is_every", obj.getString("is_every"));
-                                map.put("product_id", obj.getString("product_id"));
-                                map.put("has_free_gifts", obj.getString("has_free_gifts"));
-                                map.put("percentage_discount", obj.getString("percentage_discount"));
-                                map.put("peso_discount", obj.getString("peso_discount"));
-                                map.put("free_product_id", obj.getString("free_product_id"));
-                                map.put("name", obj.getString("name"));
-                                map.put("quantity_free", obj.getString("quantity_free"));
-                                map.put("free_product_packing", obj.getString("free_product_packing"));
-                                map.put("free_prod_price", obj.getString("free_prod_price"));
-                                no_code_promos.add(map);
+                                if (obj.getString("product_applicability").equals("SPECIFIC_PRODUCTS")) {
+                                    map.put("promo_id", obj.getString("pr_promo_id"));
+                                    map.put("minimum_purchase", obj.getString("minimum_purchase"));
+                                    map.put("quantity_required", obj.getString("quantity_required"));
+                                    map.put("is_every", obj.getString("is_every"));
+                                    map.put("product_id", obj.getString("product_id"));
+                                    map.put("has_free_gifts", obj.getString("has_free_gifts"));
+                                    map.put("percentage_discount", obj.getString("percentage_discount"));
+                                    map.put("peso_discount", obj.getString("peso_discount"));
+                                    map.put("free_product_id", obj.getString("free_product_id"));
+                                    map.put("name", obj.getString("name"));
+                                    map.put("quantity_free", obj.getString("quantity_free"));
+                                    map.put("free_product_packing", obj.getString("free_product_packing"));
+                                    map.put("free_prod_price", obj.getString("free_prod_price"));
+                                    no_code_promos.add(map);
+                                }
                             }
                         }
                     }
@@ -132,21 +134,23 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                             int success = response.getInt("success");
 
                             if (success == 1) {
-                                if (response.getBoolean("basket_quantity_changed")) {
-                                    letDialogSleep();
-                                    cartQuantityUpdated();
-                                }
-                                JSONArray json_mysql = response.getJSONArray("baskets");
-                                d("baskets_json", json_mysql + "");
+                                if (response.getBoolean("has_contents")) {
+                                    if (response.getBoolean("basket_quantity_changed")) {
+                                        letDialogSleep();
+                                        cartQuantityUpdated();
+                                    }
+                                    JSONArray json_mysql = response.getJSONArray("baskets");
+                                    d("baskets_json", json_mysql + "");
 
-                                if (json_mysql.length() == 0) {
-                                    lisOfItems.setVisibility(View.GONE);
-                                    no_items_label.setVisibility(View.VISIBLE);
+                                    if (json_mysql.length() == 0) {
+                                        lisOfItems.setVisibility(View.GONE);
+                                        no_items_label.setVisibility(View.VISIBLE);
+                                    }
+                                    items = bc.convertFromJson(ShoppingCartActivity.this, json_mysql);
+                                    items1.addAll(items);
+                                    adapter = new ShoppingCartAdapter(ShoppingCartActivity.this, R.layout.item_shopping_cart, items);
+                                    lisOfItems.setAdapter(adapter);
                                 }
-                                items = bc.convertFromJson(ShoppingCartActivity.this, json_mysql);
-                                items1.addAll(items);
-                                adapter = new ShoppingCartAdapter(ShoppingCartActivity.this, R.layout.item_shopping_cart, items);
-                                lisOfItems.setAdapter(adapter);
                             }
                         } catch (Exception e) {
                             Toast.makeText(ShoppingCartActivity.this, e + "", Toast.LENGTH_SHORT).show();
@@ -323,6 +327,8 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
             params.put("action", "multiple_update_for_basket");
             params.put("jsobj", json_to_be_passed.toString());
 
+            d("params_sc", params + "");
+
             PostRequest.send(ShoppingCartActivity.this, params, new RespondListener<JSONObject>() {
                 @Override
                 public void getResult(JSONObject response) {
@@ -330,33 +336,35 @@ public class ShoppingCartActivity extends AppCompatActivity implements View.OnCl
                     try {
                         int success = response.getInt("success");
                         if (success == 1) {
-                            if (check == 1) {
-                                if (order_model.isValid()) {
-                                    Intent intent = new Intent(ShoppingCartActivity.this, SummaryActivity.class);
-                                    intent.putExtra("order_model", order_model);
-                                    startActivity(intent);
-                                    ShoppingCartActivity.this.finish();
-                                } else {
-                                    Intent intent = new Intent(ShoppingCartActivity.this, DeliverPickupOption.class);
-                                    intent.putExtra("order_model", order_model);
-                                    startActivity(intent);
-                                    ShoppingCartActivity.this.finish();
+                            if (response.getBoolean("has_contents")) {
+                                if (check == 1) {
+                                    if (order_model.isValid()) {
+                                        Intent intent = new Intent(ShoppingCartActivity.this, SummaryActivity.class);
+                                        intent.putExtra("order_model", order_model);
+                                        startActivity(intent);
+                                        ShoppingCartActivity.this.finish();
+                                    } else {
+                                        Intent intent = new Intent(ShoppingCartActivity.this, DeliverPickupOption.class);
+                                        intent.putExtra("order_model", order_model);
+                                        startActivity(intent);
+                                        ShoppingCartActivity.this.finish();
+                                    }
                                 }
                             }
                         }
                     } catch (Exception e) {
-                        Log.d("shoppingCartAct", e + "");
+                        d("shoppingCartAct", e + "");
                         Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }, new ErrorListener<VolleyError>() {
                 public void getError(VolleyError error) {
-                    Log.d("shoppingCartAct1", error + "");
+                    d("shoppingCartAct1", error + "");
                     Snackbar.make(root, "Network Error", Snackbar.LENGTH_SHORT).show();
                 }
             });
         } catch (JSONException e) {
-            Log.d("shoppingCartAct2", e + "");
+            d("shoppingCartAct2", e + "");
             Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
         }
     }

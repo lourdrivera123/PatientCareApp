@@ -65,8 +65,8 @@ public class ProductCategoryController extends DbHelper {
             id = cur.getInt(0);
             cur.moveToNext();
         }
-        sql_db.close();
         cur.close();
+        sql_db.close();
         return id;
     }
 

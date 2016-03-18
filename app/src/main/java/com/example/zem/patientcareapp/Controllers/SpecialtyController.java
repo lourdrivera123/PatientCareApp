@@ -2,9 +2,13 @@ package com.example.zem.patientcareapp.Controllers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.zem.patientcareapp.Model.Specialty;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Zem on 11/24/2015.
@@ -47,4 +51,25 @@ public class SpecialtyController extends DbHelper {
         sql_db.close();
         return rowID > 0;
     }
+
+    public ArrayList<HashMap<String, String>> getAllSpecialties() {
+        ArrayList<HashMap<String, String>> listOfSpecialties = new ArrayList<>();
+        SQLiteDatabase sql_db = dbhelper.getWritableDatabase();
+
+        String sql = "SELECT * FROM " + TBL_SPECIALTIES;
+        Cursor cur = sql_db.rawQuery(sql, null);
+
+        while (cur.moveToNext()) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("specialty_id", String.valueOf(cur.getInt(cur.getColumnIndex(SERVER_SPECIALTY_ID))));
+            map.put("specialty_name", cur.getString(cur.getColumnIndex(SPECIALTY_NAME)));
+            listOfSpecialties.add(map);
+        }
+
+        cur.close();
+        sql_db.close();
+
+        return listOfSpecialties;
+    }
+
 }

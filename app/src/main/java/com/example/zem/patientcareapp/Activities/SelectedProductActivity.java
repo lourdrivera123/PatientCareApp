@@ -230,19 +230,22 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                             final HashMap<String, String> old_basket = new HashMap<>();
 
                             if (success == 1) {
-                                JSONArray json_mysql = response.getJSONArray("baskets");
+                                if (response.getBoolean("has_contents")) {
 
-                                for (int x = 0; x < json_mysql.length(); x++) {
-                                    JSONObject obj = json_mysql.getJSONObject(x);
-                                    basket_count += 1;
+                                    JSONArray json_mysql = response.getJSONArray("baskets");
 
-                                    Log.d("object", obj + "");
+                                    for (int x = 0; x < json_mysql.length(); x++) {
+                                        JSONObject obj = json_mysql.getJSONObject(x);
+                                        basket_count += 1;
 
-                                    if (get_productID == obj.getInt("product_id")) {
-                                        check += 1;
-                                        old_basket.put("basket_id", obj.getString("id"));
-                                        old_basket.put("product_id", obj.getString("product_id"));
-                                        old_basket.put("old_qty", obj.getString("quantity"));
+                                        Log.d("object", obj + "");
+
+                                        if (get_productID == obj.getInt("product_id")) {
+                                            check += 1;
+                                            old_basket.put("basket_id", obj.getString("id"));
+                                            old_basket.put("product_id", obj.getString("product_id"));
+                                            old_basket.put("old_qty", obj.getString("quantity"));
+                                        }
                                     }
                                 }
                             }
@@ -446,6 +449,7 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                     int success = response.getInt("success");
 
                     if (success == 1) {
+                        if (response.getBoolean("has_contents")) {
                         JSONArray json_mysql = response.getJSONArray("products");
 
                         for (int x = 0; x < json_mysql.length(); x++) {
@@ -470,6 +474,7 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                         prod.setSku(obj.getString("sku"));
                         prod.setAvailableQuantity(obj.getInt("available_quantity"));
                     }
+                }
                 } catch (Exception e) {
                     Snackbar.make(root, e + "", Snackbar.LENGTH_SHORT).show();
                 }
@@ -520,14 +525,17 @@ public class SelectedProductActivity extends AppCompatActivity implements View.O
                     int success = response.getInt("success");
                     int count = 0;
                     if (success == 1) {
-                        JSONArray json_mysql = response.getJSONArray("baskets");
+                        if (response.getBoolean("has_contents")) {
 
-                        for (int x = 0; x < json_mysql.length(); x++)
-                            count++;
+                            JSONArray json_mysql = response.getJSONArray("baskets");
 
-                        if (count > 0) {
-                            number_of_notif.setVisibility(View.VISIBLE);
-                            number_of_notif.setText(String.valueOf(count));
+                            for (int x = 0; x < json_mysql.length(); x++)
+                                count++;
+
+                            if (count > 0) {
+                                number_of_notif.setVisibility(View.VISIBLE);
+                                number_of_notif.setText(String.valueOf(count));
+                            }
                         }
                     } else
                         number_of_notif.setVisibility(View.GONE);

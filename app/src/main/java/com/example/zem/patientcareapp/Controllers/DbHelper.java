@@ -98,7 +98,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     /////////////////////////////INSERT METHODS///////////////////////////////////////
-    public boolean insertTableNamesToUpdates(String table_name, SQLiteDatabase db) {
+    public boolean insertTableNamesToUpdates(String table_name, SQLiteDatabase sql_db) {
+//        SQLiteDatabase sql_db = getWritableDatabase();
         Date now = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -107,7 +108,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(UpdateController.UPDATE_TIMESTAMP, formatter.format(now));
         values.put(UpdateController.UPDATE_SEEN, 0);
 
-        long rowID = db.insert(UpdateController.TBL_UPDATES, null, values);
+        long rowID = sql_db.insert(UpdateController.TBL_UPDATES, null, values);
         return rowID > 0;
     }
 

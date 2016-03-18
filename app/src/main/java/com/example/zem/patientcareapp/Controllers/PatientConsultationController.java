@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.util.Log.d;
+
 /**
  * Created by Zem on 11/23/2015.
  */
@@ -103,8 +105,9 @@ public class PatientConsultationController extends DbHelper {
 
             listOfAllConsultations.add(map);
         }
-        sql_db.close();
+
         cur.close();
+        sql_db.close();
 
         return listOfAllConsultations;
     }
@@ -123,6 +126,7 @@ public class PatientConsultationController extends DbHelper {
             updated_id = sql_db.update(TBL_PATIENT_CONSULTATIONS, values, CONSULT_SERVER_ID + " = " + json.getInt("id"), null);
 
         } catch (JSONException e) {
+            d("j_err", e +"");
             e.printStackTrace();
         }
         sql_db.close();
@@ -153,7 +157,7 @@ public class PatientConsultationController extends DbHelper {
         SQLiteDatabase sql_db = dbhelper.getWritableDatabase();
         long deletedID = sql_db.delete(TBL_PATIENT_CONSULTATIONS, AI_ID + " = " + AI_id, null);
 
-        Log.d("delete", deletedID + "");
+        d("delete", deletedID + "");
         sql_db.close();
         return deletedID > 0;
     }

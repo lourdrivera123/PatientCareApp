@@ -456,16 +456,18 @@ public class ShoppingCartAdapter extends ArrayAdapter implements View.OnClickLis
                                     int success = response.getInt("success");
 
                                     if (success == 1) {
-                                        cart_total_amount = 0;
-                                        objects.remove(pos);
-                                        ShoppingCartAdapter.this.notifyDataSetChanged();
+                                        if (response.getBoolean("has_contents")) {
+                                            cart_total_amount = 0;
+                                            objects.remove(pos);
+                                            ShoppingCartAdapter.this.notifyDataSetChanged();
 
-                                        if (objects.size() == 0) {
-                                            ShoppingCartActivity.total_amount.setText("---");
-                                            ShoppingCartActivity.total_savings.setText("---");
+                                            if (objects.size() == 0) {
+                                                ShoppingCartActivity.total_amount.setText("---");
+                                                ShoppingCartActivity.total_savings.setText("---");
+                                            }
+
+                                            Snackbar.make(v, "Item has been deleted", Snackbar.LENGTH_SHORT).show();
                                         }
-
-                                        Snackbar.make(v, "Item has been deleted", Snackbar.LENGTH_SHORT).show();
                                     } else
                                         Snackbar.make(v, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                                 } catch (JSONException e) {

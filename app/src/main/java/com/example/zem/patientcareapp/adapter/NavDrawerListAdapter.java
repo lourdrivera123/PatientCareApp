@@ -51,10 +51,10 @@ public class NavDrawerListAdapter extends BaseAdapter {
         icon.setImageResource(navDrawerItems.get(position).getIcon());
 
         // displaying count. check whether it set visible or not
-        if (navDrawerItems.get(position).getCounterVisibility()) {
+     /*   if (navDrawerItems.get(position).getCounterVisibility()) {
             txtCount.setText(navDrawerItems.get(position).getCount());
         } else
-            txtCount.setVisibility(View.GONE);
+            txtCount.setVisibility(View.GONE);*/
 
         return convertView;
     }

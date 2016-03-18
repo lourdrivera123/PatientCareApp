@@ -630,6 +630,8 @@ public class EditTabsActivity extends AppCompatActivity implements ViewPager.OnP
                                         patient.setReferral_id(response);
                                         params.put("referral_id", patient.getReferral_id());
 
+                                        Log.d("pili_pinas", params+"");
+
                                         PostRequest.send(getBaseContext(), params, new RespondListener<JSONObject>() {
                                             @Override
                                             public void getResult(JSONObject response) {

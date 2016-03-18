@@ -402,6 +402,8 @@ public class Sync {
         try {
             clinic.setName(json.getString("name"));
             clinic.setClinicsId(json.getInt("id"));
+            clinic.setBarangay_id(json.getInt("barangay_id"));
+            clinic.setCity_id(json.getInt("city_municipality_id"));
             clinic.setContactNumber(json.getString("contact_no"));
             clinic.setFullAddress(json.getString(ClinicController.CLINIC_BARANGAY), json.getString(ClinicController.CLINIC_CITY),
                     json.getString(ClinicController.CLINIC_PROVINCE), json.getString(ClinicController.CLINIC_REGION));

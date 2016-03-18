@@ -113,6 +113,8 @@ public class ContactsFragment extends Fragment implements AdapterView.OnItemSele
                         hashOfRegions.add(map_region);
                     }
 
+
+                    ArrayList<String> listOfRegions = new ArrayList<>();
                     for (int y = 0; y < hashOfRegions.size(); y++)
                         listOfRegions.add(hashOfRegions.get(y).get("name"));
 

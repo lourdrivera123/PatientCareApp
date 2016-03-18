@@ -16,6 +16,8 @@ import com.example.zem.patientcareapp.Interface.RespondListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static android.util.Log.d;
+
 public class GetRequest {
 
     public static void getJSONobj(final Context c, final String q, final String table_name, final String table_id, final RespondListener<JSONObject> listener, final ErrorListener<VolleyError> errorlistener) {
@@ -32,9 +34,10 @@ public class GetRequest {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    d("has_contents", response.getBoolean("has_contents") + "");
                     //condition here must not be success cause it still return 1, it shuold be something like if the table name
                     //is not on response json array
-                    if(response.getInt("success") > 0){
+                    if(response.getBoolean("has_contents")){
                         Sync sync = new Sync();
                         sync.init(c, table_name, table_id, response);
                             upc.updateLastUpdatedTable(table_name, response.getString("latest_updated_at"));
@@ -52,7 +55,7 @@ public class GetRequest {
             @Override
             public void onErrorResponse(VolleyError error) {
                 errorlistener.getError(error);
-                Log.d("error <GetRequest> ", error + "");
+                d("error <GetRequest> ", error + "");
             }
         });
         queue.add(jsonrequest);

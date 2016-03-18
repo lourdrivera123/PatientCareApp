@@ -73,7 +73,7 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
     Intent get_intent;
 
     public static ArrayList<Map<String, String>> temp_products_items = new ArrayList<>(), products_items = new ArrayList<>(), basket_items;
-    public static ArrayList<HashMap<String, String>> specific_no_code;
+    public static ArrayList<HashMap<String, String>> specific_no_code = new ArrayList<>();;
     public static HashMap<String, String> map = new HashMap<>();
     ArrayList<HashMap<Integer, HashMap<String, String>>> searchProducts = new ArrayList<>();
 
@@ -125,23 +125,24 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
                     int success = response.getInt("success");
 
                     if (success == 1) {
-                        JSONArray json_mysql = response.getJSONArray("promos");
-                        specific_no_code = new ArrayList<>();
+                        if (response.getBoolean("has_contents")) {
+                            JSONArray json_mysql = response.getJSONArray("promos");
 
-                        for (int x = 0; x < json_mysql.length(); x++) {
-                            JSONObject obj = json_mysql.getJSONObject(x);
-                            HashMap<String, String> map = new HashMap<>();
+                            for (int x = 0; x < json_mysql.length(); x++) {
+                                JSONObject obj = json_mysql.getJSONObject(x);
+                                HashMap<String, String> map = new HashMap<>();
 
-                            if (obj.getString("product_applicability").equals("SPECIFIC_PRODUCTS")) {
-                                map.put("promo_id", obj.getString("pr_promo_id"));
-                                map.put("minimum_purchase", obj.getString("minimum_purchase"));
-                                map.put("quantity_required", obj.getString("quantity_required"));
-                                map.put("is_every", obj.getString("is_every"));
-                                map.put("product_id", obj.getString("product_id"));
-                                map.put("has_free_gifts", obj.getString("has_free_gifts"));
-                                map.put("percentage_discount", obj.getString("percentage_discount"));
-                                map.put("peso_discount", obj.getString("peso_discount"));
-                                specific_no_code.add(map);
+                                if (obj.getString("product_applicability").equals("SPECIFIC_PRODUCTS")) {
+                                    map.put("promo_id", obj.getString("pr_promo_id"));
+                                    map.put("minimum_purchase", obj.getString("minimum_purchase"));
+                                    map.put("quantity_required", obj.getString("quantity_required"));
+                                    map.put("is_every", obj.getString("is_every"));
+                                    map.put("product_id", obj.getString("product_id"));
+                                    map.put("has_free_gifts", obj.getString("has_free_gifts"));
+                                    map.put("percentage_discount", obj.getString("percentage_discount"));
+                                    map.put("peso_discount", obj.getString("peso_discount"));
+                                    specific_no_code.add(map);
+                                }
                             }
                         }
                     }
@@ -210,8 +211,10 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
                         int success = response.getInt("success");
 
                         if (success == 1) {
-                            hashMap.put("server_id", String.valueOf(response.getInt("last_inserted_id")));
-                            transferHashMap(hashMap);
+                            if(response.getBoolean("has_contents")) {
+                                hashMap.put("server_id", String.valueOf(response.getInt("last_inserted_id")));
+                                transferHashMap(hashMap);
+                            }
                         }
                     } catch (Exception e) {
                         Log.d("exception3", e + "");
@@ -369,23 +372,25 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
                     int count = 0;
 
                     if (success == 1) {
-                        JSONArray json_mysql = response.getJSONArray("baskets");
+                        if(response.getBoolean("has_contents")) {
+                            JSONArray json_mysql = response.getJSONArray("baskets");
 
-                        for (int x = 0; x < json_mysql.length(); x++) {
-                            JSONObject obj = json_mysql.getJSONObject(x);
-                            count += 1;
+                            for (int x = 0; x < json_mysql.length(); x++) {
+                                JSONObject obj = json_mysql.getJSONObject(x);
+                                count += 1;
 
-                            HashMap<String, String> map = new HashMap<>();
-                            map.put("server_id", String.valueOf(obj.getInt("id")));
-                            map.put("product_id", String.valueOf(obj.getInt("product_id")));
-                            map.put("quantity", String.valueOf(obj.getInt("quantity")));
-                            map.put("prescription_id", String.valueOf(obj.getInt("prescription_id")));
-                            basket_items.add(map);
-                        }
+                                HashMap<String, String> map = new HashMap<>();
+                                map.put("server_id", String.valueOf(obj.getInt("id")));
+                                map.put("product_id", String.valueOf(obj.getInt("product_id")));
+                                map.put("quantity", String.valueOf(obj.getInt("quantity")));
+                                map.put("prescription_id", String.valueOf(obj.getInt("prescription_id")));
+                                basket_items.add(map);
+                            }
 
-                        if (count > 0) {
-                            number_of_notif.setVisibility(View.VISIBLE);
-                            number_of_notif.setText(String.valueOf(count));
+                            if (count > 0) {
+                                number_of_notif.setVisibility(View.VISIBLE);
+                                number_of_notif.setText(String.valueOf(count));
+                            }
                         }
                     } else
                         number_of_notif.setVisibility(View.GONE);
@@ -469,8 +474,10 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
                     public void getResult(JSONObject response) {
                         try {
                             if (response.getInt("success") > 0) {
-                                JSONArray json_array = response.getJSONArray("products");
-                                setCategoryAdapter(json_array);
+                                if (response.getBoolean("has_contents")) {
+                                    JSONArray json_array = response.getJSONArray("products");
+                                    setCategoryAdapter(json_array);
+                                }
                             } else {
                                 no_products.setVisibility(View.VISIBLE);
                                 listOfProducts.setVisibility(View.GONE);

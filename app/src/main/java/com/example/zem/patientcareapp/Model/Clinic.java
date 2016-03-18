@@ -6,13 +6,21 @@ package com.example.zem.patientcareapp.Model;
 public class Clinic {
     String name, contactNumber, createdAt, updatedAt, deletedAt, address_barangay = "", address_city_municipality = "",
             address_province = "", address_region = "", addition_address = "";
-    int id, clinicsId, barangay_id;
+    int id, clinicsId, barangay_id, city_id;
 
     public Clinic() {
 
     }
 
     /* SETTERS */
+
+    public int getCity_id() {
+        return city_id;
+    }
+
+    public void setCity_id(int city_id) {
+        this.city_id = city_id;
+    }
 
     public void setId(int id) {
         this.id = id;
