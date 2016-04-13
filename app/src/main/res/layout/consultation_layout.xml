@@ -77,7 +77,6 @@
                         android:layout_height="wrap_content"
                         android:text="Clinic" />
 
-
                 </LinearLayout>
 
                 <EditText
@@ -90,12 +89,13 @@
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:fillViewport="true">
-
+                    android:fillViewport="true"
+                    android:padding="5dp">
                     <ListView
                         android:id="@+id/doctors_list"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"/>
                 </ScrollView>
 
             </LinearLayout>

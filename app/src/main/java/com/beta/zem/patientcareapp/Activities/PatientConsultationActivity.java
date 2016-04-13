@@ -213,7 +213,7 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
 
         d("doctor_log", listOfDoctors + "");
 
-        doctorListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, listOfDoctors);
+        doctorListAdapter = new ArrayAdapter<String>(this, R.layout.regular_list_item, listOfDoctors);
         doctors_list.setAdapter(doctorListAdapter);
 
         doctors_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -255,7 +255,7 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
                             for (int i = 0; i < specialty_hashmap.size(); i++)
                                 specialty_names_list.add(specialty_hashmap.get(i).get("specialty_name"));
 
-                            specialty_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, android.R.layout.simple_expandable_list_item_1, specialty_names_list);
+                            specialty_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, R.layout.regular_list_item, specialty_names_list);
                             lv.setAdapter(specialty_names_adapter);
                         }
                     }, new ErrorListener<VolleyError>() {
@@ -323,7 +323,7 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
                     for (int i = 0; i < clinic_hashmap.size(); i++)
                         clinic_names_list.add(clinic_hashmap.get(i).get("address_city_municipality"));
 
-                    clinic_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, android.R.layout.simple_expandable_list_item_1, clinic_names_list);
+                    clinic_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, R.layout.regular_list_item, clinic_names_list);
                     lv.setAdapter(clinic_names_adapter);
                 }
             }, new ErrorListener<VolleyError>() {
@@ -386,7 +386,7 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
                     for (int i = 0; i < clinic_hashmap.size(); i++)
                         clinic_names_list.add(clinic_hashmap.get(i).get("clinic_name"));
 
-                    clinic_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, android.R.layout.simple_expandable_list_item_1, clinic_names_list);
+                    clinic_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, R.layout.regular_list_item, clinic_names_list);
                     lv.setAdapter(clinic_names_adapter);
                 }
             }, new ErrorListener<VolleyError>() {
@@ -453,7 +453,7 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
                             for (int i = 0; i < clinic_hashmap.size(); i++)
                                 clinic_names_list.add(clinic_hashmap.get(i).get("clinic_name"));
 
-                            ArrayAdapter clinic_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, android.R.layout.simple_expandable_list_item_1, clinic_names_list);
+                            ArrayAdapter clinic_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, R.layout.regular_list_item, clinic_names_list);
                             lv.setAdapter(clinic_names_adapter);
 
                             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
