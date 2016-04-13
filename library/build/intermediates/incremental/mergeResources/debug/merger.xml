@@ -1639,7 +1639,7 @@
              The drawable to show in the button for expanding the activities overflow popup.
              <strong>Note:</strong> Clients would like to set this drawable
              as a clue about the action the chosen activity will perform. For
-             example, if share activity is to be chosen the drawable should
+             beta, if share activity is to be chosen the drawable should
              give a clue that sharing is to be performed.
         -->
         <attr format="reference" name="expandActivityOverflowButtonDrawable"/>
@@ -2407,7 +2407,7 @@
 
         <!-- Text color. -->
         <attr name="android:textColor"/>
-        <!-- Size of the text. Recommended dimension type for text is "sp" for scaled-pixels (example: 15sp). -->
+        <!-- Size of the text. Recommended dimension type for text is "sp" for scaled-pixels (beta: 15sp). -->
         <attr name="android:textSize"/>
         <!-- Style (bold, italic, bolditalic) for the text. -->
         <attr name="android:textStyle"/>

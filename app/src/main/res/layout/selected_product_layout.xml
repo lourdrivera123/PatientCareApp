@@ -33,7 +33,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="150dp" />
 
-                <com.example.zem.patientcareapp.ImageGallery.CirclePageIndicator
+                <com.beta.zem.patientcareapp.ImageGallery.CirclePageIndicator
                     android:id="@+id/indicator"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

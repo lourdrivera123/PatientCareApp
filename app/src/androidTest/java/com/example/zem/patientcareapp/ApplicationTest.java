@@ -1,4 +1,4 @@
-package com.example.zem.patientcareapp;
+package com.beta.zem.patientcareapp;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

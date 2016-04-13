@@ -148,7 +148,7 @@
         <item quantity="one">; pour une fois</item>
         <item quantity="other">; pour <xliff:g id="number">%d</xliff:g> fois</item>
     </plurals>
-    <!-- A description for an event that repeats daily. For example, Every 2 days [CHAR LIMIT=15]-->
+    <!-- A description for an event that repeats daily. For beta, Every 2 days [CHAR LIMIT=15]-->
     <plurals name="daily">
         <item quantity="one">Quotidien</item>
         <item quantity="other">Tous les <xliff:g id="number">%d</xliff:g> jours</item>
@@ -156,14 +156,14 @@
     <!-- A label in a multiple-choice list for the specifying that an event
          repeats every weekday (Monday through Friday) -->
     <string name="every_weekday">"Tous les jours de semaine (Lun\u2013Ven)"</string>
-    <!-- A description for an event that repeats weekly on some day of the week. For example,
+    <!-- A description for an event that repeats weekly on some day of the week. For beta,
          'Weekly on mardi' or Every 2 weeks on lundi, mardi.  [CHAR LIMIT=25]-->
     <plurals name="weekly">
         <item quantity="one">Hebdomadaire le <xliff:g id="days_of_week">%2$s</xliff:g></item>
         <item quantity="other">Toutes les <xliff:g id="number">%1$d</xliff:g> semaines le <xliff:g id="days_of_week">%2$s</xliff:g></item>
     </plurals>
     <!-- The common portion of a string describing how often an event repeats,
-         example: 'Monthly (on day 2)' -->
+         beta: 'Monthly (on day 2)' -->
     <string name="monthly">Mensuel</string>
     <!-- Calendar spinner item, to select that an event recurs every year. -->
     <string name="yearly_plain">Annuel</string>

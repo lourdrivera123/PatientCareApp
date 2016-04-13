@@ -336,7 +336,7 @@ ACTIVITY MANAGER CONTENT PROVIDERS (dumpsys activity providers)
       -> 646:com.android.launcher/u0a8 s1/1 u0/0 +22m14s540ms
       -> 1158:com.android.packageinstaller/u0a44 s1/1 u0/0 +21m53s813ms
       -> 1199:com.android.defcontainer/u0a3 s1/1 u0/0 +19m22s572ms
-      -> 1325:com.example.zem.patientcareapp/u0a182 s1/1 u0/0 +18m51s111ms
+      -> 1325:beta.zem.patientcareapp/u0a182 s1/1 u0/0 +18m51s111ms
       -> 1179:com.android.gallery3d/u0a32 s1/1 u0/0 +18m15s789ms
 
   Published user 0 content providers (by class):
@@ -476,27 +476,27 @@ ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)
 
   Stack #1:
     Task id #4
-      TaskRecord{52b70b88 #4 A=com.example.zem.patientcareapp U=0 sz=3}
-      Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 cmp=com.example.zem.patientcareapp/.SplashActivity }
-        Hist #2: ActivityRecord{52b7c4b8 u0 com.example.zem.patientcareapp/.MasterTabActivity t4}
-          Intent { cmp=com.example.zem.patientcareapp/.MasterTabActivity (has extras) }
-          ProcessRecord{52941968 1325:com.example.zem.patientcareapp/u0a182}
-        Hist #1: ActivityRecord{529da5a8 u0 com.example.zem.patientcareapp/.SidebarActivity t4}
-          Intent { cmp=com.example.zem.patientcareapp/.SidebarActivity }
-          ProcessRecord{52941968 1325:com.example.zem.patientcareapp/u0a182}
-        Hist #0: ActivityRecord{5282357c u0 com.example.zem.patientcareapp/.MainActivity t4}
-          Intent { cmp=com.example.zem.patientcareapp/.MainActivity }
-          ProcessRecord{52941968 1325:com.example.zem.patientcareapp/u0a182}
+      TaskRecord{52b70b88 #4 A=beta.zem.patientcareapp U=0 sz=3}
+      Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 cmp=beta.zem.patientcareapp/.SplashActivity }
+        Hist #2: ActivityRecord{52b7c4b8 u0 beta.zem.patientcareapp/.MasterTabActivity t4}
+          Intent { cmp=beta.zem.patientcareapp/.MasterTabActivity (has extras) }
+          ProcessRecord{52941968 1325:beta.zem.patientcareapp/u0a182}
+        Hist #1: ActivityRecord{529da5a8 u0 beta.zem.patientcareapp/.SidebarActivity t4}
+          Intent { cmp=beta.zem.patientcareapp/.SidebarActivity }
+          ProcessRecord{52941968 1325:beta.zem.patientcareapp/u0a182}
+        Hist #0: ActivityRecord{5282357c u0 beta.zem.patientcareapp/.MainActivity t4}
+          Intent { cmp=beta.zem.patientcareapp/.MainActivity }
+          ProcessRecord{52941968 1325:beta.zem.patientcareapp/u0a182}
 
     Running activities (most recent first):
-      TaskRecord{52b70b88 #4 A=com.example.zem.patientcareapp U=0 sz=3}
-        Run #2: ActivityRecord{52b7c4b8 u0 com.example.zem.patientcareapp/.MasterTabActivity t4}
-        Run #1: ActivityRecord{529da5a8 u0 com.example.zem.patientcareapp/.SidebarActivity t4}
-        Run #0: ActivityRecord{5282357c u0 com.example.zem.patientcareapp/.MainActivity t4}
+      TaskRecord{52b70b88 #4 A=beta.zem.patientcareapp U=0 sz=3}
+        Run #2: ActivityRecord{52b7c4b8 u0 beta.zem.patientcareapp/.MasterTabActivity t4}
+        Run #1: ActivityRecord{529da5a8 u0 beta.zem.patientcareapp/.SidebarActivity t4}
+        Run #0: ActivityRecord{5282357c u0 beta.zem.patientcareapp/.MainActivity t4}
 
-    mResumedActivity: ActivityRecord{52b7c4b8 u0 com.example.zem.patientcareapp/.MasterTabActivity t4}
+    mResumedActivity: ActivityRecord{52b7c4b8 u0 beta.zem.patientcareapp/.MasterTabActivity t4}
 
-  mFocusedActivity: ActivityRecord{52b7c4b8 u0 com.example.zem.patientcareapp/.MasterTabActivity t4}
+  mFocusedActivity: ActivityRecord{52b7c4b8 u0 beta.zem.patientcareapp/.MasterTabActivity t4}
   mDismissKeyguardOnNextActivity=false
   mFocusedStack=ActivityStack{52b6dddc stackId=2, 1 tasks} mStackState=STACK_STATE_HOME_IN_BACK
   mSleepTimeout=false
@@ -504,7 +504,7 @@ ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)
   mUserStackInFront={}
 
   Recent tasks:
-  * Recent #0: TaskRecord{52b70b88 #4 A=com.example.zem.patientcareapp U=0 sz=3}
+  * Recent #0: TaskRecord{52b70b88 #4 A=beta.zem.patientcareapp U=0 sz=3}
   * Recent #1: TaskRecord{5290dffc #1 A=com.android.launcher U=0 sz=1}
   * Recent #2: TaskRecord{529ec884 #3 A=com.android.packageinstaller U=0 sz=0}
 
@@ -513,7 +513,7 @@ ACTIVITY MANAGER RUNNING PROCESSES (dumpsys activity processes)
     PERS #19: sys   F/ /P  trm: 0 470:system/1000 (fixed)
     PERS #18: pers  F/ /P  trm: 0 525:com.android.systemui/u0a7 (fixed)
     PERS #17: pers  F/ /P  trm: 0 632:com.android.phone/1001 (fixed)
-    Proc # 0: fore  F/A/T  trm: 0 1325:com.example.zem.patientcareapp/u0a182 (top-activity)
+    Proc # 0: fore  F/A/T  trm: 0 1325:beta.zem.patientcareapp/u0a182 (top-activity)
     Proc #16: vis   F/ /IF trm: 0 741:com.android.smspush/u0a55 (service)
         com.android.smspush/.WapPushManager<=Proc{632:com.android.phone/1001}
     Proc # 5: vis   F/ /IF trm: 0 602:com.android.inputmethod.latin/u0a35 (service)
@@ -541,5 +541,5 @@ ACTIVITY MANAGER RUNNING PROCESSES (dumpsys activity processes)
   mStartedUserArray: [0]
   mUserLru: [0]
   mHomeProcess: ProcessRecord{5295532c 646:com.android.launcher/u0a8}
-  mPreviousProcess: ProcessRecord{52941968 1325:com.example.zem.patientcareapp/u0a182}
+  mPreviousProcess: ProcessRecord{52941968 1325:beta.zem.patientcareapp/u0a182}
   mConfiguration: {1.0 ?mcc?mnc en_US ldltr sw384dp w384dp h567dp 320dpi nrml port finger qwerty/v/v dpad/v s.5}

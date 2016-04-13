@@ -1,5 +1,5 @@
-TASK com.example.zem.patientcareapp id=48
-  ACTIVITY com.example.zem.patientcareapp/.SidebarActivity 53710abc pid=25179
+TASK beta.zem.patientcareapp id=48
+  ACTIVITY beta.zem.patientcareapp/.SidebarActivity 53710abc pid=25179
     Local FragmentActivity 53578fbc State:
       mCreated=truemResumed=true mStopped=false mReallyStopped=false
       mLoadersStarted=true
@@ -11,20 +11,20 @@ TASK com.example.zem.patientcareapp id=48
         mHidden=false mDetached=false mMenuVisible=true mHasMenu=false
         mRetainInstance=false mRetaining=false mUserVisibleHint=true
         mFragmentManager=FragmentManager{53578120 in SidebarActivity{53578fbc}}
-        mActivity=com.example.zem.patientcareapp.SidebarModule.SidebarActivity@53578fbc
+        mActivity=beta.zem.patientcareapp.SidebarModule.SidebarActivity@53578fbc
         mContainer=android.widget.FrameLayout@53666354
         mView=android.widget.LinearLayout@5368a50c
         mInnerView=android.widget.LinearLayout@5368a50c
         Child FragmentManager{5368a398 in ReferralsFragment{53689e18}}:
           FragmentManager misc state:
-            mActivity=com.example.zem.patientcareapp.SidebarModule.SidebarActivity@53578fbc
+            mActivity=beta.zem.patientcareapp.SidebarModule.SidebarActivity@53578fbc
             mContainer=android.support.v4.app.Fragment$1@5368a3d4
             mParent=ReferralsFragment{53689e18 #0 id=0x7f0d011f}
             mCurState=5 mStateSaved=false mDestroyed=false
     Added Fragments:
       #0: ReferralsFragment{53689e18 #0 id=0x7f0d011f}
     FragmentManager misc state:
-      mActivity=com.example.zem.patientcareapp.SidebarModule.SidebarActivity@53578fbc
+      mActivity=beta.zem.patientcareapp.SidebarModule.SidebarActivity@53578fbc
       mContainer=android.support.v4.app.FragmentActivity$2@5356f3ac
       mCurState=5 mStateSaved=false mDestroyed=false
     View Hierarchy:
@@ -59,7 +59,7 @@ TASK com.example.zem.patientcareapp id=48
                   android.widget.TextView{536639c4 G.ED.... ... 0,0-0,0 #7f0d0087 app:id/counter}
           com.android.internal.widget.ActionBarContainer{53641f54 G.ED.... ... 0,0-0,0 #102031c android:id/split_action_bar}
 
-  ACTIVITY com.example.zem.patientcareapp/.MainActivity 53679d64 pid=25179
+  ACTIVITY beta.zem.patientcareapp/.MainActivity 53679d64 pid=25179
     Local Activity 5364f790 State:
       mResumed=false mStopped=true mFinished=false
       mLoadersStarted=false

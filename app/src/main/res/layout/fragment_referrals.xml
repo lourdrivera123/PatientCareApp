@@ -58,7 +58,7 @@
                     android:layout_height="1dip"
                     android:background="@color/ColorPrimary" />
 
-                <com.example.zem.patientcareapp.Customizations.NonScrollListView
+                <com.beta.zem.patientcareapp.Customizations.NonScrollListView
                     android:id="@+id/used_points_log"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
                     android:layout_height="1dip"
                     android:background="@color/ColorPrimary" />
 
-                <com.example.zem.patientcareapp.Customizations.NonScrollListView
+                <com.beta.zem.patientcareapp.Customizations.NonScrollListView
                     android:id="@+id/earned_points_log"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
                 </LinearLayout>
 
 
-                <com.example.zem.patientcareapp.Customizations.NonScrollListView
+                <com.beta.zem.patientcareapp.Customizations.NonScrollListView
                     android:id="@+id/downlines"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><!-- suppress ALL -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.zem.patientcareapp">
+    package="com.beta.zem.patientcareapp"
+    android:versionCode="2"
+    android:versionName="1.2">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -44,7 +46,7 @@
 
     <!-- [END gcm_permission] -->
     <application
-        android:name=".Network.PatientCareApplication"
+        android:name="com.beta.zem.patientcareapp.Network.PatientCareApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_app"
         android:label="@string/app_name"
@@ -52,7 +54,7 @@
 
         <!-- start of bullshit here -->
         <activity
-            android:name=".gcm.gcmquickstart.MainActivity"
+            android:name="com.beta.zem.patientcareapp.gcm.gcmquickstart.MainActivity"
             android:label="@string/app_name" />
 
         <!-- [START gcm_receiver] -->
@@ -71,7 +73,7 @@
 
         <!-- [START gcm_listener] -->
         <service
-            android:name=".gcm.gcmquickstart.MyGcmListenerService"
+            android:name="com.beta.zem.patientcareapp.gcm.gcmquickstart.MyGcmListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -80,7 +82,7 @@
         <!-- [END gcm_listener] -->
         <!-- [START instanceId_listener] -->
         <service
-            android:name=".gcm.gcmquickstart.MyInstanceIDListenerService"
+            android:name="com.beta.zem.patientcareapp.gcm.gcmquickstart.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
@@ -89,7 +91,7 @@
 
         <!-- [END instanceId_listener] -->
         <service
-            android:name=".gcm.gcmquickstart.RegistrationIntentService"
+            android:name="com.beta.zem.patientcareapp.gcm.gcmquickstart.RegistrationIntentService"
             android:exported="false" />
         <!-- end of bullshit here -->
 
@@ -102,28 +104,28 @@
 
         <!-- Activities -->
         <activity
-            android:name=".Activities.ShoppingCartActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.ShoppingCartActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.MainActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.MainActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.DoctorActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.DoctorActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.ViewPatientRecordActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.ViewPatientRecordActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".SwipeTabsModule.ViewPagerActivity"
+            android:name="com.beta.zem.patientcareapp.SwipeTabsModule.ViewPagerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.SearchAllProductsActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.SearchAllProductsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme">
@@ -136,40 +138,40 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SwipeTabsModule.MasterTabActivity"
+            android:name="com.beta.zem.patientcareapp.SwipeTabsModule.MasterTabActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".SwipeTabsModule.EditTabsActivity"
+            android:name="com.beta.zem.patientcareapp.SwipeTabsModule.EditTabsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activities.SaveMedicalRecordActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.SaveMedicalRecordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.SelectedProductActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.SelectedProductActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.ProductCategoriesActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.ProductCategoriesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.ReferralActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.ReferralActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.PatientConsultationActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.PatientConsultationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.MessageActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.MessageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.SplashActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -178,15 +180,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ShowPrescriptionDialog"
+            android:name="com.beta.zem.patientcareapp.ShowPrescriptionDialog"
             android:excludeFromRecents="true"
             android:theme="@style/myDialog" />
         <activity
-            android:name=".Activities.GoogleMapsActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.GoogleMapsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".Activities.ProductsActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.ProductsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme">
@@ -199,39 +201,39 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.OrderDetailsActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.OrderDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".SidebarModule.SidebarActivity"
+            android:name="com.beta.zem.patientcareapp.SidebarModule.SidebarActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".CheckoutModule.DeliverPickupOption"
+            android:name="com.beta.zem.patientcareapp.CheckoutModule.DeliverPickupOption"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".CheckoutModule.AddressForDelivery"
+            android:name="com.beta.zem.patientcareapp.CheckoutModule.AddressForDelivery"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".CheckoutModule.RecipientForDelivery"
+            android:name="com.beta.zem.patientcareapp.CheckoutModule.RecipientForDelivery"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".CheckoutModule.PaymentMethod"
+            android:name="com.beta.zem.patientcareapp.CheckoutModule.PaymentMethod"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".CheckoutModule.PromosDiscounts"
+            android:name="com.beta.zem.patientcareapp.CheckoutModule.PromosDiscounts"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".CheckoutModule.SummaryActivity"
+            android:name="com.beta.zem.patientcareapp.CheckoutModule.SummaryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".CheckoutModule.ContactForDelivery"
+            android:name="com.beta.zem.patientcareapp.CheckoutModule.ContactForDelivery"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
 
@@ -255,23 +257,23 @@
             android:name="io.card.payment.DataEntryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CheckoutModule.PayPalCheckout"
+            android:name="com.beta.zem.patientcareapp.CheckoutModule.PayPalCheckout"
             android:screenOrientation="portrait" />
 
         <!-- Will not be called unless the application explicitly enables it -->
         <receiver
-            android:name=".AlarmModule.DeviceBootReceiver"
+            android:name="com.beta.zem.patientcareapp.AlarmModule.DeviceBootReceiver"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".AlarmModule.AlarmReceiver"
+            android:name="com.beta.zem.patientcareapp.AlarmModule.AlarmReceiver"
             android:enabled="true" />
 
         <activity
-            android:name=".Activities.SeniorCitizenActivity"
+            android:name="com.beta.zem.patientcareapp.Activities.SeniorCitizenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
     </application>

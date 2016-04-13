@@ -15,7 +15,7 @@ ACTIVITY MANAGER PENDING INTENTS (dumpsys activity intents)
   * PendingIntentRecord{528c6584 android broadcastIntent}
   * PendingIntentRecord{52925bd8 android broadcastIntent}
   * PendingIntentRecord{528b89ec android broadcastIntent}
-  * PendingIntentRecord{52952a90 com.example.zem.patientcareapp broadcastIntent}
+  * PendingIntentRecord{52952a90 beta.zem.patientcareapp broadcastIntent}
   * PendingIntentRecord{5296eb10 com.android.calendar broadcastIntent}
   * PendingIntentRecord{52997248 com.android.providers.calendar broadcastIntent}
   * PendingIntentRecord{5291bd8c android broadcastIntent}
@@ -185,26 +185,26 @@ ACTIVITY MANAGER BROADCAST STATE (dumpsys activity broadcasts)
   #0: BroadcastRecord{52a8bd6c u-1 com.android.server.action.NETWORK_STATS_UPDATED}
     act=com.android.server.action.NETWORK_STATS_UPDATED flg=0x40000010
   #1: BroadcastRecord{529df768 u0 android.intent.action.PACKAGE_REPLACED}
-    act=android.intent.action.PACKAGE_REPLACED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REPLACED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #2: BroadcastRecord{52b25c74 u0 android.search.action.SEARCHABLES_CHANGED}
     act=android.search.action.SEARCHABLES_CHANGED flg=0x24000010
   #3: BroadcastRecord{529df4d0 u0 android.intent.action.PACKAGE_ADDED}
-    act=android.intent.action.PACKAGE_ADDED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_ADDED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #4: BroadcastRecord{52afe550 u0 android.search.action.SEARCHABLES_CHANGED}
     act=android.search.action.SEARCHABLES_CHANGED flg=0x24000010
   #5: BroadcastRecord{529df114 u0 android.intent.action.PACKAGE_REMOVED}
-    act=android.intent.action.PACKAGE_REMOVED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REMOVED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.REMOVED_FOR_ALL_USERS=false, android.intent.extra.UID=10061, android.intent.extra.DATA_REMOVED=false, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #6: BroadcastRecord{529df700 u0 android.intent.action.PACKAGE_REPLACED}
-    act=android.intent.action.PACKAGE_REPLACED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REPLACED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #7: BroadcastRecord{529df468 u0 android.intent.action.PACKAGE_ADDED}
-    act=android.intent.action.PACKAGE_ADDED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_ADDED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #8: BroadcastRecord{529df0ac u0 android.intent.action.PACKAGE_REMOVED}
-    act=android.intent.action.PACKAGE_REMOVED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REMOVED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.REMOVED_FOR_ALL_USERS=false, android.intent.extra.UID=10061, android.intent.extra.DATA_REMOVED=false, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #9: BroadcastRecord{52992778 u0 com.android.inputmethod.latin.personalization.DICT_DECAY}
     act=com.android.inputmethod.latin.personalization.DICT_DECAY flg=0x14 (has extras)
@@ -226,26 +226,26 @@ ACTIVITY MANAGER BROADCAST STATE (dumpsys activity broadcasts)
   #15: BroadcastRecord{52b5dad0 u-1 com.android.server.action.NETWORK_STATS_UPDATED}
     act=com.android.server.action.NETWORK_STATS_UPDATED flg=0x40000010
   #16: BroadcastRecord{52a833d8 u0 android.intent.action.PACKAGE_REPLACED}
-    act=android.intent.action.PACKAGE_REPLACED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REPLACED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #17: BroadcastRecord{52b26a30 u0 android.search.action.SEARCHABLES_CHANGED}
     act=android.search.action.SEARCHABLES_CHANGED flg=0x24000010
   #18: BroadcastRecord{52abc6f0 u0 android.intent.action.PACKAGE_ADDED}
-    act=android.intent.action.PACKAGE_ADDED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_ADDED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #19: BroadcastRecord{52a25bc8 u0 android.search.action.SEARCHABLES_CHANGED}
     act=android.search.action.SEARCHABLES_CHANGED flg=0x24000010
   #20: BroadcastRecord{52a2c950 u0 android.intent.action.PACKAGE_REMOVED}
-    act=android.intent.action.PACKAGE_REMOVED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REMOVED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.REMOVED_FOR_ALL_USERS=false, android.intent.extra.UID=10061, android.intent.extra.DATA_REMOVED=false, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #21: BroadcastRecord{52a832f4 u0 android.intent.action.PACKAGE_REPLACED}
-    act=android.intent.action.PACKAGE_REPLACED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REPLACED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #22: BroadcastRecord{529e97ac u0 android.intent.action.PACKAGE_ADDED}
-    act=android.intent.action.PACKAGE_ADDED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_ADDED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #23: BroadcastRecord{52a2c8e8 u0 android.intent.action.PACKAGE_REMOVED}
-    act=android.intent.action.PACKAGE_REMOVED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REMOVED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.REMOVED_FOR_ALL_USERS=false, android.intent.extra.UID=10061, android.intent.extra.DATA_REMOVED=false, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #24: BroadcastRecord{52b55f9c u-1 com.android.server.action.NETWORK_STATS_UPDATED}
     act=com.android.server.action.NETWORK_STATS_UPDATED flg=0x40000010
@@ -254,22 +254,22 @@ ACTIVITY MANAGER BROADCAST STATE (dumpsys activity broadcasts)
   #26: BroadcastRecord{52aa7e28 u0 android.search.action.SEARCHABLES_CHANGED}
     act=android.search.action.SEARCHABLES_CHANGED flg=0x24000010
   #27: BroadcastRecord{52b2d34c u0 android.intent.action.PACKAGE_REPLACED}
-    act=android.intent.action.PACKAGE_REPLACED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REPLACED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #28: BroadcastRecord{52a0012c u0 android.intent.action.PACKAGE_ADDED}
-    act=android.intent.action.PACKAGE_ADDED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_ADDED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #29: BroadcastRecord{52b5bb54 u0 android.intent.action.PACKAGE_REMOVED}
-    act=android.intent.action.PACKAGE_REMOVED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REMOVED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.REMOVED_FOR_ALL_USERS=false, android.intent.extra.UID=10061, android.intent.extra.DATA_REMOVED=false, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #30: BroadcastRecord{52b2d2e4 u0 android.intent.action.PACKAGE_REPLACED}
-    act=android.intent.action.PACKAGE_REPLACED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REPLACED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #31: BroadcastRecord{529fff90 u0 android.intent.action.PACKAGE_ADDED}
-    act=android.intent.action.PACKAGE_ADDED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_ADDED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #32: BroadcastRecord{52b5baec u0 android.intent.action.PACKAGE_REMOVED}
-    act=android.intent.action.PACKAGE_REMOVED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REMOVED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.REMOVED_FOR_ALL_USERS=false, android.intent.extra.UID=10061, android.intent.extra.DATA_REMOVED=false, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #33: BroadcastRecord{52b625ac u-1 com.android.server.action.NETWORK_STATS_UPDATED}
     act=com.android.server.action.NETWORK_STATS_UPDATED flg=0x40000010
@@ -278,22 +278,22 @@ ACTIVITY MANAGER BROADCAST STATE (dumpsys activity broadcasts)
   #35: BroadcastRecord{529f5808 u0 android.search.action.SEARCHABLES_CHANGED}
     act=android.search.action.SEARCHABLES_CHANGED flg=0x24000010
   #36: BroadcastRecord{52b40d88 u0 android.intent.action.PACKAGE_REPLACED}
-    act=android.intent.action.PACKAGE_REPLACED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REPLACED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #37: BroadcastRecord{52a2b000 u0 android.intent.action.PACKAGE_ADDED}
-    act=android.intent.action.PACKAGE_ADDED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_ADDED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #38: BroadcastRecord{52b3e71c u0 android.intent.action.PACKAGE_REMOVED}
-    act=android.intent.action.PACKAGE_REMOVED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REMOVED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.REMOVED_FOR_ALL_USERS=false, android.intent.extra.UID=10061, android.intent.extra.DATA_REMOVED=false, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #39: BroadcastRecord{52b40d20 u0 android.intent.action.PACKAGE_REPLACED}
-    act=android.intent.action.PACKAGE_REPLACED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REPLACED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #40: BroadcastRecord{52a2e33c u0 android.intent.action.PACKAGE_ADDED}
-    act=android.intent.action.PACKAGE_ADDED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_ADDED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #41: BroadcastRecord{52b3e6b4 u0 android.intent.action.PACKAGE_REMOVED}
-    act=android.intent.action.PACKAGE_REMOVED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REMOVED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.REMOVED_FOR_ALL_USERS=false, android.intent.extra.UID=10061, android.intent.extra.DATA_REMOVED=false, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #42: BroadcastRecord{52a9c484 u-1 com.android.server.action.NETWORK_STATS_UPDATED}
     act=com.android.server.action.NETWORK_STATS_UPDATED flg=0x40000010
@@ -304,16 +304,16 @@ ACTIVITY MANAGER BROADCAST STATE (dumpsys activity broadcasts)
   #45: BroadcastRecord{529eecc0 u0 android.search.action.SEARCHABLES_CHANGED}
     act=android.search.action.SEARCHABLES_CHANGED flg=0x24000010
   #46: BroadcastRecord{52b3add8 u0 android.intent.action.PACKAGE_REPLACED}
-    act=android.intent.action.PACKAGE_REPLACED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REPLACED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #47: BroadcastRecord{52b93830 u0 android.intent.action.PACKAGE_ADDED}
-    act=android.intent.action.PACKAGE_ADDED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_ADDED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #48: BroadcastRecord{52b50f24 u0 android.intent.action.PACKAGE_REMOVED}
-    act=android.intent.action.PACKAGE_REMOVED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REMOVED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.REMOVED_FOR_ALL_USERS=false, android.intent.extra.UID=10061, android.intent.extra.DATA_REMOVED=false, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   #49: BroadcastRecord{52ac6ffc u0 android.intent.action.PACKAGE_REPLACED}
-    act=android.intent.action.PACKAGE_REPLACED dat=package:com.example.zem.patientcareapp flg=0x4000010 (has extras)
+    act=android.intent.action.PACKAGE_REPLACED dat=package:beta.zem.patientcareapp flg=0x4000010 (has extras)
     extras: Bundle[{android.intent.extra.UID=10061, android.intent.extra.REPLACING=true, android.intent.extra.user_handle=0}]
   ...
 
@@ -366,9 +366,9 @@ ACTIVITY MANAGER CONTENT PROVIDERS (dumpsys activity providers)
   * ContentProviderRecord{52998a28 u0 com.svox.pico/.providers.SettingsProvider}
     proc=ProcessRecord{52a27d70 1603:com.svox.pico/u0a47}
     authority=com.svox.pico.providers.SettingsProvider
-  * ContentProviderRecord{529a45f0 u0 com.example.zem.patientcareapp/com.google.android.gms.measurement.AppMeasurementContentProvider}
-    proc=ProcessRecord{52941850 3264:com.example.zem.patientcareapp/u0a61}
-    authority=com.example.zem.patientcareapp.google_measurement_service
+  * ContentProviderRecord{529a45f0 u0 beta.zem.patientcareapp/com.google.android.gms.measurement.AppMeasurementContentProvider}
+    proc=ProcessRecord{52941850 3264:beta.zem.patientcareapp/u0a61}
+    authority=beta.zem.patientcareapp.google_measurement_service
   * ContentProviderRecord{528ea3a4 u0 com.android.launcher/com.android.launcher2.LauncherProvider}
     proc=ProcessRecord{5294c274 992:com.android.launcher/u0a8}
     authority=com.android.launcher2.settings
@@ -479,23 +479,23 @@ ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)
 
   Stack #1:
     Task id #16
-      TaskRecord{52a95e1c #16 A=com.example.zem.patientcareapp U=0 sz=2}
-      Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 cmp=com.example.zem.patientcareapp/.Activities.SplashActivity }
-        Hist #1: ActivityRecord{52b9c040 u0 com.example.zem.patientcareapp/.SidebarModule.SidebarActivity t16}
-          Intent { cmp=com.example.zem.patientcareapp/.SidebarModule.SidebarActivity }
-          ProcessRecord{52941850 3264:com.example.zem.patientcareapp/u0a61}
-        Hist #0: ActivityRecord{52a97638 u0 com.example.zem.patientcareapp/.Activities.MainActivity t16}
-          Intent { cmp=com.example.zem.patientcareapp/.Activities.MainActivity }
-          ProcessRecord{52941850 3264:com.example.zem.patientcareapp/u0a61}
+      TaskRecord{52a95e1c #16 A=beta.zem.patientcareapp U=0 sz=2}
+      Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 cmp=beta.zem.patientcareapp/.Activities.SplashActivity }
+        Hist #1: ActivityRecord{52b9c040 u0 beta.zem.patientcareapp/.SidebarModule.SidebarActivity t16}
+          Intent { cmp=beta.zem.patientcareapp/.SidebarModule.SidebarActivity }
+          ProcessRecord{52941850 3264:beta.zem.patientcareapp/u0a61}
+        Hist #0: ActivityRecord{52a97638 u0 beta.zem.patientcareapp/.Activities.MainActivity t16}
+          Intent { cmp=beta.zem.patientcareapp/.Activities.MainActivity }
+          ProcessRecord{52941850 3264:beta.zem.patientcareapp/u0a61}
 
     Running activities (most recent first):
-      TaskRecord{52a95e1c #16 A=com.example.zem.patientcareapp U=0 sz=2}
-        Run #1: ActivityRecord{52b9c040 u0 com.example.zem.patientcareapp/.SidebarModule.SidebarActivity t16}
-        Run #0: ActivityRecord{52a97638 u0 com.example.zem.patientcareapp/.Activities.MainActivity t16}
+      TaskRecord{52a95e1c #16 A=beta.zem.patientcareapp U=0 sz=2}
+        Run #1: ActivityRecord{52b9c040 u0 beta.zem.patientcareapp/.SidebarModule.SidebarActivity t16}
+        Run #0: ActivityRecord{52a97638 u0 beta.zem.patientcareapp/.Activities.MainActivity t16}
 
-    mResumedActivity: ActivityRecord{52b9c040 u0 com.example.zem.patientcareapp/.SidebarModule.SidebarActivity t16}
+    mResumedActivity: ActivityRecord{52b9c040 u0 beta.zem.patientcareapp/.SidebarModule.SidebarActivity t16}
 
-  mFocusedActivity: ActivityRecord{52b9c040 u0 com.example.zem.patientcareapp/.SidebarModule.SidebarActivity t16}
+  mFocusedActivity: ActivityRecord{52b9c040 u0 beta.zem.patientcareapp/.SidebarModule.SidebarActivity t16}
   mDismissKeyguardOnNextActivity=false
   mFocusedStack=ActivityStack{52a8e064 stackId=15, 1 tasks} mStackState=STACK_STATE_HOME_IN_BACK
   mSleepTimeout=false
@@ -503,7 +503,7 @@ ACTIVITY MANAGER ACTIVITIES (dumpsys activity activities)
   mUserStackInFront={}
 
   Recent tasks:
-  * Recent #0: TaskRecord{52a95e1c #16 A=com.example.zem.patientcareapp U=0 sz=2}
+  * Recent #0: TaskRecord{52a95e1c #16 A=beta.zem.patientcareapp U=0 sz=2}
   * Recent #1: TaskRecord{5294bbf0 #1 A=com.android.launcher U=0 sz=1}
 
 ACTIVITY MANAGER RUNNING PROCESSES (dumpsys activity processes)
@@ -511,7 +511,7 @@ ACTIVITY MANAGER RUNNING PROCESSES (dumpsys activity processes)
     PERS #15: sys   F/ /P  trm: 0 813:system/1000 (fixed)
     PERS #14: pers  F/ /P  trm: 0 870:com.android.systemui/u0a7 (fixed)
     PERS #13: pers  F/ /P  trm: 0 979:com.android.phone/1001 (fixed)
-    Proc # 0: fore  F/A/T  trm: 0 3264:com.example.zem.patientcareapp/u0a61 (top-activity)
+    Proc # 0: fore  F/A/T  trm: 0 3264:beta.zem.patientcareapp/u0a61 (top-activity)
     Proc #12: vis   F/ /IF trm: 0 1048:com.android.smspush/u0a55 (service)
         com.android.smspush/.WapPushManager<=Proc{979:com.android.phone/1001}
     Proc # 3: vis   F/ /IF trm: 0 960:com.android.inputmethod.latin/u0a35 (service)

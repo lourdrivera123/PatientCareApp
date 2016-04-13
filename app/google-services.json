@@ -39,10 +39,10 @@
     {
       "client_info": {
         "mobilesdk_app_id": "1:235736150487:android:a657281aae1f1a1e",
-        "client_id": "android:com.example.zem.patientcareapp",
+        "client_id": "android:com.beta.zem.patientcareapp",
         "client_type": 1,
         "android_client_info": {
-          "package_name": "com.example.zem.patientcareapp"
+          "package_name": "com.beta.zem.patientcareapp"
         }
       },
       "oauth_client": [],

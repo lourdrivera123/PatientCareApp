@@ -429,7 +429,7 @@
                     android:layout_height="wrap_content"
                     android:padding="16dp">
 
-                    <com.example.zem.patientcareapp.Customizations.NonScrollListView
+                    <com.beta.zem.patientcareapp.Customizations.NonScrollListView
                         android:id="@+id/order_summary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

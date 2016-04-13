@@ -164,7 +164,7 @@ public class RadialTimePickerDialogFragment extends DialogFragment implements On
 
     /**
      * @param styleResId a style modeled after the styleable "BetterPickersRadialTimePickerDialog".
-     *                   There is an example in the android-betterpickers sample under res/values/styles.xml
+     *                   There is an beta in the android-betterpickers sample under res/values/styles.xml
      */
     public void setThemeCustom(int styleResId) {
         mStyleResId = styleResId;
