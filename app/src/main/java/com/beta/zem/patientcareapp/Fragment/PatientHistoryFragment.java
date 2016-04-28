@@ -267,36 +267,38 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                     int success = response.getInt("success");
 
                     if (success == 1) {
-                        JSONArray json_mysql = response.getJSONArray("clinic_patient_doctor");
-                        JSONArray array = new JSONArray();
-                        int cpr_id;
+                        if (response.getBoolean("has_contents")) {
+                            JSONArray json_mysql = response.getJSONArray("clinic_patient_doctor");
+                            JSONArray array = new JSONArray();
+                            int cpr_id;
 
-                        if (json_mysql.length() > 1) {
-                            for (int x = 0; x < json_mysql.length() - 1; x++) {
-                                JSONObject obj = json_mysql.getJSONObject(x);
+                            if (json_mysql.length() > 1) {
+                                for (int x = 0; x < json_mysql.length() - 1; x++) {
+                                    JSONObject obj = json_mysql.getJSONObject(x);
 
-                                cpr_id = obj.getInt("cpr_id");
+                                    cpr_id = obj.getInt("cpr_id");
 
-                                for (int y = (x + 1); y < json_mysql.length(); y++) {
-                                    JSONObject obj_future = json_mysql.getJSONObject(y);
+                                    for (int y = (x + 1); y < json_mysql.length(); y++) {
+                                        JSONObject obj_future = json_mysql.getJSONObject(y);
 
-                                    if (obj.getString("pr_record_id").equals("")) {
-                                        if (cpr_id != obj_future.getInt("cpr_id")) {
-                                            insertHistory(array);
-                                            array = new JSONArray();
-                                            array.put(obj_future);
-                                        } else {
-                                            array.put(obj);
-                                            array.put(obj_future);
+                                        if (obj.getString("pr_record_id").equals("")) {
+                                            if (cpr_id != obj_future.getInt("cpr_id")) {
+                                                insertHistory(array);
+                                                array = new JSONArray();
+                                                array.put(obj_future);
+                                            } else {
+                                                array.put(obj);
+                                                array.put(obj_future);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        } else if (json_mysql.length() == 1){
-                            JSONObject obj = json_mysql.getJSONObject(0);
+                            } else if (json_mysql.length() == 1) {
+                                JSONObject obj = json_mysql.getJSONObject(0);
 
-                            if(obj.getString("pr_record_id").equals(""))
-                                insertHistory(json_mysql);
+                                if (obj.getString("pr_record_id").equals(""))
+                                    insertHistory(json_mysql);
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -326,6 +328,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                     int success = response.getInt("success");
 
                     if (success == 1) {
+
                         int hasRecord = response.getInt("has_record");
                         JSONArray json_mysql = response.getJSONArray("records");
 

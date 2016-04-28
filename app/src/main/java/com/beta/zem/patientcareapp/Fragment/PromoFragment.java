@@ -60,24 +60,26 @@ public class PromoFragment extends Fragment {
                     int success = response.getInt("success");
 
                     if (success == 1) {
-                        no_promos.setVisibility(View.GONE);
-                        list_of_promos.setVisibility(View.VISIBLE);
-                        JSONArray json_mysql = response.getJSONArray("promos");
+                        if (response.getBoolean("has_contents")) {
+                            no_promos.setVisibility(View.GONE);
+                            list_of_promos.setVisibility(View.VISIBLE);
+                            JSONArray json_mysql = response.getJSONArray("promos");
 
-                        for (int x = 0; x < json_mysql.length() - 1; x++) {
-                            JSONObject obj = json_mysql.getJSONObject(x);
-                            HashMap<String, String> map = new HashMap<>();
+                            for (int x = 0; x < json_mysql.length() - 1; x++) {
+                                JSONObject obj = json_mysql.getJSONObject(x);
+                                HashMap<String, String> map = new HashMap<>();
 
-                            map.put("promo_id", obj.getString("pr_promo_id"));
-                            map.put("promo_title", obj.getString("long_title"));
-                            map.put("applicability", obj.getString("product_applicability"));
-                            map.put("pt_minimum_purchase", obj.getString("minimum_purchase_amount"));
-                            map.put("pt_free_delivery", obj.getString("pr_free_delivery"));
-                            map.put("pt_percentage", obj.getString("pr_percentage"));
-                            map.put("pt_peso", obj.getString("pr_peso"));
-                            map.put("start_date", obj.getString("start_date"));
-                            map.put("end_date", obj.getString("end_date"));
-                            map_promos.add(map);
+                                map.put("promo_id", obj.getString("pr_promo_id"));
+                                map.put("promo_title", obj.getString("long_title"));
+                                map.put("applicability", obj.getString("product_applicability"));
+                                map.put("pt_minimum_purchase", obj.getString("minimum_purchase_amount"));
+                                map.put("pt_free_delivery", obj.getString("pr_free_delivery"));
+                                map.put("pt_percentage", obj.getString("pr_percentage"));
+                                map.put("pt_peso", obj.getString("pr_peso"));
+                                map.put("start_date", obj.getString("start_date"));
+                                map.put("end_date", obj.getString("end_date"));
+                                map_promos.add(map);
+                            }
                         }
                     } else {
                         no_promos.setVisibility(View.VISIBLE);
@@ -88,15 +90,18 @@ public class PromoFragment extends Fragment {
                     Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                 }
 
-                type_of_promos.add(map_promos.get(0));
+                if(map_promos.size() < 0) {
+                    type_of_promos.add(map_promos.get(0));
 
-                for (int x = 0; x < map_promos.size(); x++) {
-                    if (!type_of_promos.get(0).get("promo_id").equals(map_promos.get(x).get("promo_id")))
-                        type_of_promos.add(map_promos.get(x));
+                    for (int x = 0; x < map_promos.size(); x++) {
+                        if (!type_of_promos.get(0).get("promo_id").equals(map_promos.get(x).get("promo_id")))
+                            type_of_promos.add(map_promos.get(x));
+                    }
+
+                    adapter = new ListViewAdapter(getActivity(), R.layout.item_promo_products, type_of_promos);
+                    list_of_promos.setAdapter(adapter);
                 }
 
-                adapter = new ListViewAdapter(getActivity(), R.layout.item_promo_products, type_of_promos);
-                list_of_promos.setAdapter(adapter);
                 pdialog.dismiss();
             }
         }, new ErrorListener<VolleyError>() {

@@ -117,7 +117,7 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item_clicked = parent.getItemAtPosition(position).toString();
                 int item_id = listOfClinics.indexOf(item_clicked);
-                clinic_id = Integer.parseInt(arrayOfClinics.get(item_id).get("clinic_id"));
+                clinic_id = Integer.parseInt(arrayOfClinics.get(item_id).get("clinics_id"));
             }
         });
 
@@ -210,7 +210,7 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
                                     record.setRecordID(last_inserted_id);
                                     insertTreatments(last_inserted_id, record);
                                     Intent intent = new Intent(SaveMedicalRecordActivity.this, SidebarActivity.class);
-                                    intent.putExtra("select", 4);
+                                    intent.putExtra("select", 3);
                                     startActivity(intent);
                                     SaveMedicalRecordActivity.this.finish();
                                 }
