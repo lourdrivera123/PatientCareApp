@@ -1,13 +1,16 @@
 package com.beta.zem.patientcareapp.Activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -71,7 +74,7 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
-//    private Location mLastLocation;
+    private Location mLastLocation;
 
     // Google client to interact with Google API
     private GoogleApiClient mGoogleApiClient;
@@ -145,12 +148,22 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
 
     private void setMapMarker() {
 
-//        mLastLocation = LocationServices.FusedLocationApi
-//                .getLastLocation(mGoogleApiClient);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi
+                .getLastLocation(mGoogleApiClient);
 
-//        if (mLastLocation != null) {
-//            MY_GEOCODE = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-//            ECE_DAVAO = new LatLng(7.051969, 125.5947593);
+        if (mLastLocation != null) {
+            MY_GEOCODE = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            ECE_DAVAO = new LatLng(7.051969, 125.5947593);
         ECE_DAVAO = new LatLng(7.163199, 125.577526);
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
@@ -159,7 +172,7 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
         final List<Marker> same_region_markers = new ArrayList<>();
 
 
-        GetRequest.getJSONobj(getBaseContext(), "google_distance_matrix&mylocation_lat=" + 7.163199 + "&mylocation_long=" + 125.577526, "branches", "branches_id", new RespondListener<JSONObject>() {
+        GetRequest.getJSONobj(getBaseContext(), "google_distance_matrix&mylocation_lat=" + mLastLocation.getLatitude() + "&mylocation_long=" + mLastLocation.getLongitude(), "branches", "branches_id", new RespondListener<JSONObject>() {
             @Override
             public void getResult(JSONObject response) {
                 Log.d("googlemapactivity", response + "");
@@ -172,7 +185,7 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
                 Bitmap my_marker_icon = BitmapFactory.decodeResource(getResources(), R.mipmap.my_map_marker);
 
                 //change ECE_DAVAO constant to MY_GEOCODE if going production
-                Marker my_location_marker = map.addMarker(new MarkerOptions().position(ECE_DAVAO).title("You are here !").icon(BitmapDescriptorFactory.fromBitmap(my_marker_icon)));
+                Marker my_location_marker = map.addMarker(new MarkerOptions().position(MY_GEOCODE).title("You are here !").icon(BitmapDescriptorFactory.fromBitmap(my_marker_icon)));
                 same_region_markers.add(my_location_marker);
 
                 Log.d("srm", same_region_markers.size() + "");
@@ -216,8 +229,9 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
                 list_view_of_branches.setAdapter(branches_adapter);
             }
         });
-//        } else {
-//            Toast.makeText(GoogleMapsActivity.this, "cant get location", Toast.LENGTH_SHORT).show();
+        } else {
+//            make(root, "Please turn on location services", Snackbar.LENGTH_LONG);
+            Toast.makeText(GoogleMapsActivity.this, "Please turn on location services", Toast.LENGTH_LONG).show();
 //            root.postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
@@ -225,7 +239,7 @@ public class GoogleMapsActivity extends AppCompatActivity implements GoogleApiCl
 //                        turn_on_location_dialog();
 //                }
 //            }, 3000);
-//        }
+        }
     }
 
     public void turn_on_location_dialog() {

@@ -76,8 +76,9 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
     AutoCompleteTextView search_doctor;
     Toolbar myToolBar;
 
-    ListView doctors_list;
+    ListView doctors_list, clinics_list;
     AlertDialog dialog;
+    LinearLayout choose_clinic_for_doctor_layout, choose_doctor_layout;
 
     Calendar cal;
     ArrayAdapter<String> doctorAdapter, clinicAdapter, specialtyAdapter, citiesMunicipalitiesAdapter, doctorListAdapter, specialty_names_adapter, clinic_names_adapter;
@@ -137,6 +138,9 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
         search_clinic_btn = (Button) findViewById(R.id.search_clinic_btn);
         filter_doctor_search = (EditText) findViewById(R.id.filter_doctor_search);
         the_chosen_one = (TextView) findViewById(R.id.the_chosen_one);
+        choose_clinic_for_doctor_layout = (LinearLayout) findViewById(R.id.choose_clinic_for_doctor_layout);
+        choose_doctor_layout = (LinearLayout) findViewById(R.id.choose_doctor_layout);
+        clinics_list = (ListView) findViewById(R.id.clinics_list);
 
         cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("GMT+8"));
@@ -179,6 +183,54 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
         if (getIntent.getStringExtra("request").equals("add")) {
             request = "add";
             consult = new Consultation();
+            final int doctorID = getIntent.getIntExtra("doctorID", 0);
+
+            if (doctorID > 0) {
+                choose_clinic_for_doctor_layout.setVisibility(View.VISIBLE);
+                choose_doctor_layout.setVisibility(View.GONE);
+
+                getJSONobj(getBaseContext(), "get_clinics", "clinics", "clinics_id", new RespondListener<JSONObject>() {
+                    @Override
+                    public void getResult(JSONObject response) {
+
+                        getJSONobj(getBaseContext(), "get_clinic_doctor", "clinic_doctor", "clinic_doctor_id", new RespondListener<JSONObject>() {
+                            @Override
+                            public void getResult(JSONObject response) {
+                                final ArrayList<HashMap<String, String>> clinic_hashmap = cc.getDoctorClinics(doctorID);
+                                ArrayList<String> clinic_names_list = new ArrayList();
+
+                                for (int i = 0; i < clinic_hashmap.size(); i++)
+                                    clinic_names_list.add(clinic_hashmap.get(i).get("clinic_name"));
+
+                                ArrayAdapter clinic_names_adapter = new ArrayAdapter<String>(PatientConsultationActivity.this, R.layout.regular_list_item, clinic_names_list);
+//                                d("names_adapter", clinic_names_adapter + "");
+                                clinics_list.setAdapter(clinic_names_adapter);
+
+                                clinics_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                        d("clinic_id =", clinic_hashmap.get(i).get("clinics_id") + "");
+                                        consult.setClinicID(Integer.parseInt(clinic_hashmap.get(i).get("clinics_id")));
+                                        consult.setDoctorID(doctorID);
+                                        String c_name = clinic_hashmap.get(i).get("clinic_name");
+                                        String d_name = clinic_hashmap.get(i).get("doctor_name");
+                                        the_chosen_one.setText("Doctor: " + d_name + " \nClinic: " + c_name);
+//                                        letDialogSleep();
+                                    }
+                                });
+                            }
+                        }, new ErrorListener<VolleyError>() {
+                            public void getError(VolleyError error) {
+                                make(root, "Network error", LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }, new ErrorListener<VolleyError>() {
+                    public void getError(VolleyError error) {
+                        make(root, "Network error", LENGTH_SHORT).show();
+                    }
+                });
+            }
 
             if (hour > 12)
                 txtAlarmedTime.setText((hour - 12) + " : " + minute + " PM");
@@ -465,7 +517,7 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
                                     consult.setDoctorID(the_chosen_doctor);
                                     String c_name = clinic_hashmap.get(i).get("clinic_name");
                                     String d_name = clinic_hashmap.get(i).get("doctor_name");
-                                    the_chosen_one.setText("Doctor: "+d_name+" \nClinic: "+c_name);
+                                    the_chosen_one.setText("Doctor: " + d_name + " \nClinic: " + c_name);
                                     letDialogSleep();
                                 }
                             });
@@ -697,27 +749,4 @@ public class PatientConsultationActivity extends AppCompatActivity implements Vi
             time_alarm = "";
         }
     }
-
-   /* @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        String s_doctor = search_doctor.getText().toString();
-
-        for (String doctor : listOfDoctors) {
-            if (!doctor.toLowerCase().contains(s_doctor.toLowerCase())) {
-                listOfClinic.clear();
-                listOfClinic.add("Choose a Clinic");
-                clinicAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }*/
 }

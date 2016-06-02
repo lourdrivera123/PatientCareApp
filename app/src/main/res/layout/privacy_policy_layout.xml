@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/toolbar"
+    android:orientation="vertical">
+=
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="10dp"
+                android:text="Privacy Policy"
+                />
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="10dp"
+                android:text="Thank you for choosing PharmacyTree. Your privacy is very important to us. Accordingly, we have developed this Policy in order for you to understand how we collect, communicate and disclose, and make use of personal information. Before getting into the details, we'd like to highlight some of the key principles behind it.
+
+            1. We will collect personal information by lawful and fair means and, where appropriate, with the knowledge or consent of the individual concerned.
+
+            2. We are committed to ensuring that all your personal data including that of a sensitive nature is used with your consent.
+
+            3. Personal data should be relevant to the purposes for which it is to be used, and, to the extent necessary for those purposes, should be accurate, complete, and up-to-date.
+
+            4. We collect information from or about the phones or other devices where you install or access our Services, depending on the permissions you've granted. (e.g. device  locations, including specific geographic locations, such as through GPS or WIFI signals)"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

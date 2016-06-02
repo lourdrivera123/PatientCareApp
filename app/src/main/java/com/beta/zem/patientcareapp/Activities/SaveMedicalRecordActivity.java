@@ -69,6 +69,7 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
     ClinicController cc;
     PatientRecordController prc;
     PatientTreatmentsController ptc;
+    public static boolean ISSAVEDFROMSMRA = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -210,8 +211,9 @@ public class SaveMedicalRecordActivity extends AppCompatActivity implements View
                                     record.setRecordID(last_inserted_id);
                                     insertTreatments(last_inserted_id, record);
                                     Intent intent = new Intent(SaveMedicalRecordActivity.this, SidebarActivity.class);
-                                    intent.putExtra("select", 3);
+                                    intent.putExtra("select", 1);
                                     startActivity(intent);
+//                                    ISSAVEDFROMSMRA = true;
                                     SaveMedicalRecordActivity.this.finish();
                                 }
                             } catch (JSONException e) {

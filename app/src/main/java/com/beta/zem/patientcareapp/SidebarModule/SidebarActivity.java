@@ -2,6 +2,7 @@ package com.beta.zem.patientcareapp.SidebarModule;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
@@ -49,7 +50,9 @@ import com.beta.zem.patientcareapp.Fragment.ListOfDoctorsFragment;
 import com.beta.zem.patientcareapp.Fragment.OrdersFragment;
 import com.beta.zem.patientcareapp.Fragment.PatientHistoryFragment;
 import com.beta.zem.patientcareapp.Fragment.PatientProfileFragment;
+import com.beta.zem.patientcareapp.Fragment.PrivacyPolicyFragment;
 import com.beta.zem.patientcareapp.Fragment.PromoFragment;
+import com.beta.zem.patientcareapp.Fragment.TermsAndConditionsFragment;
 import com.beta.zem.patientcareapp.ImageGallery.ImageHelper;
 import com.beta.zem.patientcareapp.Activities.MainActivity;
 import com.beta.zem.patientcareapp.Interface.ErrorListener;
@@ -88,13 +91,13 @@ public class SidebarActivity extends AppCompatActivity {
     static com.beta.zem.patientcareapp.Model.Patient patient;
     static DbHelper dbHelper;
     static PatientController pc;
-    PatientRecordController prc;
+    static PatientRecordController prc;
     PatientTreatmentsController ptc;
     OverlayController oc;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "SidebarActivity";
     private BroadcastReceiver mRegistrationBroadcastReceiver;
-
+    public static Activity sidebar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,7 @@ public class SidebarActivity extends AppCompatActivity {
 
         prc = new PatientRecordController(this);
         ptc = new PatientTreatmentsController(this);
+        sidebar = this;
 
         root = (LinearLayout) findViewById(R.id.root);
 
@@ -168,6 +172,8 @@ public class SidebarActivity extends AppCompatActivity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
 //        navDrawerItems.add(new NavDrawerItem(navMenuTitles[7], navMenuIcons.getResourceId(7, -1)));
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[8], navMenuIcons.getResourceId(8, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[9], navMenuIcons.getResourceId(9, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[10], navMenuIcons.getResourceId(10, -1)));
 
         navMenuIcons.recycle(); // Recycle the typed array
 
@@ -253,6 +259,10 @@ public class SidebarActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        d("activity_log", prc.getAllPatientRecords() + "");
+
+        PatientHistoryFragment.test();
+
         getAllBasketItems();
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
@@ -314,6 +324,7 @@ public class SidebarActivity extends AppCompatActivity {
     private void displayView(int position) {
         Fragment fragment = null;
         String title = "Home";
+        d("position_", position + "");
         switch (position) {
             case 0:
                 fragment = new HomeTileFragment();
@@ -350,6 +361,16 @@ public class SidebarActivity extends AppCompatActivity {
 //                fragment = new HomeTileFragment();
 //                break;
             case 7:
+                title = "Privacy Policy";
+                fragment = new PrivacyPolicyFragment();
+                break;
+
+            case 8:
+                title = "Terms and Conditions";
+                fragment = new TermsAndConditionsFragment();
+                break;
+            
+            case 9:
                 if (prc.deleteAllRecords()) {
                     if (ptc.deleteTreatments()) {
                         editor.clear();
@@ -424,22 +445,22 @@ public class SidebarActivity extends AppCompatActivity {
                     int success = response.getInt("success");
                     int count = 0;
                     if (success == 1) {
-                        if(response.getBoolean("has_contents")) {
+                        if (response.getBoolean("has_contents")) {
 
-                        JSONArray json_mysql = response.getJSONArray("baskets");
+                            JSONArray json_mysql = response.getJSONArray("baskets");
 
-                        for (int x = 0; x < json_mysql.length(); x++)
-                            count++;
+                            for (int x = 0; x < json_mysql.length(); x++)
+                                count++;
 
-                        if (count > 0) {
-                            number_of_notif.setVisibility(View.VISIBLE);
-                            number_of_notif.setText(String.valueOf(count));
+                            if (count > 0) {
+                                number_of_notif.setVisibility(View.VISIBLE);
+                                number_of_notif.setText(String.valueOf(count));
+                            }
                         }
-                       }
                     } else
                         number_of_notif.setVisibility(View.GONE);
                 } catch (Exception e) {
-                    Log.d("SidebarAct2", e + "");
+                    d("SidebarAct2", e + "");
                     Snackbar.make(root, "Error occurred", Snackbar.LENGTH_SHORT).show();
                 }
             }

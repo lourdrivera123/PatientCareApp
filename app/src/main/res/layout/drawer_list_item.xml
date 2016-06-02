@@ -24,12 +24,4 @@
         android:textColor="@color/list_item_title"
         android:textSize="13sp" />
 
-    <TextView
-        android:id="@+id/counter"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:layout_weight=".1"
-        android:background="@drawable/counter_bg"
-        android:textColor="@color/counter_text_color" />
 </LinearLayout>

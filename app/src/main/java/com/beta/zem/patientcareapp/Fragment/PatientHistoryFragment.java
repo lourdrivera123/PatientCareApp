@@ -48,20 +48,22 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.util.Log.d;
+
 public class PatientHistoryFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
-    ListView list_of_history;
+    static ListView list_of_history;
     FloatingActionButton add_record;
-    TextView noResults;
+    static TextView noResults;
     LinearLayout root;
 
-    ArrayList<HashMap<String, String>> hashHistory;
+    static ArrayList<HashMap<String, String>> hashHistory;
     ArrayList<String> arrayOfRecords;
     ArrayList<Integer> selectedList;
 
-    private SelectionAdapter mAdapter;
+    private static SelectionAdapter mAdapter;
 
     DbHelper dbHelper;
-    PatientRecordController prc;
+    static PatientRecordController prc;
     PatientTreatmentsController ptc;
     Helpers helpers;
     Dialog dialog;
@@ -71,16 +73,17 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_patient_records, container, false);
 
-        dbHelper = new DbHelper(getActivity());
-        ptc = new PatientTreatmentsController(getActivity());
-        helpers = new Helpers();
-        arrayOfRecords = new ArrayList<>();
-        selectedList = new ArrayList<>();
-
         add_record = (FloatingActionButton) rootView.findViewById(R.id.add_record);
         noResults = (TextView) rootView.findViewById(R.id.noResults);
         list_of_history = (ListView) rootView.findViewById(R.id.list_of_history);
         root = (LinearLayout) rootView.findViewById(R.id.root);
+
+        dbHelper = new DbHelper(getActivity());
+        ptc = new PatientTreatmentsController(getActivity());
+        helpers = new Helpers();
+
+        arrayOfRecords = new ArrayList<>();
+        selectedList = new ArrayList<>();
 
         list_of_history.setOnItemClickListener(this);
         list_of_history.setOnCreateContextMenuListener(this);
@@ -90,23 +93,28 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         progress.setMessage("Please wait...");
 
         SyncClinicsRecord();
+        updateList();
 
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        prc = new PatientRecordController(getActivity());
+    static void updateList() {
+        prc = new PatientRecordController(SidebarActivity.sidebar);
+        hashHistory  = new ArrayList<>();
         hashHistory = prc.getAllPatientRecords();
 
-        mAdapter = new SelectionAdapter(getActivity(), hashHistory);
-        list_of_history.setAdapter(mAdapter);
-
-        if (hashHistory.size() == 0) {
+        if(hashHistory.size() > 0) {
+            noResults.setVisibility(View.GONE);
+            list_of_history.setVisibility(View.VISIBLE);
+        } else {
             noResults.setVisibility(View.VISIBLE);
             list_of_history.setVisibility(View.GONE);
         }
-        super.onResume();
+
+        mAdapter = new SelectionAdapter(SidebarActivity.sidebar, hashHistory);
+        list_of_history.setAdapter(mAdapter);
+
+        Log.d("activity_log", ""+hashHistory.size());
     }
 
     @Override
@@ -243,16 +251,6 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         }
     }
 
-    void updateList() {
-        noResults.setVisibility(View.GONE);
-        list_of_history.setVisibility(View.VISIBLE);
-
-        hashHistory.clear();
-        hashHistory = prc.getAllPatientRecords();
-        mAdapter = new SelectionAdapter(getActivity(), hashHistory);
-        list_of_history.setAdapter(mAdapter);
-    }
-
     void SyncClinicsRecord() {
         final ProgressDialog progress1 = new ProgressDialog(getActivity());
         progress1.setMessage("Please wait...");
@@ -311,7 +309,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
             @Override
             public void getError(VolleyError e) {
                 progress1.dismiss();
-                Log.d("patientHistoryFrag6", e + "");
+                d("patientHistoryFrag6", e + "");
                 Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -348,7 +346,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
             @Override
             public void getError(VolleyError e) {
                 progress.dismiss();
-                Log.d("patientHistoryFrag1", e + "");
+                d("patientHistoryFrag1", e + "");
                 Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -438,7 +436,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                                             }
                                         }
                                     } catch (Exception e) {
-                                        Log.d("patientHistoryFrag4", e + "");
+                                        d("patientHistoryFrag4", e + "");
                                         Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                                     }
                                 }
@@ -450,7 +448,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
                             });
                         }
                     } catch (Exception e) {
-                        Log.d("patientHistoryFrag3", e + "");
+                        d("patientHistoryFrag3", e + "");
                         Snackbar.make(root, "Server error occurred", Snackbar.LENGTH_SHORT).show();
                     }
                     progress.dismiss();
@@ -458,7 +456,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
             }, new ErrorListener<VolleyError>() {
                 public void getError(VolleyError error) {
                     progress.dismiss();
-                    Log.d("patientHistoryFrag2", error + "");
+                    d("patientHistoryFrag2", error + "");
                     Snackbar.make(root, "Network error", Snackbar.LENGTH_SHORT).show();
                 }
             });
@@ -467,7 +465,7 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
         }
     }
 
-    private class SelectionAdapter extends BaseAdapter {
+    private static class SelectionAdapter extends BaseAdapter {
         LayoutInflater inflater;
         ArrayList<HashMap<String, String>> objects;
 
@@ -507,6 +505,13 @@ public class PatientHistoryFragment extends Fragment implements AdapterView.OnIt
             clinic.setText(objects.get(position).get("clinic_name"));
 
             return v;
+        }
+    }
+    
+    public static void test(){
+        if(SaveMedicalRecordActivity.ISSAVEDFROMSMRA){
+            d("activity_log", "loggeing");
+            updateList();
         }
     }
 }

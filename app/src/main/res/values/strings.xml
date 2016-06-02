@@ -17,6 +17,8 @@
         <item>List of Doctors</item>
         <item>Promos</item>
         <item>News</item>
+        <item>Privacy Policy</item>
+        <item>Terms and Conditions</item>
         <item>Logout</item>
     </string-array>
 
@@ -30,6 +32,8 @@
         <item>@drawable/ic_doctor</item>
         <item>@drawable/ic_promo</item>
         <item>@drawable/ic_news</item>
+        <item>@drawable/ic_privacy</item>
+        <item>@drawable/ic_terms_and_conditions</item>
         <item>@drawable/ic_logout</item>
     </array>
     <string name="drawer_open">Slider Menu Opened</string>

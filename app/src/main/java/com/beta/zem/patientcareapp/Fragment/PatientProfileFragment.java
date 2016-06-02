@@ -3,6 +3,7 @@ package com.beta.zem.patientcareapp.Fragment;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,8 @@ import com.beta.zem.patientcareapp.Model.Patient;
 import com.beta.zem.patientcareapp.ConfigurationModule.Helpers;
 import com.beta.zem.patientcareapp.R;
 import com.beta.zem.patientcareapp.SidebarModule.SidebarActivity;
+
+import static android.util.Log.d;
 
 public class PatientProfileFragment extends Fragment {
     ImageView image_holder;
@@ -68,11 +71,15 @@ public class PatientProfileFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.edit) {
-            int edit = 7;
-            Intent intent = new Intent(getActivity(), EditTabsActivity.class);
-            intent.putExtra(EditTabsActivity.EDIT_REQUEST, edit);
-            startActivity(intent);
+        d("item_id", item.getItemId() + "");
+        switch (item.getItemId()) {
+            case R.id.edit:
+                int edit = 7;
+                Intent intent = new Intent(getActivity(), EditTabsActivity.class);
+                intent.putExtra(EditTabsActivity.EDIT_REQUEST, edit);
+                d("edit clicked", "yes it is");
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

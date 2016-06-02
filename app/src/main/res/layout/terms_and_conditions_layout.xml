@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/toolbar"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="10dp"
+                android:text="Terms and Conditions"
+                />
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="10dp"
+                android:text='	Hello, and welcome to our Terms and Conditions of Use. This is important and affects your legal rights, so please read them and our Privacy Policy and other terms. By registering and creating your profile, you agree to the following terms, conditions, purchase policy, and privacy statement:
+
+Terms and Conditions:
+	If you breach the following terms or any of our other terms and conditions, we reserve the right to close your account, if we do so, we may close all accounts you have open in your name.
+
+	1. The services rendered by PharmacyTree is not available to persons under the age of 18.
+
+	2. We encourage you to use "strong" passwords (passwords that use a combination of upper and lower case letters, numbers, and symbols) with your account.
+
+	3. You will not share your password or let anyone else access your account, or do anything else that might jeopardize the security of your account.
+
+	4. You will not provide any false personal information on PharmacyTree, or create an account for anyone other than yourself without permission.
+
+	5. We are not responsible for any liabilities, losses, or damages arising out of the unathorized use of your account.
+
+Purchase Policy:
+	Our goal at PharymacyTree is to make your medicine-buying experience as easy and efficient as possible. Our Purchase Policy is designed to provide you with the information you need to ensure a smooth transaction. Please take a minute to read the following:
+
+EXCHANGE-ONLY POLICY
+	 While we appreciate your business, we have a strict exchange-only policy and cannot offer refunds for any of our items. To exchange items purchased at PharmacyTree, visit the ECE Marketing branch where your order is processed. We hope we have rendered good quality products to you, however, if for any reason the item received is incorrect or damaged, we are only exchanging it with the correct item or with the same type of item. Any exchanges must be received within _____ days of the purchase delivery date.
+
+SHIPPING
+	We ship via _________. Please allow 1-2 days for processing. Additional processing delays may occur. You will receive an email notification once your order has been received, is ready for dispatch, and when we are delivering your order along with its tracking number.
+
+Ending These Terms:
+	The Terms will continue to apply until terminated by either you or PharmacyTree as follows.
+
+	You may end your legal agreement with PharmacyTree at any time for any or no reason by discontinuing your use of the Services. You do not need to specifically inform PharmacyTree when you stop using the Services.
+
+	We may suspend or terminate your accounts or cease providing you with all or part of the Services at any time for any reson including, but not limited to, (1) you have violated these Terms; or (2) you create risk or possible legal exposure for us. We will make reasonable efforts to notify you by the email address associated with your account or the next time you attempt to access your account.
+
+
+Thank you for reading our Terms. We hope you enjoy PharmacyTree!
+
+'/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
